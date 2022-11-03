@@ -1,3 +1,4 @@
+import Home from 'pages/Home';
 import React from 'react';
 
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -6,7 +7,7 @@ const Routers = () => {
   return (
     <Router>
       <Routes>
-        <Route path='' element={<div></div>} />
+        <Route path='' element={<Home />} />
       </Routes>
     </Router>
   );
