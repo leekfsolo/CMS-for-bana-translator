@@ -1,0 +1,77 @@
+@use 'styles/index' as *;
+
+.auth {
+  font-family: 'Roboto', sans-serif;
+  background-color: $gray;
+  height: 100vh;
+  overflow: hidden;
+
+  &-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    &__login {
+      padding: 50px 100px;
+
+      h1 {
+        font-size: 30px;
+        line-height: 2.2rem;
+        color: $dark-blue;
+        text-transform: uppercase;
+        margin-bottom: 50px;
+      }
+
+      .login-form {
+        background-color: $white;
+        padding: 50px 35px;
+        border-radius: 10px;
+        box-shadow: 0 42px 42px 0 $shadow-black;
+
+        &__input {
+          width: 100%;
+          position: relative;
+
+          label {
+            position: relative;
+            top: -25px;
+            left: auto;
+            color: $dark-blue;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+          }
+
+          input {
+            width: 100%;
+            background-color: $gray;
+            padding-right: 50px;
+          }
+
+          .show-password {
+            position: absolute;
+            top: 20%;
+            right: 15px;
+            cursor: pointer;
+          }
+        }
+
+        &__forgotpassword {
+          color: $blue;
+          margin-bottom: 30px;
+          cursor: pointer;
+        }
+
+        &__button {
+          button {
+            width: 200px;
+            background-color: $dark-blue;
+          }
+        }
+      }
+    }
+  }
+}

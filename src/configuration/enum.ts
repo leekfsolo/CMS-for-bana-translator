@@ -1,3 +1,5 @@
 export enum PageUrl {
-  HOME_PAGE = ''
+  HOME = 'home',
+  LOGIN = 'login',
+  ALL = '*'
 }
