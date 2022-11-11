@@ -42,7 +42,8 @@
         color: $gray-500;
         font-weight: 500;
 
-        &.active {
+        &.active,
+        &:hover {
           background-color: $gray;
           border-color: $blue;
           color: $secondary-blue;
