@@ -67,17 +67,13 @@ const Sidebar = () => {
     }
   ]);
 
-  const changeActiveSidebarItem = (title: string, label: string) => {
+  const changeActiveSidebarItem = (label: string) => {
     const newSidebarItems = sidebarItems.map((list) => {
-      if (list.title === title) {
-        list.items.map((sidebarItem) => {
-          sidebarItem.isActive = sidebarItem.label === label;
+      list.items.map((sidebarItem) => {
+        sidebarItem.isActive = sidebarItem.label === label;
 
-          return sidebarItem;
-        });
-
-        return list;
-      }
+        return sidebarItem;
+      });
 
       return list;
     });
@@ -98,12 +94,7 @@ const Sidebar = () => {
           <section key={list.title} className='sidebar-list__section'>
             <h4>{list.title}</h4>
             {list.items.map((item) => (
-              <SidebarItem
-                key={item.label}
-                title={list.title}
-                item={item}
-                changeActiveSidebarItem={changeActiveSidebarItem}
-              />
+              <SidebarItem key={item.label} item={item} changeActiveSidebarItem={changeActiveSidebarItem} />
             ))}
           </section>
         ))}
