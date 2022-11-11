@@ -11,7 +11,9 @@ const MainLayout = (props: BaseProps) => {
         <div className='col-1 col-md-3 col-lg-2 p-0'>
           <Sidebar />
         </div>
-        <div className='col p-0'>{children}</div>
+        <div className='col p-0'>
+          <main className='main'>{children}</main>
+        </div>
       </div>
     </div>
   );
