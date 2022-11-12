@@ -19,7 +19,7 @@
       h1 {
         font-size: 30px;
         line-height: 2.2rem;
-        color: $secondary-blue;
+        color: $blue-200;
         text-transform: uppercase;
         margin-bottom: 50px;
       }
@@ -38,7 +38,7 @@
             position: relative;
             top: -25px;
             left: auto;
-            color: $secondary-blue;
+            color: $blue-200;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -60,7 +60,7 @@
         }
 
         &__forgotpassword {
-          color: $primary-blue;
+          color: $blue;
           margin-bottom: 30px;
           cursor: pointer;
         }
@@ -68,7 +68,7 @@
         &__button {
           button {
             width: 200px;
-            background-color: $secondary-blue;
+            background-color: $blue-200;
           }
         }
       }

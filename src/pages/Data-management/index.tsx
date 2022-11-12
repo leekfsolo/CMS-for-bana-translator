@@ -89,7 +89,7 @@ const DataManagement = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <main className='dashboard'>
+    <main className='data-management'>
       <Box sx={{width: '100%'}}>
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar numSelected={selected.length} />

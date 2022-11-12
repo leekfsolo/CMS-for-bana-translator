@@ -17,9 +17,24 @@ $gray-300: #a9abae;
 $gray-400: #898a8c;
 $gray-500: #6e6f70;
 
-$blue: #2d92f0;
-$primary-blue: #3182ce;
-$secondary-blue: #2a4365;
+$blue: #49a3f1;
+$blue-100: #2d7de4;
+$blue-200: #2a4365;
+
+$black: #000;
+$black-100: #191919;
+$black-200: #42424a;
+
+$green: #66bb6a;
+$green-100: #43a047;
+
+$pink: #d81b60;
+$pink-100: #ec407a;
+
+$blue-gradient: linear-gradient(195deg, $blue, $blue-100);
+$black-gradient: linear-gradient(195deg, $black-200, $black-100);
+$green-gradient: linear-gradient(195deg, $green, $green-100);
+$pink-gradient: linear-gradient(195deg, $pink-100, $pink);
 
 // shadow
 $shadow-black: rgba(0, 83, 125, 0.1);

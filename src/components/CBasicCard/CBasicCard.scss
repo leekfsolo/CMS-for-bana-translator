@@ -1,0 +1,88 @@
+@use 'styles/index' as *;
+
+.basic-card {
+  font-family: 'Roboto', sans-serif;
+  min-height: 136px;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 12px 16px 16px;
+    position: relative;
+
+    .card-variant {
+      position: absolute;
+      top: -24px;
+      left: 24px;
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &__dark {
+        background-image: $black-gradient;
+      }
+
+      &__blue {
+        background-image: $blue-gradient;
+      }
+
+      &__green {
+        background-image: $green-gradient;
+      }
+
+      &__pink {
+        background-image: $pink-gradient;
+      }
+
+      svg {
+        fill: $white;
+        width: 50%;
+        height: 50%;
+      }
+    }
+
+    .card-detail {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+
+      &__title {
+        font-weight: 300;
+        color: $gray-500;
+        font-size: 14px;
+      }
+
+      &__content {
+        color: $blue-200;
+        font-weight: 500;
+        font-size: 24px;
+      }
+    }
+  }
+
+  &__desc {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 14px;
+    padding: 0 16px 16px;
+
+    .card-index {
+      color: $green;
+      font-weight: 500;
+
+      &.negative {
+        color: $pink-100;
+      }
+    }
+
+    .card-description {
+      font-weight: 300;
+    }
+  }
+}
