@@ -6,6 +6,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import {PageUrl} from 'configuration/enum';
+import Config from 'configuration';
 
 interface IFormLogin {
   username: string;
@@ -18,11 +20,11 @@ const Login = () => {
   const {handleSubmit, control} = useForm<IFormLogin>();
   const navigate = useNavigate();
 
-  const navigateTo = (destination: string) => {
-    navigate(destination);
+  const submitFormHandler: SubmitHandler<IFormLogin> = (data) => {
+    // Just for test
+    localStorage.setItem(Config.storageKey.auth, 'test');
+    navigate(`../${PageUrl.HOME}`);
   };
-
-  const submitFormHandler: SubmitHandler<IFormLogin> = (data) => {};
 
   return (
     <div className='auth-content__login w-100'>
@@ -84,7 +86,6 @@ const Login = () => {
 
           <div className='login-form__button w-100 text-center'>
             <Button className='py-3' variant='contained' type='submit'>
-              {/* {t('auth.signin')} */}
               Đăng nhập
             </Button>
           </div>
