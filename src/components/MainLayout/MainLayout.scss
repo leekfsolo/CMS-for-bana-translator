@@ -1,0 +1,7 @@
+@use 'styles/index' as *;
+
+.main {
+  background-color: $gray;
+  min-height: 100vh;
+  z-index: 0;
+}
