@@ -14,7 +14,7 @@ const SidebarItem = ({changeActiveSidebarItem, item}: Props) => {
 
   const handleClick = () => {
     changeActiveSidebarItem(label);
-    // navigate(src);
+    navigate(src);
   };
 
   const classnames = classNames('sidebar-item', {active: isActive});

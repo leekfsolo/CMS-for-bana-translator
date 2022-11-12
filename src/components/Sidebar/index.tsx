@@ -55,7 +55,7 @@ const Sidebar = () => {
         },
         {
           label: 'Sign up',
-          src: `/${PageUrl.SIGNUP}`,
+          src: PageUrl.SIGNUP,
           icon: <VpnKeyIcon />
         },
         {

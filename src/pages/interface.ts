@@ -1,14 +1,12 @@
 export interface StaffData {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+  version: string;
+  createdDate: string;
+  region: string;
+  quantity: number;
 }
 
 export interface StaffHeadCell {
   disablePadding: boolean;
   id: keyof StaffData;
   label: string;
-  numeric: boolean;
 }
