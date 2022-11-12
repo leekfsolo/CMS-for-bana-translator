@@ -5,19 +5,20 @@ import classNames from 'classnames';
 
 type Props = {
   item: ISidebarItem;
-  changeActiveSidebarItem: (label: string) => void;
+  activeSidebarTitle: string;
+  setActiveSidebarTitle: (label: string) => void;
 };
 
-const SidebarItem = ({changeActiveSidebarItem, item}: Props) => {
-  const {label, src, icon = null, isActive = false, subItems = []} = item;
+const SidebarItem = ({setActiveSidebarTitle, item, activeSidebarTitle}: Props) => {
+  const {label, src, icon = null, subItems = []} = item;
   const navigate = useNavigate();
 
   const handleClick = () => {
-    changeActiveSidebarItem(label);
+    setActiveSidebarTitle(label);
     navigate(src);
   };
 
-  const classnames = classNames('sidebar-item', {active: isActive});
+  const classnames = classNames('sidebar-item', {active: activeSidebarTitle === label});
 
   return (
     <div key={label} onClick={handleClick} className={classnames}>
