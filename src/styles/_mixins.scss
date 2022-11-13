@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 @mixin for-mobile-down {
   @media (max-width: #{$screen-xs-max}) {
     @content;
