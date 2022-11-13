@@ -54,8 +54,8 @@ const MainLayout = () => {
             icon: <AssignmentIndIcon />
           },
           {
-            label: 'Sign up',
-            src: PageUrl.SIGNUP,
+            label: 'Create Account',
+            src: PageUrl.CREATE_ACCOUNT,
             icon: <VpnKeyIcon />
           },
           {

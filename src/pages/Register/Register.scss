@@ -1,0 +1,14 @@
+@use 'styles/index' as *;
+
+.register {
+  font-family: 'Roboto', sans-serif;
+  padding: 20px 12px;
+
+  &-header {
+    font-size: 24px;
+    margin-bottom: 90px;
+  }
+
+  &-form {
+  }
+}

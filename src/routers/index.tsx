@@ -10,6 +10,8 @@ import DataManagement from 'pages/Data-management';
 import Training from 'pages/Training';
 import Testing from 'pages/Testing';
 import MainLayout from 'components/MainLayout';
+import Profile from 'pages/Profile';
+import Register from 'pages/Register';
 
 const Routers = () => {
   return (
@@ -23,6 +25,8 @@ const Routers = () => {
             <Route path={PageUrl.DATA_MANAGEMENT} element={<DataManagement />} />
             <Route path={PageUrl.TRAINING} element={<Training />} />
             <Route path={PageUrl.TESTING} element={<Testing />} />
+            <Route path={PageUrl.PROFILE} element={<Profile />} />
+            <Route path={PageUrl.CREATE_ACCOUNT} element={<Register />} />
           </Route>
           <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.LOGIN} replace={true} />} />
         </Route>
