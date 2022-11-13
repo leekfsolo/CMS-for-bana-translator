@@ -4,7 +4,7 @@
   font-family: 'Roboto', sans-serif;
   background-color: $gray;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
 
   &-content {
     display: flex;
@@ -15,6 +15,7 @@
     &__logo {
       @include tablet {
         margin-top: 20px;
+        margin-bottom: 50px;
         width: 100px;
       }
     }
@@ -35,7 +36,7 @@
         line-height: 2.2rem;
         color: $secondary-blue;
         text-transform: uppercase;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
 
         @include desktop {
           font-size: 26px;
