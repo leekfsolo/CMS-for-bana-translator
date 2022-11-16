@@ -11,6 +11,8 @@ import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import {ISidebarItem} from 'components/interface';
+import Header from 'components/Header';
+import classNames from 'classnames';
 
 const MainLayout = () => {
   const sidebarItems: Array<ISidebarItem[]> = useMemo(
@@ -63,16 +65,20 @@ const MainLayout = () => {
     []
   );
   const [activeSidebarTitle, setActiveSidebarTitle] = useState<string>('Dashboard');
+  const [isShowSideBar, setIsShowSideBar] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     navigate(activeSidebarTitle.toLowerCase(), {replace: true});
   }, []);
 
+  const wrapperSidebarClassname = classNames('wrapper-sidebar', {isShowSideBar: isShowSideBar});
+
   return (
     <div className='container-fluid p-0 m-0'>
       <div className='wrapper d-flex'>
-        <div className='wrapper-sidebar'>
+        <div className={wrapperSidebarClassname}>
           <Sidebar
             sideBarItems={sidebarItems}
             setActiveSidebarTitle={setActiveSidebarTitle}
@@ -80,6 +86,12 @@ const MainLayout = () => {
           />
         </div>
         <div className='wrapper-main'>
+          <Header
+            activeSidebarTitle={activeSidebarTitle}
+            isShowSideBar={isShowSideBar}
+            setIsShowSideBar={setIsShowSideBar}
+          />
+
           <main className='main'>
             <Outlet />
           </main>

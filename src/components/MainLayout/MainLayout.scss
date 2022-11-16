@@ -1,24 +1,39 @@
 @use 'styles/index' as *;
 
 .wrapper {
+  height: 100vh;
+  overflow: hidden;
+
   &-sidebar {
     width: 20%;
-    height: 100vh;
+    height: 100%;
     box-shadow: $shadow-s;
     z-index: 10;
     transition: width 0.3s ease-in-out;
+    background-color: $white;
 
     @include desktop {
       width: 240px;
     }
 
     @include tablet {
-      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 270px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+
+      &.isShowSideBar {
+        transform: translateX(0%);
+      }
     }
   }
 
   &-main {
     width: calc(100vw - 20%);
+    overflow-x: hidden;
 
     @include tablet {
       width: 100%;
