@@ -53,8 +53,8 @@ const MainLayout = () => {
           icon: <AssignmentIndOutlinedIcon />
         },
         {
-          label: 'Sign up',
-          src: PageUrl.SIGNUP,
+          label: 'Create account',
+          src: PageUrl.CREATE_ACCOUNT,
           icon: <KeyOutlinedIcon />
         },
         {
