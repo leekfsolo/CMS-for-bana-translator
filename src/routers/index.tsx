@@ -10,6 +10,7 @@ import DataManagement from 'pages/Data-management';
 import Training from 'pages/Training';
 import Testing from 'pages/Testing';
 import MainLayout from 'components/MainLayout';
+import ModalBackdrop from 'components/ModalBackdrop';
 import Profile from 'pages/Profile';
 import Register from 'pages/Register';
 
@@ -31,6 +32,7 @@ const Routers = () => {
           <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.LOGIN} replace={true} />} />
         </Route>
       </Routes>
+      <ModalBackdrop />
     </Router>
   );
 };

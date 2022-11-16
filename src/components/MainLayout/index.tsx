@@ -1,91 +1,94 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Sidebar from 'components/Sidebar';
 import {Outlet, useNavigate} from 'react-router-dom';
-import {ISidebarList} from 'components/interface';
 import {PageUrl} from 'configuration/enum';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
-import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
-import TaskIcon from '@mui/icons-material/Task';
-import BoltIcon from '@mui/icons-material/Bolt';
-import LogoutIcon from '@mui/icons-material/Logout';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import DataThresholdingOutlinedIcon from '@mui/icons-material/DataThresholdingOutlined';
+import ModelTrainingOutlinedIcon from '@mui/icons-material/ModelTrainingOutlined';
+import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
+import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import {ISidebarItem} from 'components/interface';
+import Header from 'components/Header';
+import classNames from 'classnames';
+import {useSelector} from 'react-redux';
+import {globalSelector} from 'app/selectors';
 
 const MainLayout = () => {
-  const sidebarItems: ISidebarList[] = useMemo(
+  const sidebarItems: Array<ISidebarItem[]> = useMemo(
     () => [
-      {
-        title: 'App',
-        items: [
-          {
-            label: 'Dashboard',
-            src: PageUrl.DASHBOARD,
-            icon: <DashboardIcon />
-          },
-          {
-            label: 'Model Management',
-            src: PageUrl.MODEL_MANAGEMENT,
-            icon: <TaskIcon />
-          },
-          {
-            label: 'Data Management',
-            src: PageUrl.DATA_MANAGEMENT,
-            icon: <DataThresholdingIcon />
-          },
-          {
-            label: 'Training',
-            src: PageUrl.TRAINING,
-            icon: <ModelTrainingIcon />
-          },
-          {
-            label: 'Testing',
-            src: PageUrl.TESTING,
-            icon: <BoltIcon />
-          }
-        ]
-      },
-      {
-        title: 'Accounts',
-        items: [
-          {
-            label: 'Profile',
-            src: PageUrl.PROFILE,
-            icon: <AssignmentIndIcon />
-          },
-          {
-            label: 'Create Account',
-            src: PageUrl.CREATE_ACCOUNT,
-            icon: <VpnKeyIcon />
-          },
-          {
-            label: 'Log out',
-            src: `/${PageUrl.LOGIN}`,
-            icon: <LogoutIcon />
-          }
-        ]
-      }
+      [
+        {
+          label: 'Dashboard',
+          src: PageUrl.DASHBOARD,
+          icon: <GridViewOutlinedIcon />
+        },
+        {
+          label: 'Model Management',
+          src: PageUrl.MODEL_MANAGEMENT,
+          icon: <AssignmentOutlinedIcon />
+        },
+        {
+          label: 'Data Management',
+          src: PageUrl.DATA_MANAGEMENT,
+          icon: <DataThresholdingOutlinedIcon />
+        },
+        {
+          label: 'Training',
+          src: PageUrl.TRAINING,
+          icon: <ModelTrainingOutlinedIcon />
+        },
+        {
+          label: 'Testing',
+          src: PageUrl.TESTING,
+          icon: <BoltOutlinedIcon />
+        }
+      ],
+      [
+        {
+          label: 'Profile',
+          src: PageUrl.PROFILE,
+          icon: <AssignmentIndOutlinedIcon />
+        },
+        {
+          label: 'Sign up',
+          src: PageUrl.SIGNUP,
+          icon: <KeyOutlinedIcon />
+        },
+        {
+          label: 'Log out',
+          src: `/${PageUrl.LOGIN}`,
+          icon: <LogoutOutlinedIcon />
+        }
+      ]
     ],
     []
   );
   const [activeSidebarTitle, setActiveSidebarTitle] = useState<string>('Dashboard');
+  const {isShowSidebar} = useSelector(globalSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
     navigate(activeSidebarTitle.toLowerCase(), {replace: true});
   }, []);
 
+  const wrapperSidebarClassname = classNames('wrapper-sidebar', {isShowSideBar: isShowSidebar});
+
   return (
     <div className='container-fluid p-0 m-0'>
-      <div className='row m-0'>
-        <div className='col-1 col-md-3 col-lg-2 p-0'>
+      <div className='wrapper d-flex'>
+        <div className={wrapperSidebarClassname}>
           <Sidebar
             sideBarItems={sidebarItems}
             setActiveSidebarTitle={setActiveSidebarTitle}
             activeSidebarTitle={activeSidebarTitle}
           />
         </div>
-        <div className='col p-0'>
+        <div className='wrapper-main'>
+          <Header activeSidebarTitle={activeSidebarTitle} isShowSidebar={isShowSidebar} />
+
           <main className='main'>
             <Outlet />
           </main>

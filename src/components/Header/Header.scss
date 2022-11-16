@@ -1,0 +1,33 @@
+@use 'styles/index' as *;
+
+.header {
+  padding: 16px 28px;
+  box-shadow: $shadow-xs;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: $white;
+  z-index: $z-index-header;
+
+  @include tablet {
+    padding: 8px 14px 8px 28px;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: $primary-500;
+  }
+
+  &-collapse {
+    cursor: pointer;
+
+    .hamburger-react {
+      color: $primary-500;
+    }
+  }
+}

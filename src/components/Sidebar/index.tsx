@@ -1,10 +1,10 @@
 import React from 'react';
 import SidebarItem from './SidebarItem';
 import {Logo} from 'assets';
-import {ISidebarList} from 'components/interface';
+import {ISidebarItem} from 'components/interface';
 
 type Props = {
-  sideBarItems: ISidebarList[];
+  sideBarItems: Array<ISidebarItem[]>;
   setActiveSidebarTitle: (label: string) => void;
   activeSidebarTitle: string;
 };
@@ -14,17 +14,19 @@ const Sidebar = (props: Props) => {
 
   return (
     <div className='sidebar'>
-      <div className='sidebar-info d-flex align-items-center gap-3'>
+      <div className='sidebar-info d-flex align-items-center'>
         <div className='sidebar-info__logo'>
           <img src={Logo} alt='logo' className='img-fluid' />
         </div>
-        <div className='sidebar-info__user'>Tên người dùng</div>
+        <div className='sidebar-info__user'>
+          <div className='username'>Tên người dùng</div>
+          <div className='role'>Admin</div>
+        </div>
       </div>
       <nav className='sidebar-list'>
-        {sideBarItems.map((list) => (
-          <section key={list.title} className='sidebar-list__section'>
-            <h4>{list.title}</h4>
-            {list.items.map((item) => (
+        {sideBarItems.map((section, idx) => (
+          <section key={`sidebar-section-${idx}`} className='sidebar-list__section'>
+            {section.map((item) => (
               <SidebarItem
                 key={item.label}
                 item={item}
@@ -32,6 +34,8 @@ const Sidebar = (props: Props) => {
                 activeSidebarTitle={activeSidebarTitle}
               />
             ))}
+
+            {idx < sideBarItems.length - 1 && <div className='section-divider'></div>}
           </section>
         ))}
       </nav>
