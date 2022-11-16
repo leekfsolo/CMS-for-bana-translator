@@ -1,74 +1,107 @@
 @use 'styles/index' as *;
 
 .auth {
-  font-family: 'Roboto', sans-serif;
-  background-color: $gray;
+  font-family: 'Inter', sans-serif;
+  background-color: $neutral-150;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
 
   &-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     width: 100%;
+
+    &__logo {
+      @include tablet {
+        margin-top: 20px;
+        margin-bottom: 50px;
+        width: 100px;
+      }
+    }
 
     &__login {
       padding: 50px 100px;
 
+      @include desktop {
+        padding: 30px;
+      }
+
+      @include mobile {
+        padding: 15px;
+      }
+
       h1 {
         font-size: 30px;
         line-height: 2.2rem;
-        color: $dark-blue;
+        color: $info-700;
         text-transform: uppercase;
         margin-bottom: 50px;
+
+        @include desktop {
+          font-size: 26px;
+        }
       }
 
-      .login-form {
-        background-color: $white;
-        padding: 50px 35px;
-        border-radius: 10px;
-        box-shadow: 0 42px 42px 0 $shadow-black;
+      .login-wrapper {
+        padding: 0px 50px;
 
-        &__input {
-          width: 100%;
-          position: relative;
+        @include tablet {
+          padding: 0;
+        }
 
-          label {
-            position: relative;
-            top: -25px;
-            left: auto;
-            color: $dark-blue;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 8px;
-          }
+        .login-form {
+          background-color: $white;
+          padding: 50px 35px;
+          border-radius: 10px;
+          box-shadow: $shadow-m;
+          max-width: 500px;
+          margin: 0 auto;
 
-          input {
+          &__input {
             width: 100%;
-            background-color: $gray;
-            padding-right: 50px;
+            position: relative;
+
+            label {
+              position: relative;
+              top: -25px;
+              left: auto;
+              color: $info-700;
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              margin-bottom: 8px;
+            }
+
+            input {
+              width: 100%;
+              background-color: $neutral-150;
+              padding-right: 50px;
+            }
+
+            .show-password {
+              position: absolute;
+              top: 20%;
+              right: 15px;
+              cursor: pointer;
+            }
           }
 
-          .show-password {
-            position: absolute;
-            top: 20%;
-            right: 15px;
+          &__forgotpassword {
+            color: $info-500;
+            margin-bottom: 30px;
             cursor: pointer;
           }
-        }
 
-        &__forgotpassword {
-          color: $blue;
-          margin-bottom: 30px;
-          cursor: pointer;
-        }
+          &__button {
+            button {
+              width: 200px;
+              background-color: $info-700;
 
-        &__button {
-          button {
-            width: 200px;
-            background-color: $dark-blue;
+              @include tablet {
+                width: 100%;
+              }
+            }
           }
         }
       }
