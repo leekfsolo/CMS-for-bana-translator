@@ -4,8 +4,3 @@ export interface ISidebarItem {
   icon?: React.ReactNode;
   subItems?: ISidebarItem[];
 }
-
-export interface ISidebarList {
-  title: string;
-  items: ISidebarItem[];
-}

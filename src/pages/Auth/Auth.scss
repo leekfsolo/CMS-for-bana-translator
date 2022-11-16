@@ -1,8 +1,8 @@
 @use 'styles/index' as *;
 
 .auth {
-  font-family: 'Roboto', sans-serif;
-  background-color: $gray;
+  font-family: 'Inter', sans-serif;
+  background-color: $neutral-150;
   height: 100vh;
   overflow-x: hidden;
 
@@ -34,7 +34,7 @@
       h1 {
         font-size: 30px;
         line-height: 2.2rem;
-        color: $secondary-blue;
+        color: $info-700;
         text-transform: uppercase;
         margin-bottom: 50px;
 
@@ -54,7 +54,7 @@
           background-color: $white;
           padding: 50px 35px;
           border-radius: 10px;
-          box-shadow: 0 42px 42px 0 $shadow-black;
+          box-shadow: $shadow-m;
           max-width: 500px;
           margin: 0 auto;
 
@@ -66,7 +66,7 @@
               position: relative;
               top: -25px;
               left: auto;
-              color: $secondary-blue;
+              color: $info-700;
               display: flex;
               align-items: center;
               gap: 5px;
@@ -75,7 +75,7 @@
 
             input {
               width: 100%;
-              background-color: $gray;
+              background-color: $neutral-150;
               padding-right: 50px;
             }
 
@@ -88,7 +88,7 @@
           }
 
           &__forgotpassword {
-            color: $primary-blue;
+            color: $info-500;
             margin-bottom: 30px;
             cursor: pointer;
           }
@@ -96,7 +96,7 @@
           &__button {
             button {
               width: 200px;
-              background-color: $secondary-blue;
+              background-color: $info-700;
 
               @include tablet {
                 width: 100%;
