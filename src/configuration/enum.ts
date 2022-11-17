@@ -1,7 +1,7 @@
 export enum PageUrl {
   HOME = 'home',
   LOGIN = 'login',
-  SIGNUP = 'signup',
+  CREATE_ACCOUNT = 'create-account',
   PROFILE = 'profile',
   DASHBOARD = 'dashboard',
   MODEL_MANAGEMENT = 'model-management',

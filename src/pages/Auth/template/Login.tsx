@@ -1,22 +1,16 @@
 import React from 'react';
-import {FormControl, Button, TextField, Box, InputLabel} from '@mui/material';
+import {FormControl, Button, Box} from '@mui/material';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {useNavigate} from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {PageUrl} from 'configuration/enum';
 import Config from 'configuration';
-
-interface IFormLogin {
-  username: string;
-  password: string;
-}
+import CInput from 'components/CInput';
+import {IFormLogin} from 'pages/interface';
 
 const Login = () => {
-  const [isShowPassword, setIsShowPassword] = React.useState<boolean>(false);
-
   const {handleSubmit, control} = useForm<IFormLogin>();
   const navigate = useNavigate();
 
@@ -44,18 +38,13 @@ const Login = () => {
               control={control}
               render={({field}) => (
                 <Box className='login-form__input mb-4'>
-                  <InputLabel htmlFor='username'>
-                    <PersonIcon />
-                    <span>Tài Khoản</span>
-                  </InputLabel>
-                  <TextField
-                    className='mb-4'
-                    variant='outlined'
-                    placeholder='example@gmail.com'
-                    {...field}
-                    value={field.value || ''}
+                  <CInput
+                    field={field}
                     id='username'
-                    fullWidth
+                    placeholder='example@gmail.com'
+                    type='text'
+                    label={{upper: true, content: 'Tài Khoản', svg: <PersonIcon />}}
+                    className='mb-4'
                   />
                 </Box>
               )}
@@ -66,25 +55,15 @@ const Login = () => {
               name='password'
               render={({field}) => (
                 <Box className='login-form__input'>
-                  <InputLabel htmlFor='password'>
-                    <LockIcon />
-                    <span>Mật khẩu</span>
-                  </InputLabel>
-                  <Box sx={{position: 'relative'}}>
-                    <TextField
-                      className='mb-4'
-                      variant='outlined'
-                      placeholder='password'
-                      type={isShowPassword ? 'text' : 'password'}
-                      {...field}
-                      value={field.value || ''}
-                      id='password'
-                      fullWidth
-                    />
-                    <div className='show-password' onClick={() => setIsShowPassword(!isShowPassword)}>
-                      {isShowPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </div>
-                  </Box>
+                  <CInput
+                    field={field}
+                    id='password'
+                    placeholder='password'
+                    type='password'
+                    label={{upper: true, content: 'Mật khẩu', svg: <LockIcon />}}
+                    endIcon={<VisibilityIcon />}
+                    className='mb-4'
+                  />
                 </Box>
               )}
             />

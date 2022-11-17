@@ -1,5 +1,11 @@
 @use 'variables' as *;
 
+@mixin for-extra-small {
+  @media (max-width: #{$screen-xxs-max}) {
+    @content;
+  }
+}
+
 @mixin for-mobile-down {
   @media (max-width: #{$screen-xs-max}) {
     @content;
