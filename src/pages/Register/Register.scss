@@ -1,14 +1,79 @@
 @use 'styles/index' as *;
 
 .register {
-  font-family: 'Roboto', sans-serif;
-  padding: 20px 12px;
+  font-family: 'Inter', sans-serif;
+  padding: 30px 100px 50px 28px;
 
-  &-header {
-    font-size: 24px;
-    margin-bottom: 90px;
+  @include desktop {
+    padding-right: 28px;
   }
 
-  &-form {
+  &-section {
+    &__title {
+      width: 100%;
+      background-color: $neutral-650;
+      color: $white;
+      border-radius: $radius-m;
+      padding: 14px 22px;
+      font-size: 22px;
+      margin-bottom: 30px;
+
+      @include for-extra-small {
+        font-size: 16px;
+      }
+    }
+
+    &__inputs {
+      .input-row {
+        margin-bottom: 40px;
+        padding-left: 22px;
+        display: flex;
+        align-items: center;
+
+        @include for-mobile-down {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0;
+          gap: 10px;
+
+          &__field {
+            width: 100%;
+          }
+        }
+
+        &__label {
+          min-width: 220px;
+          color: $neutral-900;
+
+          .required {
+            color: $danger-500;
+          }
+        }
+
+        &__field {
+          flex: 1;
+
+          input {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  &-button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      border: 1px solid $primary-500;
+      color: $primary-500;
+
+      &:hover {
+        border-color: $primary-600;
+        background-color: $primary-100;
+      }
+    }
   }
 }
