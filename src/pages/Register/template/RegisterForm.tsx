@@ -1,9 +1,10 @@
 import React from 'react';
-import {Button} from '@mui/material';
+import {Box, Button, FormHelperText} from '@mui/material';
 import {IFormRegister, IRegisterInput, IRegisterSection} from 'pages/interface';
 import {Controller, SubmitErrorHandler, SubmitHandler, useForm} from 'react-hook-form';
 import {FormGroup} from '@mui/material';
 import CInput from 'components/CInput';
+import CSelect from 'components/CSelect/CSelect';
 
 type Props = {
   registerSections: IRegisterSection[];
@@ -24,26 +25,34 @@ const RegisterForm = (props: Props) => {
     handleSubmit,
     control,
     reset,
-    formState: {errors}
+    formState: {errors},
+    getValues
   } = useForm<IFormRegister>({defaultValues});
 
   const onValidSubmit: SubmitHandler<IFormRegister> = (data) => {
     // Just for test
+    console.log(data);
     reset(defaultValues);
   };
   const onInvalidSubmit: SubmitErrorHandler<IFormRegister> = (data, event) => {
-    console.log(data);
     event?.target.classList.add('wasvalidated');
   };
 
   const rulesValidation = (item: IRegisterInput) => {
+    let validator = {required: {value: item.required, message: 'This field is required'}};
     if (item.name === 'phone') {
-      console.log('test');
-      return {pattern: {value: /\d{10}/, message: 'invalid phone number'}};
+      Object.assign(validator, {pattern: {value: /\d{10}/, message: 'Invalid phone number'}});
     }
-    return {
-      required: {value: item.required, message: 'Required Field'}
-    };
+    if (item.name === 'accountRole') {
+      Object.assign(validator, {validate: (value: string) => value !== 'default' || 'This field is required'});
+    }
+    if (item.name === 'confirmPassword') {
+      Object.assign(validator, {
+        validate: (value: string) => value === getValues('password') || 'Password does not match'
+      });
+    }
+
+    return validator;
   };
 
   return (
@@ -65,27 +74,37 @@ const RegisterForm = (props: Props) => {
                     </label>
                   </div>
                   <div className='input-row__field'>
-                    <Controller
-                      control={control}
-                      name={item.name}
-                      rules={rulesValidation(item)}
-                      render={({field}) => (
-                        <>
-                          {item.options ? (
-                            <></>
-                          ) : (
-                            <CInput
-                              {...field}
-                              id={item.id}
-                              placeholder={item.placeholder}
-                              type={item.type}
-                              valid={!errors[item.name]}
-                            />
-                          )}
-                        </>
+                    <Box sx={{position: 'relative'}}>
+                      <Controller
+                        control={control}
+                        name={item.name}
+                        rules={rulesValidation(item)}
+                        render={({field}) => (
+                          <>
+                            {item.options ? (
+                              <CSelect
+                                {...field}
+                                id={item.id}
+                                placeholder={item.placeholder}
+                                options={item.options}
+                                valid={!errors[item.name]}
+                              />
+                            ) : (
+                              <CInput
+                                {...field}
+                                id={item.id}
+                                placeholder={item.placeholder}
+                                type={item.type}
+                                valid={!errors[item.name]}
+                              />
+                            )}
+                          </>
+                        )}
+                      />
+                      {errors[item.name] && (
+                        <FormHelperText className='form-helper-text'>{errors[item.name]?.message}</FormHelperText>
                       )}
-                    />
-                    {errors[item.name] && <span className='error'>{errors[item.name]?.message}</span>}
+                    </Box>
                   </div>
                 </div>
               );

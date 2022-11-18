@@ -54,7 +54,7 @@ const Register = () => {
           label: 'Account role',
           id: 'account-role',
           name: 'accountRole',
-          required: false,
+          required: true,
           placeholder: 'role',
           type: 'text',
           options: ['admin', 'sub-admin']

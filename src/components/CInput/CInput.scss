@@ -3,8 +3,9 @@
 .wasvalidated {
   .cinput {
     &-valid {
-      .MuiInputBase-root {
+      .MuiInputBase-input {
         border: 1px solid $success-500;
+        border-radius: 4px;
       }
 
       fieldset {
@@ -13,8 +14,9 @@
     }
 
     &-invalid {
-      .MuiInputBase-root {
+      .MuiInputBase-input {
         border: 1px solid $danger-500;
+        border-radius: 4px;
       }
 
       fieldset {
@@ -23,10 +25,12 @@
     }
   }
 
-  .error {
+  .form-helper-text {
     display: inline-block;
     color: $danger-500;
-    font-size: 14px;
-    margin-top: 5px;
+    font-size: 13px;
+    position: absolute;
+    bottom: -25px;
+    left: 0;
   }
 }
