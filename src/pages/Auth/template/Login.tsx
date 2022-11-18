@@ -1,6 +1,6 @@
 import React from 'react';
-import {FormControl, Button, Box} from '@mui/material';
-import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {FormControl, Button, InputLabel, FormGroup} from '@mui/material';
+import {SubmitHandler, useForm} from 'react-hook-form';
 import {useNavigate} from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
@@ -11,7 +11,7 @@ import CInput from 'components/CInput';
 import {IFormLogin} from 'pages/interface';
 
 const Login = () => {
-  const {handleSubmit, control} = useForm<IFormLogin>();
+  const {handleSubmit} = useForm<IFormLogin>();
   const navigate = useNavigate();
 
   const submitFormHandler: SubmitHandler<IFormLogin> = (data) => {
@@ -33,40 +33,28 @@ const Login = () => {
           noValidate
         >
           <FormControl variant='standard' className='w-100 d-flex flex-column'>
-            <Controller
-              name='username'
-              control={control}
-              render={({field}) => (
-                <Box className='login-form__input mb-4'>
-                  <CInput
-                    field={field}
-                    id='username'
-                    placeholder='example@gmail.com'
-                    type='text'
-                    label={{upper: true, content: 'Tài Khoản', svg: <PersonIcon />}}
-                    className='mb-4'
-                  />
-                </Box>
-              )}
-            />
+            <FormGroup className='login-form__group mb-4'>
+              <InputLabel htmlFor='username'>
+                <PersonIcon />
+                <span>Username</span>
+              </InputLabel>
+              <CInput id='username' name='username' placeholder='example@gmail.com' type='text' className='mb-4' />
+            </FormGroup>
 
-            <Controller
-              control={control}
-              name='password'
-              render={({field}) => (
-                <Box className='login-form__input'>
-                  <CInput
-                    field={field}
-                    id='password'
-                    placeholder='password'
-                    type='password'
-                    label={{upper: true, content: 'Mật khẩu', svg: <LockIcon />}}
-                    endIcon={<VisibilityIcon />}
-                    className='mb-4'
-                  />
-                </Box>
-              )}
-            />
+            <FormGroup className='login-form__group'>
+              <InputLabel htmlFor='password'>
+                <LockIcon />
+                <span>Password</span>
+              </InputLabel>
+              <CInput
+                id='password'
+                placeholder='password'
+                type='password'
+                endicon={<VisibilityIcon />}
+                className='mb-4'
+                name='password'
+              />
+            </FormGroup>
 
             <div className='login-form__forgotpassword'>Quên mật khẩu?</div>
 

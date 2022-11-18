@@ -19,11 +19,11 @@ const Register = () => {
           label: 'Full name',
           id: 'fullname',
           name: 'fullname',
-          required: true,
+          required: false,
           placeholder: 'Nguyen Van A',
           type: 'text'
         },
-        {label: 'Phone number', id: 'phone', name: 'phone', required: false, placeholder: '+84123456789', type: 'text'}
+        {label: 'Phone number', id: 'phone', name: 'phone', required: false, placeholder: '0123456789', type: 'text'}
       ]
     },
     {

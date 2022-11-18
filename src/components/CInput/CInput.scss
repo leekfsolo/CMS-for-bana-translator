@@ -1,0 +1,32 @@
+@use 'styles/index' as *;
+
+.wasvalidated {
+  .cinput {
+    &-valid {
+      .MuiInputBase-root {
+        border: 1px solid $success-500;
+      }
+
+      fieldset {
+        border: none;
+      }
+    }
+
+    &-invalid {
+      .MuiInputBase-root {
+        border: 1px solid $danger-500;
+      }
+
+      fieldset {
+        border: none;
+      }
+    }
+  }
+
+  .error {
+    display: inline-block;
+    color: $danger-500;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+}

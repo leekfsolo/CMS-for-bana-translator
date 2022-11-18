@@ -7,11 +7,9 @@ import '_styles.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Routers />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <Routers />
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
