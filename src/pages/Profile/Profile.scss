@@ -1,6 +1,6 @@
 @use 'styles/index' as *;
 
-.register {
+.profile {
   font-family: 'Inter', sans-serif;
   padding: 30px 100px 50px 28px;
 
@@ -23,11 +23,12 @@
       }
     }
 
-    &__inputs {
-      .input-row {
+    &__infos {
+      .info-row {
         margin-bottom: 40px;
         padding-left: 22px;
         display: flex;
+        height: 30px;
         align-items: center;
 
         @include for-mobile-down {
@@ -36,54 +37,21 @@
           padding: 0;
           gap: 10px;
 
-          &__field {
+          &__key {
             width: 100%;
           }
         }
 
-        &__label {
+        &__key {
           min-width: 220px;
-          color: $neutral-900;
-
-          .required {
-            color: $danger-500;
-          }
+          color: $neutral-500;
+          font-style: italic;
         }
 
-        &__field {
+        &__value {
           flex: 1;
-
-          input {
-            width: 100%;
-          }
         }
       }
-    }
-  }
-
-  &-button {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-
-    button {
-      border: 1px solid $primary-500;
-      color: $primary-500;
-
-      &:hover {
-        border-color: $primary-600;
-        background-color: $primary-100;
-      }
-    }
-
-    .cancel {
-      border: none;
-      color: $white;
-      margin-right: 10px;
-    }
-
-    .cancel:hover {
-      background-color: rgba(108, 117, 125, 0.7);
     }
   }
 }
