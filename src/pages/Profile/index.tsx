@@ -105,7 +105,7 @@ const Profile = () => {
                     <p>{item.value}</p>
                   </div>
 
-                  {item.key === 'password' ? (
+                  {item.key === 'password' && (
                     <div className='changePassword-button'>
                       <Button
                         size='small'
@@ -117,8 +117,6 @@ const Profile = () => {
                         change password
                       </Button>
                     </div>
-                  ) : (
-                    <></>
                   )}
                 </div>
               );
@@ -127,7 +125,7 @@ const Profile = () => {
         </div>
       ))}
 
-      {isChangePassword ? <CForm sections={changePasswordFormSections} defaultValues={defaultValues} /> : <></>}
+      {isChangePassword && <CForm sections={changePasswordFormSections} defaultValues={defaultValues} />}
     </div>
   );
 };
