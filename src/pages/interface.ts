@@ -40,3 +40,42 @@ export interface IFormLogin {
   username: string;
   password: string;
 }
+
+export interface IProfile {
+  fullname: string;
+  phone: string;
+  accountRole: string;
+  username: string;
+  password: string;
+}
+
+export interface IProfileInfo {
+  key: string;
+  value: string;
+}
+
+export interface IProfileSection {
+  title: string;
+  items: IProfileInfo[];
+}
+
+export interface IProfileFormTitle {
+  currPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export interface IProfileFormInput {
+  label: string;
+  required: boolean;
+  type: HTMLInputTypeAttribute;
+  placeholder: string;
+  id: string;
+  options?: string[];
+  name: keyof IProfileFormTitle;
+}
+
+export interface IProfileFormSection {
+  title: string;
+  items: IProfileFormInput[];
+}
