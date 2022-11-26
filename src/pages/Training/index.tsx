@@ -1,9 +1,11 @@
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect/CSelect';
 import React, {useState} from 'react';
-import {FormControlLabel, SelectChangeEvent} from '@mui/material';
+import {FormControlLabel, SelectChangeEvent, LinearProgress} from '@mui/material';
 import CSwitch from 'components/CSwitch/CSwitch';
 import {ITrainingOptionSelect, ITrainingOptionValues} from 'pages/interface';
+import {useAppDispatch} from 'app/hooks';
+import {sleep} from 'utils/helpers/sleep';
 
 const trainingOptions: ITrainingOptionSelect[] = [
   {title: 'Tập dữ liệu', options: ['test', 'asdf'], type: 'dataset'},
@@ -20,6 +22,7 @@ const defaultOptionValues: ITrainingOptionValues = {
 };
 
 const Training = () => {
+  const dispatch = useAppDispatch();
   const [optionValues, setOptionValues] = useState<ITrainingOptionValues>(defaultOptionValues);
   const [isTesting, setIstesting] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -40,6 +43,7 @@ const Training = () => {
     setIsRunning(true);
     try {
       // Running Model
+      await sleep(2000);
     } catch (e) {
       console.error(e);
     } finally {
@@ -61,6 +65,7 @@ const Training = () => {
                 name={filter.type}
                 onChange={handleFilterChange}
                 value={optionValues[filter.type]}
+                variant='standard'
               />
             </div>
           ))}
@@ -86,7 +91,11 @@ const Training = () => {
         </div>
       </div>
 
-      <div className='training-output my-3'></div>
+      <div className='training-output my-3'>
+        <div className='training-output__progress'>{isRunning && <LinearProgress />}</div>
+
+        <div className='training-output__content'></div>
+      </div>
       <div className='training-cancel d-flex justify-content-end'>
         <CButton variant='outlined' color='primary'>
           Cancel

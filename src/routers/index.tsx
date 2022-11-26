@@ -12,10 +12,12 @@ import MainLayout from 'components/MainLayout';
 import ModalBackdrop from 'components/ModalBackdrop';
 import Profile from 'pages/Profile';
 import Register from 'pages/Register';
+import GlobalLoading from 'components/GlobalLoading';
 
 const Routers = () => {
   return (
     <Router>
+      <GlobalLoading />
       <Routes>
         <Route path={PageUrl.LOGIN} element={<Auth />} />
         <Route element={<PrivateRoute />}>

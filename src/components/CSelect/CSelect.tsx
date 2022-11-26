@@ -15,7 +15,6 @@ const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
       className={`cinput ${className} cinput-${valid ? 'valid' : 'invalid'}`}
       ref={ref}
       fullWidth
-      variant='outlined'
       defaultValue='default'
     >
       <MenuItem sx={{fontStyle: 'italic'}} value='default' disabled>

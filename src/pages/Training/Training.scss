@@ -2,6 +2,7 @@
 
 .training {
   padding: 24px 30px;
+  height: 100%;
 
   &-label {
     span.MuiFormControlLabel-label {
@@ -25,5 +26,21 @@
     border-radius: $radius-m;
     background-color: $white;
     box-shadow: $shadow-s;
+    position: relative;
+
+    &__progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+
+      .MuiLinearProgress-root {
+        background-color: $primary-150;
+
+        .MuiLinearProgress-bar {
+          background-color: $primary-500;
+        }
+      }
+    }
   }
 }
