@@ -1,5 +1,6 @@
 import React from 'react';
-import {TableHead, TableRow, TableCell, Checkbox} from '@mui/material';
+import {TableHead, TableRow, TableCell} from '@mui/material';
+import CCheckbox from 'components/CCheckbox';
 
 interface EnhancedTableProps {
   numSelected: number;
@@ -10,12 +11,13 @@ interface EnhancedTableProps {
 
 const CTableHead = (props: EnhancedTableProps) => {
   const {onSelectAllClick, numSelected, rowCount, headCells} = props;
+  const headCellsDisplay = headCells.concat({id: 'Action', label: 'Action'});
 
   return (
     <TableHead className='ctable-head'>
       <TableRow>
         <TableCell padding='checkbox'>
-          <Checkbox
+          <CCheckbox
             color='primary'
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -25,8 +27,8 @@ const CTableHead = (props: EnhancedTableProps) => {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell key={headCell.id} align='left' padding={headCell.disablePadding ? 'none' : 'normal'}>
+        {headCellsDisplay.map((headCell) => (
+          <TableCell key={headCell.id} align='left' padding='normal'>
             {headCell.label}
           </TableCell>
         ))}

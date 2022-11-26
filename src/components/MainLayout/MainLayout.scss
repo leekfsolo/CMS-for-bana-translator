@@ -5,23 +5,18 @@
   overflow: hidden;
 
   &-sidebar {
-    width: 16%;
-    min-width: 230px;
+    width: 17%;
+    min-width: 240px;
     height: 100%;
     box-shadow: $shadow-s;
     z-index: $z-index-sidebar;
     transition: width 0.3s ease-in-out;
     background-color: $white;
 
-    @include desktop {
-      width: 240px;
-    }
-
     @include tablet {
       position: absolute;
       top: 0;
       left: 0;
-      width: 270px;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
 
@@ -32,7 +27,7 @@
   }
 
   &-main {
-    width: calc(100vw - 16%);
+    width: calc(100vw - 17%);
     overflow-x: hidden;
 
     @include tablet {

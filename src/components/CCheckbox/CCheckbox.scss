@@ -1,0 +1,9 @@
+@use 'styles/index' as *;
+
+.MuiCheckbox-root {
+  &.Mui-checked {
+    &.MuiCheckbox-colorPrimary {
+      color: $primary-500 !important;
+    }
+  }
+}

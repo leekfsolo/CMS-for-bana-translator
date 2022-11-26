@@ -1,5 +1,5 @@
 import React from 'react';
-import {alpha, IconButton, Toolbar, Tooltip, Typography} from '@mui/material';
+import {IconButton, Toolbar, Tooltip, Typography} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
@@ -10,15 +10,7 @@ const CTableToolbar = (props: Props) => {
   const {numSelected} = props;
 
   return (
-    <Toolbar
-      sx={{
-        pl: {sm: 2},
-        pr: {xs: 1, sm: 1},
-        ...(numSelected > 0 && {
-          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
-        })
-      }}
-    >
+    <Toolbar className='table-toolbar'>
       {numSelected > 0 ? (
         <Typography sx={{flex: '1 1 100%'}} color='inherit' variant='subtitle1' component='div'>
           {numSelected} selected
@@ -29,7 +21,7 @@ const CTableToolbar = (props: Props) => {
         </Typography>
       )}
       {numSelected > 0 && (
-        <Tooltip title='Delete'>
+        <Tooltip className='table-toolbar__delete' title='Delete'>
           <IconButton>
             <DeleteIcon />
           </IconButton>

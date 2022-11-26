@@ -10,6 +10,7 @@ export interface StaffHeadCell {
   disablePadding: boolean;
   id: keyof StaffData;
   label: string;
+  align: 'left' | 'right';
 }
 
 export interface IRegisterInput {

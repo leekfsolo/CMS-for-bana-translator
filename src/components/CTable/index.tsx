@@ -1,18 +1,20 @@
 import React from 'react';
 import CTableHead from 'components/CTableHead';
 import {Table, TableBody, TableCell, TableRow, TableContainer} from '@mui/material';
-
+import CCheckbox from 'components/CCheckbox';
+import EditIcon from '@mui/icons-material/Edit';
 interface Props {
   page: number;
   rowsPerPage: number;
   data: any[];
   headCells: any[];
   viewData?: (id: string) => void;
+  setSelected: (selected: string[]) => void;
+  selected: string[];
 }
 
 const CTable = (props: Props) => {
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const {data, headCells, page, rowsPerPage, viewData} = props;
+  const {data, headCells, page, rowsPerPage, setSelected, selected} = props;
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -25,7 +27,7 @@ const CTable = (props: Props) => {
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -46,24 +48,47 @@ const CTable = (props: Props) => {
 
   return (
     <TableContainer>
-      <Table aria-labelledby='customer' size='medium' sx={{borderCollapse: 'collapse'}}>
+      <Table sx={{minWidth: 750}} aria-labelledby='tableTitle' size='medium'>
         <CTableHead
-          headCells={headCells}
           numSelected={selected.length}
-          rowCount={data.length}
           onSelectAllClick={handleSelectAllClick}
+          rowCount={data.length}
+          headCells={headCells}
         />
         <TableBody>
-          {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+          {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+            const isItemSelected = isSelected(row.version);
+            const labelId = `enhanced-table-checkbox-${index}`;
+
             return (
-              <TableRow hover role='checkbox' tabIndex={-1} key={row.customerId} sx={{cursor: 'pointer'}}>
-                {Object.keys(row).map((cell: any, idx) => {
+              <TableRow
+                hover
+                onClick={(event) => handleClick(event, row.version)}
+                role='checkbox'
+                aria-checked={isItemSelected}
+                tabIndex={-1}
+                key={row.version}
+                selected={isItemSelected}
+              >
+                <TableCell padding='checkbox'>
+                  <CCheckbox
+                    color='primary'
+                    checked={isItemSelected}
+                    inputProps={{
+                      'aria-labelledby': labelId
+                    }}
+                  />
+                </TableCell>
+                {Object.values(row).map((cell: any, idx) => {
                   return (
-                    <TableCell key={`cell-${cell}-${idx}`} align='left'>
-                      {row[cell]}
+                    <TableCell key={`cell-${idx}`} align='left'>
+                      {cell}
                     </TableCell>
                   );
                 })}
+                <TableCell align='center' padding='checkbox'>
+                  <EditIcon />
+                </TableCell>
               </TableRow>
             );
           })}
