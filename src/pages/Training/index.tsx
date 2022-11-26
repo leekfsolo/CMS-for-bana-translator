@@ -72,7 +72,7 @@ const Training = () => {
         </div>
       </div>
 
-      <div className='training-controls d-flex justify-content-between align-items-center'>
+      <div className='training-controls d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center'>
         <FormControlLabel
           value='start'
           control={<CSwitch color='primary' checked={isTesting} onChange={() => setIstesting(!isTesting)} />}
