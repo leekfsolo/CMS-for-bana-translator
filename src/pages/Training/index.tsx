@@ -3,39 +3,37 @@ import CSelect from 'components/CSelect/CSelect';
 import React, {useState} from 'react';
 import {FormControlLabel, SelectChangeEvent} from '@mui/material';
 import CSwitch from 'components/CSwitch/CSwitch';
+import {IOptionValues} from 'pages/interface';
 
-const trainingFilters = [
-  {title: 'Tập dữ liệu', options: [], type: 'dataset'},
-  {title: 'Loại Model', options: [], type: 'model'},
-  {title: 'Vùng', options: [], type: 'region'},
-  {title: 'File Checkpoint', options: [], type: 'checkpoint'}
+const trainingOptions = [
+  {title: 'Tập dữ liệu', options: ['test', 'asdf'], type: 'dataset'},
+  {title: 'Loại Model', options: ['123', '43'], type: 'model'},
+  {title: 'Vùng', options: ['Asd', 'cbvc'], type: 'region'},
+  {title: 'File Checkpoint', options: ['.ste', 'asd'], type: 'checkpoint'}
 ];
 
-interface IFilterValues {
-  dataset: string;
-  model: string;
-  region: string;
-  checkpoint: string;
-}
+const defaultOptionValues: IOptionValues = {
+  dataset: '',
+  model: '',
+  region: '',
+  checkpoint: ''
+};
 
 const Training = () => {
-  const [filterValues, setFilterValues] = useState<IFilterValues>({
-    dataset: '',
-    model: '',
-    region: '',
-    checkpoint: ''
-  });
+  const [optionValues, setOptionValues] = useState<IOptionValues>(defaultOptionValues);
   const [isTesting, setIstesting] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const canStartRunning = !Object.values(filterValues).some((value) => value === '');
+  const canStartRunning = Object.values(optionValues).every((value) => value !== '');
+
+  const resetOptions = () => setOptionValues(defaultOptionValues);
 
   const handleFilterChange = (e: SelectChangeEvent<unknown>) => {
     const newFilterValues = {
-      ...filterValues,
+      ...optionValues,
       [e.target.name]: e.target.value
     };
 
-    setFilterValues(newFilterValues);
+    setOptionValues(newFilterValues);
   };
 
   const startRunning = async () => {
@@ -53,14 +51,14 @@ const Training = () => {
     <div className='training'>
       <div className='container-fluid m-0 p-0'>
         <div className='row justify-content-between m-0'>
-          {trainingFilters.map((filter) => (
+          {trainingOptions.map((filter) => (
             <div key={filter.title} className='training-filter col-5 p-0'>
               <p className='mb-2'>{filter.title}</p>
               <CSelect
                 size='small'
                 options={filter.options}
                 disabled={isRunning}
-                name={filter.title}
+                name={filter.type}
                 onChange={handleFilterChange}
               />
             </div>
@@ -78,10 +76,10 @@ const Training = () => {
         />
 
         <div className='training-controls__button d-flex gap-2'>
-          <CButton type='reset' variant='contained' color='error'>
+          <CButton type='reset' variant='contained' color='error' onClick={resetOptions}>
             Reset
           </CButton>
-          <CButton variant='contained' color='success' onClick={startRunning} disabled={canStartRunning}>
+          <CButton variant='contained' color='success' onClick={startRunning} disabled={!canStartRunning}>
             Start
           </CButton>
         </div>

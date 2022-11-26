@@ -79,3 +79,10 @@ export interface IProfileFormSection {
   title: string;
   items: IProfileFormInput[];
 }
+
+export interface IOptionValues {
+  dataset: string;
+  model: string;
+  region: string;
+  checkpoint: string;
+}
