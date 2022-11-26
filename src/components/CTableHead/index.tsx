@@ -12,7 +12,7 @@ const CTableHead = (props: EnhancedTableProps) => {
   const {onSelectAllClick, numSelected, rowCount, headCells} = props;
 
   return (
-    <TableHead>
+    <TableHead className='ctable-head'>
       <TableRow>
         <TableCell padding='checkbox'>
           <Checkbox

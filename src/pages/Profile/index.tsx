@@ -4,6 +4,7 @@ import {Button} from '@mui/material';
 import {useState} from 'react';
 import {ICForm, ICFormSection} from 'components/interface';
 import CForm from 'components/CForm';
+import CButton from 'components/CButton';
 
 const userData: IProfile = {
   username: 'username',
@@ -107,7 +108,7 @@ const Profile = () => {
 
                   {item.key === 'password' && (
                     <div className='changePassword-button'>
-                      <Button
+                      <CButton
                         size='small'
                         variant='contained'
                         onClick={() => {
@@ -115,7 +116,7 @@ const Profile = () => {
                         }}
                       >
                         change password
-                      </Button>
+                      </CButton>
                     </div>
                   )}
                 </div>
