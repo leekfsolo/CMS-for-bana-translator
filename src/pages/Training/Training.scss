@@ -1,0 +1,29 @@
+@use 'styles/index' as *;
+
+.training {
+  padding: 24px 30px;
+
+  &-label {
+    span.MuiFormControlLabel-label {
+      color: $primary-500;
+      font-weight: 700;
+    }
+  }
+
+  &-filter {
+    margin-bottom: 20px;
+
+    p {
+      font-weight: 700;
+      color: $primary-500;
+    }
+  }
+
+  &-output {
+    width: 100%;
+    min-height: 400px;
+    border-radius: $radius-m;
+    background-color: $white;
+    box-shadow: $shadow-s;
+  }
+}

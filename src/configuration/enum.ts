@@ -7,6 +7,5 @@ export enum PageUrl {
   MODEL_MANAGEMENT = 'model-management',
   DATA_MANAGEMENT = 'data-management',
   TRAINING = 'training',
-  TESTING = 'testing',
   ALL = '*'
 }

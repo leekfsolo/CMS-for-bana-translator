@@ -1,7 +1,7 @@
 @use 'styles/index' as *;
 
 .header {
-  padding: 16px 28px;
+  padding: 16px 30px;
   box-shadow: $shadow-xs;
   display: flex;
   align-items: center;
@@ -20,14 +20,14 @@
   h1 {
     font-size: 24px;
     font-weight: 700;
-    color: $primary-500;
+    color: $neutral-700;
   }
 
   &-collapse {
     cursor: pointer;
 
     .hamburger-react {
-      color: $primary-500;
+      color: $neutral-700;
     }
   }
 }

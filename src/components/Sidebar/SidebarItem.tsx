@@ -10,7 +10,7 @@ type Props = {
 };
 
 const SidebarItem = ({setActiveSidebarTitle, item, activeSidebarTitle}: Props) => {
-  const {label, src, icon = null, subItems = []} = item;
+  const {label, src, icon = null} = item;
   const navigate = useNavigate();
 
   const handleClick = () => {
