@@ -3,27 +3,27 @@ import CSelect from 'components/CSelect/CSelect';
 import React, {useState} from 'react';
 import {FormControlLabel, SelectChangeEvent} from '@mui/material';
 import CSwitch from 'components/CSwitch/CSwitch';
-import {IOptionValues} from 'pages/interface';
+import {ITrainingOptionSelect, ITrainingOptionValues} from 'pages/interface';
 
-const trainingOptions = [
+const trainingOptions: ITrainingOptionSelect[] = [
   {title: 'Tập dữ liệu', options: ['test', 'asdf'], type: 'dataset'},
   {title: 'Loại Model', options: ['123', '43'], type: 'model'},
   {title: 'Vùng', options: ['Asd', 'cbvc'], type: 'region'},
   {title: 'File Checkpoint', options: ['.ste', 'asd'], type: 'checkpoint'}
 ];
 
-const defaultOptionValues: IOptionValues = {
-  dataset: '',
-  model: '',
-  region: '',
-  checkpoint: ''
+const defaultOptionValues: ITrainingOptionValues = {
+  dataset: 'default',
+  model: 'default',
+  region: 'default',
+  checkpoint: 'default'
 };
 
 const Training = () => {
-  const [optionValues, setOptionValues] = useState<IOptionValues>(defaultOptionValues);
+  const [optionValues, setOptionValues] = useState<ITrainingOptionValues>(defaultOptionValues);
   const [isTesting, setIstesting] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const canStartRunning = Object.values(optionValues).every((value) => value !== '');
+  const canStartRunning = Object.values(optionValues).every((value) => value !== 'default');
 
   const resetOptions = () => setOptionValues(defaultOptionValues);
 
@@ -60,6 +60,7 @@ const Training = () => {
                 disabled={isRunning}
                 name={filter.type}
                 onChange={handleFilterChange}
+                value={optionValues[filter.type]}
               />
             </div>
           ))}

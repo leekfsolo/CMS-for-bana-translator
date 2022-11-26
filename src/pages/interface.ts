@@ -80,7 +80,13 @@ export interface IProfileFormSection {
   items: IProfileFormInput[];
 }
 
-export interface IOptionValues {
+export interface ITrainingOptionSelect {
+  title: string;
+  options: string[];
+  type: keyof ITrainingOptionValues;
+}
+
+export interface ITrainingOptionValues {
   dataset: string;
   model: string;
   region: string;
