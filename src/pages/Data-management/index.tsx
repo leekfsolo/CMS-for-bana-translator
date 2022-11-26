@@ -4,6 +4,8 @@ import {Box, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
+import CButton from 'components/CButton';
+import CSelect from 'components/CSelect/CSelect';
 
 function createData(version: string, createdDate: string, region: string, quantity: number): StaffData {
   return {
@@ -56,6 +58,7 @@ const headCells: StaffHeadCell[] = [
     align: 'left'
   }
 ];
+const options: string[] = [];
 const DataManagement = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
@@ -64,6 +67,13 @@ const DataManagement = () => {
   return (
     <main className='dashboard'>
       <Box sx={{width: '100%'}}>
+        <Box className='d-flex justify-content-between align-items-center mb-4'>
+          <Box className='d-flex align-items-center gap-2'>
+            <CSelect options={options} placeholder='Data type' size='small' />
+            <CSelect options={options} placeholder='Data region' size='small' />
+          </Box>
+          <CButton variant='outlined'>+ Import Data</CButton>
+        </Box>
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar numSelected={selected.length} />
           <CTable
