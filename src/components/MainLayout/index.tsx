@@ -6,7 +6,6 @@ import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import DataThresholdingOutlinedIcon from '@mui/icons-material/DataThresholdingOutlined';
 import ModelTrainingOutlinedIcon from '@mui/icons-material/ModelTrainingOutlined';
-import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
@@ -36,14 +35,9 @@ const MainLayout = () => {
           icon: <DataThresholdingOutlinedIcon />
         },
         {
-          label: 'Training',
+          label: 'Training / Testing',
           src: PageUrl.TRAINING,
           icon: <ModelTrainingOutlinedIcon />
-        },
-        {
-          label: 'Testing',
-          src: PageUrl.TESTING,
-          icon: <BoltOutlinedIcon />
         }
       ],
       [

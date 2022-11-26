@@ -8,7 +8,6 @@ import Dashboard from 'pages/Dashboard';
 import ModelManagement from 'pages/Model-management';
 import DataManagement from 'pages/Data-management';
 import Training from 'pages/Training';
-import Testing from 'pages/Testing';
 import MainLayout from 'components/MainLayout';
 import ModalBackdrop from 'components/ModalBackdrop';
 import Profile from 'pages/Profile';
@@ -25,7 +24,6 @@ const Routers = () => {
             <Route path={PageUrl.MODEL_MANAGEMENT} element={<ModelManagement />} />
             <Route path={PageUrl.DATA_MANAGEMENT} element={<DataManagement />} />
             <Route path={PageUrl.TRAINING} element={<Training />} />
-            <Route path={PageUrl.TESTING} element={<Testing />} />
             <Route path={PageUrl.PROFILE} element={<Profile />} />
             <Route path={PageUrl.CREATE_ACCOUNT} element={<Register />} />
           </Route>
