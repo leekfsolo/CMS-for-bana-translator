@@ -65,14 +65,20 @@ const DataManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   return (
-    <main className='dashboard'>
+    <main className='data-management'>
       <Box sx={{width: '100%'}}>
-        <Box className='d-flex justify-content-between align-items-center mb-4'>
-          <Box className='d-flex align-items-center gap-2'>
-            <CSelect options={options} placeholder='Data type' size='small' />
-            <CSelect options={options} placeholder='Data region' size='small' />
+        <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
+          <Box className='control-data d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
+            <div className='control-data__select'>
+              <CSelect className='w-100' options={options} placeholder='Data type' size='small' />
+            </div>
+            <div className='control-data__select'>
+              <CSelect className='w-100' options={options} placeholder='Data region' size='small' />
+            </div>
           </Box>
-          <CButton variant='outlined'>+ Import Data</CButton>
+          <CButton className='control-import' variant='outlined'>
+            + Import Data
+          </CButton>
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar numSelected={selected.length} />

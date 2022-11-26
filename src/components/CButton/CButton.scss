@@ -4,6 +4,7 @@
   color: $white;
   pointer-events: all !important;
   padding: 8px 20px;
+  white-space: nowrap;
 
   &.cbutton {
     &-disabled {
