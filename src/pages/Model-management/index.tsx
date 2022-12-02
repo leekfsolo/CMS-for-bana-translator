@@ -1,7 +1,7 @@
 import {StaffHeadCell, StaffModel} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import React, {useState} from 'react';
-import CSelect from 'components/CSelect/CSelect';
+import CSelect from 'components/CSelect';
 import CButton from 'components/CButton';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
