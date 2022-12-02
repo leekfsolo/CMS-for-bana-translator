@@ -3,11 +3,12 @@ import {IconButton, Toolbar, Tooltip, Typography} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
+  tableTitle: string;
   numSelected: number;
 }
 
 const CTableToolbar = (props: Props) => {
-  const {numSelected} = props;
+  const {tableTitle, numSelected} = props;
 
   return (
     <Toolbar className='table-toolbar'>
@@ -17,7 +18,7 @@ const CTableToolbar = (props: Props) => {
         </Typography>
       ) : (
         <Typography sx={{flex: '1 1 100%'}} variant='h6' id='tableTitle' component='div'>
-          Data Management
+          {tableTitle}
         </Typography>
       )}
       {numSelected > 0 && (

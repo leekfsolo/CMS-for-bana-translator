@@ -8,9 +8,18 @@ export interface StaffData {
 
 export interface StaffHeadCell {
   disablePadding: boolean;
-  id: keyof StaffData;
+  id: keyof StaffData | keyof StaffModel;
   label: string;
   align: 'left' | 'right';
+}
+
+export interface StaffModel {
+  version: string;
+  dataVersion: string;
+  createdDate: string;
+  region: string;
+  accuracy: number;
+  epoch: number;
 }
 
 export interface IRegisterInput {

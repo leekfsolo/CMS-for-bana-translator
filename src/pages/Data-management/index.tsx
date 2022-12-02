@@ -81,7 +81,7 @@ const DataManagement = () => {
           </CButton>
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar numSelected={selected.length} />
+          <CTableToolbar tableTitle='Data Management' numSelected={selected.length} />
           <CTable
             data={rows}
             headCells={headCells}
