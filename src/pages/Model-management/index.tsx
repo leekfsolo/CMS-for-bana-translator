@@ -98,9 +98,6 @@ const ModelManagement = () => {
               <CSelect className='w-100' options={options} placeholder='Model region' size='small' />
             </div>
           </Box>
-          <CButton className='control-import' variant='outlined'>
-            + Import Data
-          </CButton>
         </Box>
 
         <Paper sx={{width: '100%', mb: 2}}>
@@ -112,6 +109,7 @@ const ModelManagement = () => {
             rowsPerPage={rowsPerPage}
             selected={selected}
             setSelected={setSelected}
+            manageType='model'
           />
           <CPagination
             maxLength={rows.length}

@@ -3,6 +3,7 @@ import CTableHead from 'components/CTableHead';
 import {Table, TableBody, TableCell, TableRow, TableContainer} from '@mui/material';
 import CCheckbox from 'components/CCheckbox';
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 interface Props {
   page: number;
   rowsPerPage: number;
@@ -11,10 +12,11 @@ interface Props {
   viewData?: (id: string) => void;
   setSelected: (selected: string[]) => void;
   selected: string[];
+  manageType?: string;
 }
 
 const CTable = (props: Props) => {
-  const {data, headCells, page, rowsPerPage, setSelected, selected} = props;
+  const {data, headCells, page, rowsPerPage, setSelected, selected, manageType = ''} = props;
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -87,7 +89,7 @@ const CTable = (props: Props) => {
                   );
                 })}
                 <TableCell align='center' padding='checkbox'>
-                  <EditIcon />
+                  {manageType === 'model' ? <ArrowCircleUpIcon /> : <EditIcon />}
                 </TableCell>
               </TableRow>
             );
