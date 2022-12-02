@@ -23,7 +23,8 @@ const Sidebar = (props: Props) => {
           <div className='role'>Admin</div>
         </div>
       </div>
-      <nav className='sidebar-list'>
+      <hr className='section-divider' />
+      <nav className='sidebar-list pt-1'>
         {sideBarItems.map((section, idx) => (
           <section key={`sidebar-section-${idx}`} className='sidebar-list__section'>
             {section.map((item) => (
@@ -35,7 +36,7 @@ const Sidebar = (props: Props) => {
               />
             ))}
 
-            {idx < sideBarItems.length - 1 && <div className='section-divider'></div>}
+            {idx < sideBarItems.length - 1 && <hr className='section-divider' />}
           </section>
         ))}
       </nav>
