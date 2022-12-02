@@ -4,7 +4,7 @@ import {IFormRegister, IRegisterInput, IRegisterSection} from 'pages/interface';
 import {Controller, SubmitErrorHandler, SubmitHandler, useForm} from 'react-hook-form';
 import {FormGroup} from '@mui/material';
 import CInput from 'components/CInput';
-import CSelect from 'components/CSelect/CSelect';
+import CSelect from 'components/CSelect';
 import CButton from 'components/CButton';
 
 type Props = {

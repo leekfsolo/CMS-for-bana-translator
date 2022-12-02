@@ -3,7 +3,7 @@ import {Box, Button, FormHelperText} from '@mui/material';
 import {Controller, SubmitErrorHandler, SubmitHandler, useForm} from 'react-hook-form';
 import {FormGroup} from '@mui/material';
 import CInput from 'components/CInput';
-import CSelect from 'components/CSelect/CSelect';
+import CSelect from 'components/CSelect';
 import {ICForm, ICFormInput, ICFormSection} from 'components/interface';
 
 type Props = {

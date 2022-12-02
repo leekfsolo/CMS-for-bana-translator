@@ -1,5 +1,5 @@
 import CButton from 'components/CButton';
-import CSelect from 'components/CSelect/CSelect';
+import CSelect from 'components/CSelect';
 import React, {useState} from 'react';
 import {FormControlLabel, SelectChangeEvent, LinearProgress} from '@mui/material';
 import CSwitch from 'components/CSwitch/CSwitch';
