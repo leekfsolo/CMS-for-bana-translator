@@ -5,7 +5,7 @@ import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import CButton from 'components/CButton';
-import CSelect from 'components/CSelect/CSelect';
+import CSelect from 'components/CSelect';
 
 function createData(version: string, createdDate: string, region: string, quantity: number): StaffData {
   return {
