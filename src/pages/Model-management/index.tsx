@@ -1,8 +1,7 @@
-import {StaffHeadCell, StaffModel} from 'pages/interface';
+import {TableHeadCell, IModelHead} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import React, {useState} from 'react';
 import CSelect from 'components/CSelect';
-import CButton from 'components/CButton';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
@@ -14,7 +13,7 @@ function createData(
   region: string,
   accuracy: number,
   epoch: number
-): StaffModel {
+): IModelHead {
   return {
     version,
     dataVersion,
@@ -40,7 +39,7 @@ const rows = [
   createData('1.3.1', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2)
 ];
 
-const headCells: StaffHeadCell[] = [
+const headCells: TableHeadCell[] = [
   {
     id: 'version',
     disablePadding: true,
@@ -109,7 +108,7 @@ const ModelManagement = () => {
             rowsPerPage={rowsPerPage}
             selected={selected}
             setSelected={setSelected}
-            manageType='model'
+            manageType='activate'
           />
           <CPagination
             maxLength={rows.length}

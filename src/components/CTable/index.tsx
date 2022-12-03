@@ -56,6 +56,7 @@ const CTable = (props: Props) => {
           onSelectAllClick={handleSelectAllClick}
           rowCount={data.length}
           headCells={headCells}
+          isHavingAction={manageType !== ''}
         />
         <TableBody>
           {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
@@ -69,7 +70,7 @@ const CTable = (props: Props) => {
                 role='checkbox'
                 aria-checked={isItemSelected}
                 tabIndex={-1}
-                key={row.version}
+                key={`row-${index}`}
                 selected={isItemSelected}
               >
                 <TableCell padding='checkbox'>
@@ -81,16 +82,20 @@ const CTable = (props: Props) => {
                     }}
                   />
                 </TableCell>
-                {Object.values(row).map((cell: any, idx) => {
+                {Object.keys(row).map((key, idx) => {
                   return (
                     <TableCell key={`cell-${idx}`} align='left'>
-                      {cell}
+                      <span className={key === 'status' ? `cell-variant cell-variant__${row[key]}` : ''}>
+                        {row[key]}
+                      </span>
                     </TableCell>
                   );
                 })}
-                <TableCell align='center' padding='checkbox'>
-                  {manageType === 'model' ? <ArrowCircleUpIcon /> : <EditIcon />}
-                </TableCell>
+                {manageType !== '' && (
+                  <TableCell align='center' padding='checkbox'>
+                    {manageType === 'activate' ? <ArrowCircleUpIcon /> : <EditIcon />}
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}

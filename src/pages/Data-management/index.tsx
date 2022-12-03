@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StaffData, StaffHeadCell} from 'pages/interface';
+import {IDataHead, TableHeadCell} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
@@ -7,7 +7,7 @@ import CTable from 'components/CTable';
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect';
 
-function createData(version: string, createdDate: string, region: string, quantity: number): StaffData {
+function createData(version: string, createdDate: string, region: string, quantity: number): IDataHead {
   return {
     version,
     createdDate,
@@ -32,7 +32,7 @@ const rows = [
   createData('Oreo', '437', '18.0', 63)
 ];
 
-const headCells: StaffHeadCell[] = [
+const headCells: TableHeadCell[] = [
   {
     id: 'version',
     disablePadding: true,
@@ -89,6 +89,7 @@ const DataManagement = () => {
             rowsPerPage={rowsPerPage}
             selected={selected}
             setSelected={setSelected}
+            manageType='edit'
           />
           <CPagination
             maxLength={rows.length}

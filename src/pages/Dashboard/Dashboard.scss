@@ -1,0 +1,13 @@
+@use 'styles/index' as *;
+
+.dashboard {
+  padding: 20px 30px;
+
+  &-overview {
+    &__card {
+      width: 40%;
+      height: 200px;
+      box-shadow: $shadow-m;
+    }
+  }
+}

@@ -1,25 +1,35 @@
 import {HTMLInputTypeAttribute} from 'react';
-export interface StaffData {
+
+export interface TableHeadCell {
+  disablePadding: boolean;
+  id: string;
+  label: string;
+  align: 'left' | 'right';
+}
+
+export interface IDataHead {
   version: string;
   createdDate: string;
   region: string;
   quantity: number;
 }
 
-export interface StaffHeadCell {
-  disablePadding: boolean;
-  id: keyof StaffData | keyof StaffModel;
-  label: string;
-  align: 'left' | 'right';
-}
-
-export interface StaffModel {
+export interface IModelHead {
   version: string;
   dataVersion: string;
   createdDate: string;
   region: string;
   accuracy: number;
   epoch: number;
+}
+
+export interface ITrainingHistory {
+  user: string;
+  dataVersion: string;
+  dataType: string;
+  region: string;
+  time: string;
+  status: string;
 }
 
 export interface IRegisterInput {

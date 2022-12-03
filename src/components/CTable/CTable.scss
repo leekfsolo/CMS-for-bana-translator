@@ -1,0 +1,26 @@
+@use 'styles/index' as *;
+
+.MuiTableCell-root {
+  .cell-variant {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    text-transform: capitalize;
+
+    &__waiting {
+      background-color: $danger-400;
+    }
+
+    &__pending {
+      background-color: $warning-400;
+    }
+
+    &__done {
+      background-color: $success-400;
+    }
+  }
+}

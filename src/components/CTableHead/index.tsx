@@ -2,16 +2,17 @@ import React from 'react';
 import {TableHead, TableRow, TableCell} from '@mui/material';
 import CCheckbox from 'components/CCheckbox';
 
-interface EnhancedTableProps {
+interface Props {
   numSelected: number;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   rowCount: number;
   headCells: Array<any>;
+  isHavingAction?: boolean;
 }
 
-const CTableHead = (props: EnhancedTableProps) => {
-  const {onSelectAllClick, numSelected, rowCount, headCells} = props;
-  const headCellsDisplay = headCells.concat({id: 'Action', label: 'Action'});
+const CTableHead = (props: Props) => {
+  const {onSelectAllClick, numSelected, rowCount, headCells, isHavingAction = true} = props;
+  const headCellsDisplay = isHavingAction ? headCells.concat({id: 'Action', label: 'Action'}) : headCells;
 
   return (
     <TableHead className='ctable-head'>
