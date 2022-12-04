@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormControl, Button, InputLabel, FormGroup} from '@mui/material';
+import {FormControl, InputLabel, FormGroup, FormControlLabel, Checkbox} from '@mui/material';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {useNavigate} from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
@@ -9,6 +9,7 @@ import {PageUrl} from 'configuration/enum';
 import Config from 'configuration';
 import CInput from 'components/CInput';
 import {IFormLogin} from 'pages/interface';
+import CButton from 'components/CButton';
 
 const Login = () => {
   const {handleSubmit} = useForm<IFormLogin>();
@@ -21,8 +22,8 @@ const Login = () => {
   };
 
   return (
-    <div className='auth-content__login w-100'>
-      <h1 className='text-center d-none d-lg-block'>HỆ THỐNG QUẢN LÝ MODEL CHO DỊCH VÀ PHÁT ÂM TIẾNG BANA</h1>
+    <div className='auth-login w-100'>
+      <h1 className='text-center'>Đăng Nhập</h1>
 
       <div className='login-wrapper'>
         <form
@@ -36,34 +37,45 @@ const Login = () => {
             <FormGroup className='login-form__group mb-4'>
               <InputLabel htmlFor='username'>
                 <PersonIcon />
-                <span>Username</span>
+                <span>Tên tài khoản</span>
               </InputLabel>
-              <CInput id='username' name='username' placeholder='example@gmail.com' type='text' className='mb-4' />
+              <CInput
+                id='username'
+                name='username'
+                placeholder='Email, tên người dùng,...'
+                type='text'
+                className='mb-2'
+              />
             </FormGroup>
 
             <FormGroup className='login-form__group'>
               <InputLabel htmlFor='password'>
                 <LockIcon />
-                <span>Password</span>
+                <span>Mật khẩu</span>
               </InputLabel>
               <CInput
                 id='password'
-                placeholder='password'
+                placeholder='Vui lòng nhập mật khẩu của bạn'
                 type='password'
                 endicon={<VisibilityIcon />}
-                className='mb-4'
+                className='mb-1'
                 name='password'
               />
             </FormGroup>
-
-            <div className='login-form__forgotpassword'>Quên mật khẩu?</div>
-
-            <div className='login-form__button w-100 text-center'>
-              <Button className='py-3' variant='contained' type='submit'>
-                Đăng nhập
-              </Button>
-            </div>
           </FormControl>
+
+          <div className='login-form__support mb-3 d-flex justify-content-between align-items-center'>
+            <div className='save-account'>
+              <FormControlLabel control={<Checkbox color='default' />} label='Lưu tài khoản' />
+            </div>
+            <div className='forgot-account'>Quên mật khẩu?</div>
+          </div>
+
+          <div className='login-form__button w-100 text-center'>
+            <CButton className='py-3 w-100' variant='contained' type='submit' color='inherit'>
+              Đăng nhập
+            </CButton>
+          </div>
         </form>
       </div>
     </div>

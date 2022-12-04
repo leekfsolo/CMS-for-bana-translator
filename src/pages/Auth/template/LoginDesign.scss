@@ -1,0 +1,38 @@
+.login-design {
+  background-color: $info-200;
+  position: relative;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  overflow: hidden;
+
+  .img-extend {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: $info-400;
+    position: relative;
+    left: 40px;
+    top: -40px;
+    float: right;
+  }
+
+  .img-vector {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 600px;
+    object-fit: cover;
+  }
+
+  .img-footer {
+    position: absolute;
+    bottom: 0;
+    left: -10px;
+    width: 110%;
+
+    .st4 {
+      fill: $info-400;
+    }
+  }
+}
