@@ -10,6 +10,7 @@ import Config from 'configuration';
 import CInput from 'components/CInput';
 import {IFormLogin} from 'pages/interface';
 import CButton from 'components/CButton';
+import {Logo} from 'assets';
 
 const Login = () => {
   const {handleSubmit} = useForm<IFormLogin>();
@@ -22,8 +23,11 @@ const Login = () => {
   };
 
   return (
-    <div className='auth-login w-100'>
-      <h1 className='text-center'>Đăng Nhập</h1>
+    <div className='auth-content__login'>
+      <div className='login-header'>
+        <img src={Logo} alt='bach khoa HCMC' />
+        <h1 className='text-center'>Đăng Nhập</h1>
+      </div>
 
       <div className='login-wrapper'>
         <form

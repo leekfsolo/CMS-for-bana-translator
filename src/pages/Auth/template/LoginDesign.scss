@@ -1,38 +1,57 @@
-.login-design {
-  background-color: $info-200;
+@use 'styles/index' as *;
+
+.login-layout {
+  background-color: $neutral-150;
   position: relative;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
   overflow: hidden;
 
-  .img-extend {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: $info-400;
-    position: relative;
-    left: 40px;
-    top: -40px;
-    float: right;
-  }
+  &__design {
+    .img-bottom-left {
+      position: absolute;
+      bottom: -120px;
+      left: -140px;
+      width: 432px;
+      height: 432px;
+      border-radius: 50%;
+      background-color: $info-400;
+      z-index: 1;
 
-  .img-vector {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-width: 600px;
-    object-fit: cover;
-  }
+      @include tablet {
+        width: 350px;
+        height: 350px;
+      }
+    }
 
-  .img-footer {
-    position: absolute;
-    bottom: 0;
-    left: -10px;
-    width: 110%;
+    .img-top-right {
+      position: absolute;
+      top: -108px;
+      right: -120px;
+      width: 432px;
+      height: 432px;
+      border-radius: 50%;
+      background-color: $info-200;
+      z-index: 1;
 
-    .st4 {
-      fill: $info-400;
+      @include tablet {
+        width: 300px;
+        height: 300px;
+      }
+    }
+
+    .img-vector {
+      width: 570px;
+      position: absolute;
+      right: 100px;
+      top: 60px;
+      z-index: 2;
+
+      @include tablet {
+        right: auto;
+        top: auto;
+        left: -20px;
+        bottom: 0;
+        width: 250px;
+      }
     }
   }
 }

@@ -7,143 +7,119 @@
   height: 100vh;
   overflow-x: hidden;
 
-  &-layout {
-    background-color: $info-400;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    background-image: linear-gradient(to right, $info-200 50%, $info-800 50%);
-  }
-
   &-content {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     height: 100%;
-    margin: 0 auto;
     position: relative;
+    left: 200px;
     z-index: 3;
 
-    @include desktop {
-      width: 90%;
-    }
-
     @include tablet {
-      width: 400px;
+      left: 0;
+      justify-content: center;
     }
 
-    @include for-mobile-down {
-      width: 90%;
-    }
-
-    &__wrapper {
-      width: 100%;
-      height: 600px;
-      display: flex;
+    &__login {
+      width: 460px;
+      background-color: white;
+      box-shadow: $shadow-xl;
+      border-radius: 10px;
+      padding: 30px 35px;
 
       @include tablet {
-        height: fit-content;
+        width: 400px;
+        padding: 16px;
       }
 
-      .login-content {
-        border-top-left-radius: 30px;
-        border-bottom-left-radius: 30px;
-        background-color: white;
-        box-shadow: $shadow-l;
+      @include mobile {
+        width: 360px;
+      }
 
-        @include tablet {
-          border-radius: 20px;
-        }
+      @include for-mobile-down {
+        width: 300px;
+      }
 
-        .auth-logo {
-          width: 100px;
-          height: 100px;
+      .login-header {
+        text-align: center;
 
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-        }
-
-        .auth-login {
-          padding: 20px 0px;
+        img {
+          width: 75px;
+          margin-bottom: 15px;
 
           @include mobile {
-            padding: 10px 0px;
+            width: 50px;
+            margin-bottom: 5px;
           }
+        }
 
-          h1 {
-            font-size: 30px;
-            line-height: 2.2rem;
-            color: $neutral-900;
-            font-weight: 500;
+        h1 {
+          font-size: 24px;
+          color: $neutral-900;
+          font-weight: 600;
+          margin-bottom: 40px;
 
-            @include desktop {
-              font-size: 26px;
+          @include mobile {
+            margin-bottom: 20px;
+          }
+        }
+      }
+
+      .login-wrapper {
+        .login-form {
+          max-width: 500px;
+          margin: 0 auto;
+
+          &__group {
+            width: 100%;
+            position: relative;
+
+            label {
+              position: relative;
+              top: -25px;
+              left: auto;
+              color: $info-800;
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              margin-bottom: 8px;
+            }
+
+            .show-password {
+              position: absolute;
+              top: 20%;
+              right: 15px;
+              cursor: pointer;
             }
           }
 
-          .login-wrapper {
-            @include tablet {
-              padding: 0;
+          &__support {
+            .save-account {
+              span {
+                @include for-mobile-down {
+                  font-size: 13px;
+                }
+              }
             }
 
-            .login-form {
-              padding: 20px 35px;
-              max-width: 500px;
-              margin: 0 auto;
+            .forgot-account {
+              color: $info-600;
+              cursor: pointer;
 
-              @include tablet {
-                padding: 20px;
+              &:hover {
+                text-decoration: underline;
               }
 
-              &__group {
-                width: 100%;
-                position: relative;
-
-                label {
-                  position: relative;
-                  top: -25px;
-                  left: auto;
-                  color: $info-800;
-                  display: flex;
-                  align-items: center;
-                  gap: 5px;
-                  margin-bottom: 8px;
-                }
-
-                .show-password {
-                  position: absolute;
-                  top: 20%;
-                  right: 15px;
-                  cursor: pointer;
-                }
+              @include for-mobile-down {
+                font-size: 13px;
               }
+            }
+          }
 
-              .forgot-account {
-                color: $info-600;
-                cursor: pointer;
-
-                &:hover {
-                  text-decoration: underline;
-                }
-              }
-
-              &__button {
-                button {
-                  width: 200px;
-                  background-color: $info-800;
-
-                  @include tablet {
-                    width: 100%;
-                  }
-                }
-              }
+          &__button {
+            button {
+              background-color: $info-800;
             }
           }
         }
