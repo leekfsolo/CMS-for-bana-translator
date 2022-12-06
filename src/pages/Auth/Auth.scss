@@ -118,8 +118,21 @@
           }
 
           &__button {
+            position: relative;
+
             button {
               background-color: $info-800;
+            }
+
+            .button-svg {
+              position: absolute;
+              right: 10px;
+              top: 3px;
+              transform: translateY(50%);
+
+              svg {
+                fill: $neutral-500;
+              }
             }
           }
         }
