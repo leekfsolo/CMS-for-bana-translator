@@ -1,7 +1,9 @@
 import Logo from './png/HCMUT_Logo.png';
 import LoginScreen from './png/login-screen.png';
+import TxtFile from './png/txt-file.png';
+import CsvFile from './png/csv.png';
 
 import {ReactComponent as LoginDown} from './svg/login-down.svg';
 import {ReactComponent as LoginSpot} from './svg/login-spot.svg';
 
-export {Logo, LoginScreen, LoginDown, LoginSpot};
+export {Logo, LoginScreen, LoginDown, LoginSpot, CsvFile, TxtFile};

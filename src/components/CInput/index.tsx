@@ -9,7 +9,7 @@ interface Props extends BaseTextFieldProps {
 }
 
 const CInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const {starticon = null, endicon = null, type, className, valid = true} = props;
+  const {starticon = null, endicon = null, type, className, valid = true, variant = 'outlined'} = props;
   const [isShowPassword, setIsShowPassword] = React.useState<boolean>(false);
 
   return (
@@ -31,7 +31,6 @@ const CInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         )
       }}
       ref={ref}
-      variant='outlined'
       type={isShowPassword ? 'text' : type}
       fullWidth
     />

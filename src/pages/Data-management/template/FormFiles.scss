@@ -1,0 +1,91 @@
+.dialog-form {
+  &__files {
+    width: 100%;
+    height: 140px;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%239095A0FF' stroke-width='4' stroke-dasharray='8%2c 15' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    position: relative;
+    background-color: $neutral-200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+
+    .input-files {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      outline: 0;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .input-content {
+      svg {
+        fill: $neutral-550;
+        font-size: 50px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 200px;
+    overflow-y: auto;
+
+    &__file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background-color: $neutral-200;
+      border-radius: $radius-m;
+      width: 100%;
+
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .file-img {
+          width: 50px;
+
+          img {
+            width: 100%;
+          }
+        }
+
+        .file-name {
+          color: $neutral-900;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 400px;
+        }
+
+        .file-size {
+          color: $neutral-700;
+          font-size: 13px;
+        }
+      }
+
+      .file-control {
+        cursor: pointer;
+
+        &__uploaded {
+          svg {
+            fill: $primary-500;
+          }
+        }
+      }
+
+      &.file-uploaded {
+      }
+    }
+  }
+}
