@@ -4,6 +4,7 @@ import {calcFileSize} from 'utils/helpers/calcFileSize';
 import validFileType from 'utils/helpers/validDataType';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {LinearProgress} from '@mui/material';
 
 interface Props {
   file: File;
@@ -20,20 +21,28 @@ const PreviewFiles = (props: Props) => {
     <>
       {validFileType(type) ? (
         <div className={`preview-list__file ${isUploaded ? 'file-uploaded' : ''}`}>
-          <div className='file-info'>
+          <div className='file-content w-100'>
             <div className='file-img'>
               <img src={type === 'text/plain' ? TxtFile : CsvFile} alt={name} />
             </div>
-            <div className='d-flex flex-column gap-2'>
-              <div className='file-name'>{name}</div>
-              <div className='file-size'>{calcFileSize(size)}</div>
+            <div className='file-info'>
+              <div>
+                <div className='file-name'>
+                  <p>{name}</p>
+                  <div className='file-control'>
+                    {isUploaded ? (
+                      <CheckIcon className='file-control__check' />
+                    ) : (
+                      <DeleteIcon onClick={() => onRemoveFile(name)} className='file-control__delete' />
+                    )}
+                  </div>
+                </div>
+
+                <div className='file-size'>{calcFileSize(size)}</div>
+              </div>
+
+              <LinearProgress variant='determinate' value={uploadingProgress} />
             </div>
-          </div>
-          <div
-            className={`file-control ${isUploaded ? 'file-control__uploaded' : ''}`}
-            onClick={() => onRemoveFile(name)}
-          >
-            {isUploaded ? <CheckIcon /> : <DeleteIcon />}
           </div>
         </div>
       ) : (
