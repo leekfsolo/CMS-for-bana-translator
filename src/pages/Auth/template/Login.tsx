@@ -13,9 +13,12 @@ import {IFormLogin} from 'pages/interface';
 import CButton from 'components/CButton';
 import {Logo} from 'assets';
 import {useTransition, animated} from 'react-spring';
+import {useAppDispatch} from 'app/hooks';
+import {authenticate} from '../authSlice';
 
 const Login = () => {
-  const {handleSubmit} = useForm<IFormLogin>();
+  const dispatch = useAppDispatch();
+  const {handleSubmit, register} = useForm<IFormLogin>();
   const navigate = useNavigate();
   const [isHoverBtn, setIsHoverBtn] = useState<boolean>(false);
   const arrowTransitions = useTransition(isHoverBtn, {
@@ -24,10 +27,16 @@ const Login = () => {
     leave: {opacity: 0, transform: 'translate(50%, 50%)'}
   });
 
-  const submitFormHandler: SubmitHandler<IFormLogin> = (data) => {
+  const submitFormHandler: SubmitHandler<IFormLogin> = async (data) => {
     // Just for test
-    localStorage.setItem(Config.storageKey.auth, 'test');
-    navigate(`../${PageUrl.HOME}`);
+    try {
+      const res = await dispatch(authenticate(data)).unwrap();
+    } catch (e) {
+      console.error(e);
+    }
+
+    // localStorage.setItem(Config.storageKey.auth, 'test');
+    // navigate(`../${PageUrl.HOME}`);
   };
 
   return (
@@ -53,10 +62,10 @@ const Login = () => {
               </InputLabel>
               <CInput
                 id='username'
-                name='username'
                 placeholder='Email, tên người dùng,...'
                 type='text'
                 className='mb-2'
+                {...register('username')}
               />
             </FormGroup>
 
@@ -71,7 +80,7 @@ const Login = () => {
                 type='password'
                 endicon={<VisibilityIcon />}
                 className='mb-1'
-                name='password'
+                {...register('password')}
               />
             </FormGroup>
           </FormControl>
