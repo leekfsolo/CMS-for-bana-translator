@@ -7,7 +7,6 @@ import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {PageUrl} from 'configuration/enum';
-import Config from 'configuration';
 import CInput from 'components/CInput';
 import {IFormLogin} from 'pages/interface';
 import CButton from 'components/CButton';
@@ -15,6 +14,8 @@ import {Logo} from 'assets';
 import {useTransition, animated} from 'react-spring';
 import {useAppDispatch} from 'app/hooks';
 import {authenticate} from '../authSlice';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
+import {handleLoading} from 'app/globalSlice';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -29,14 +30,22 @@ const Login = () => {
 
   const submitFormHandler: SubmitHandler<IFormLogin> = async (data) => {
     // Just for test
+    dispatch(handleLoading(true));
     try {
-      const res = await dispatch(authenticate(data)).unwrap();
-    } catch (e) {
-      console.error(e);
-    }
+      const res: any = await dispatch(authenticate(data)).unwrap();
+      const {isUserExisted, msg} = res;
 
-    // localStorage.setItem(Config.storageKey.auth, 'test');
-    // navigate(`../${PageUrl.HOME}`);
+      if (isUserExisted) {
+        navigate(`../${PageUrl.HOME}`);
+        customToast(ToastType.SUCCESS, msg);
+      } else {
+        customToast(ToastType.ERROR, msg);
+      }
+      dispatch(handleLoading(false));
+    } catch (e: any) {
+      customToast(ToastType.ERROR, e.message);
+      dispatch(handleLoading(false));
+    }
   };
 
   return (

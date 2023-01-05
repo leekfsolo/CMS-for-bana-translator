@@ -6,6 +6,10 @@ import {FormGroup} from '@mui/material';
 import CInput from 'components/CInput';
 import CSelect from 'components/CSelect';
 import CButton from 'components/CButton';
+import {useAppDispatch} from 'app/hooks';
+import {registerUser} from '../registerSlice';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
+import {handleLoading} from 'app/globalSlice';
 
 type Props = {
   registerSections: IRegisterSection[];
@@ -22,6 +26,7 @@ const defaultValues: IFormRegister = {
 
 const RegisterForm = (props: Props) => {
   const {registerSections} = props;
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     control,
@@ -30,10 +35,24 @@ const RegisterForm = (props: Props) => {
     getValues
   } = useForm<IFormRegister>({defaultValues});
 
-  const onValidSubmit: SubmitHandler<IFormRegister> = (data) => {
+  const onValidSubmit: SubmitHandler<IFormRegister> = async (data) => {
     // Just for test
-    console.log(data);
-    reset(defaultValues);
+    dispatch(handleLoading(true));
+    try {
+      const res: any = await dispatch(registerUser(data)).unwrap();
+      const {msg, isSuccess} = res;
+
+      if (isSuccess) {
+        customToast(ToastType.SUCCESS, msg);
+      } else customToast(ToastType.ERROR, msg);
+
+      reset(defaultValues);
+      dispatch(handleLoading(false));
+    } catch (e: any) {
+      reset(defaultValues);
+      dispatch(handleLoading(false));
+      customToast(ToastType.ERROR, e.message);
+    }
   };
   const onInvalidSubmit: SubmitErrorHandler<IFormRegister> = (data, event) => {
     event?.target.classList.add('wasvalidated');

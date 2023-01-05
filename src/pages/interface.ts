@@ -47,18 +47,13 @@ export interface IRegisterSection {
   items: IRegisterInput[];
 }
 
-export interface IFormRegister {
-  username: string;
-  fullname: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-  accountRole: string;
-}
-
 export interface IFormLogin {
   username: string;
   password: string;
+}
+
+export interface IFormRegister extends IProfile {
+  confirmPassword: string;
 }
 
 export interface IProfile {
@@ -111,4 +106,11 @@ export interface ITrainingOptionValues {
   model: string;
   region: string;
   checkpoint: string;
+}
+
+export interface ILoginState {
+  isUserExisted: boolean;
+  name: string;
+  accessToken?: string;
+  userInfo?: IProfile;
 }
