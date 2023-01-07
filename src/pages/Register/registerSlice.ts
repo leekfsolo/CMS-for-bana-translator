@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import registerApi from 'api/registerApi';
-import {IProfile} from 'pages/interface';
+import usersApi from 'api/usersApi';
+import {IProfile} from 'pages/model';
 
 export const registerUser = createAsyncThunk('register/user', async (data: IProfile) => {
-  const res = await registerApi.register(data);
+  const res = await usersApi.register(data);
   return res;
 });
 

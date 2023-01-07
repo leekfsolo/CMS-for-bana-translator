@@ -1,4 +1,5 @@
 import {HTMLInputTypeAttribute} from 'react';
+import {IProfile} from './model';
 
 export interface TableHeadCell {
   disablePadding: boolean;
@@ -54,14 +55,6 @@ export interface IFormLogin {
 
 export interface IFormRegister extends IProfile {
   confirmPassword: string;
-}
-
-export interface IProfile {
-  fullname: string;
-  phone: string;
-  accountRole: string;
-  username: string;
-  password: string;
 }
 
 export interface IProfileInfo {

@@ -1,9 +1,10 @@
 import React from 'react';
-import {IProfileSection, IProfile} from 'pages/interface';
+import {IProfileSection} from 'pages/interface';
 import {useState} from 'react';
 import {ICForm, ICFormSection} from 'components/interface';
 import CForm from 'components/CForm';
 import CButton from 'components/CButton';
+import {IProfile} from 'pages/model';
 
 const userData: IProfile = {
   username: 'username',

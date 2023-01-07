@@ -19,8 +19,8 @@ axiosClient.interceptors.request.use(async (config) => {
     const authValue = {
       ...JSON.parse(authJson)
     };
-    if (authValue.auth && config.headers) {
-      config.headers.Authorization = `Bearer ${authValue.auth.token}`;
+    if (authValue && config.headers) {
+      config.headers.Authorization = `Bearer ${authValue.accessToken}`;
     }
   }
   return config;
