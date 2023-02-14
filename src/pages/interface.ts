@@ -1,11 +1,13 @@
 import {HTMLInputTypeAttribute} from 'react';
 import {IProfile} from './model';
 
+type alignPadding = 'left' | 'right';
+
 export interface TableHeadCell {
   disablePadding: boolean;
   id: string;
   label: string;
-  align: 'left' | 'right';
+  align: alignPadding;
 }
 
 export interface IDataHead {

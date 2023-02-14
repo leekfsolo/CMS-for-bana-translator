@@ -1,5 +1,5 @@
-import {CsvFile, TxtFile} from 'assets';
 import React from 'react';
+import {ZipFile} from 'assets';
 import {calcFileSize} from 'utils/helpers/calcFileSize';
 import validFileType from 'utils/helpers/validDataType';
 import CheckIcon from '@mui/icons-material/Check';
@@ -23,7 +23,7 @@ const PreviewFiles = (props: Props) => {
         <div className={`preview-list__file ${isUploaded ? 'file-uploaded' : ''}`}>
           <div className='file-content w-100'>
             <div className='file-img'>
-              <img src={type === 'text/plain' ? TxtFile : CsvFile} alt={name} />
+              <img src={ZipFile} alt={name} />
             </div>
             <div className='file-info'>
               <div>

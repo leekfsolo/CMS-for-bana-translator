@@ -12,4 +12,7 @@ const Config = {
   }
 };
 
+export const getUserServerUrl = (url: string) => Config.apiConfig.userServer.endPoint + url;
+export const getDataServerUrl = (url: string) => Config.apiConfig.dataServer.endPoint + url;
+
 export default Config;

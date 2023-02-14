@@ -53,7 +53,7 @@ const FormDialog = (props: Props) => {
                   id='files'
                   type='file'
                   multiple
-                  accept='.csv, .txt'
+                  accept='.zip'
                   className='input-files'
                   {...register('files')}
                   onChange={handleUploadFiles}
@@ -62,7 +62,7 @@ const FormDialog = (props: Props) => {
                   <img src={UploadFile} alt='upload file' />
                   <h4>Drag & Drop</h4>
                   <p className='my-1'>Files here or browse your file</p>
-                  <span>Only CSV and TXT files with max size of 15 MB</span>
+                  <span>Only Zip files are allowed</span>
                 </Box>
               </FormGroup>
             </div>

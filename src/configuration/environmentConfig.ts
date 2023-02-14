@@ -1,9 +1,21 @@
 const enviromentConfig = {
   development: {
-    endPoint: 'http://127.0.0.1:8000'
+    userServer: {
+      endPoint: 'http://127.0.0.1:8081'
+    },
+
+    dataServer: {
+      endPoint: 'http://192.168.1.18:8081'
+    }
   },
   production: {
-    endPoint: ''
+    userServer: {
+      endPoint: 'http://127.0.0.1:8081'
+    },
+
+    dataServer: {
+      endPoint: 'http://192.168.1.18:8081'
+    }
   }
 };
 

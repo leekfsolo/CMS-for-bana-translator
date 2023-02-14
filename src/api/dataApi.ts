@@ -1,26 +1,27 @@
+import {getDataServerUrl} from 'configuration';
 import {IData} from 'pages/model';
 import axiosClient from './axiosClient';
 
 const dataApi = {
   add: (data: IData) => {
     const url = '/api/data';
-    return axiosClient.post(url, data);
+    return axiosClient.post(getDataServerUrl(url), data);
   },
   getAll: () => {
     const url = '/api/data/getAllData';
-    return axiosClient.get(url);
+    return axiosClient.get(getDataServerUrl(url));
   },
   getById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.get(`${url}/${id}`);
+    return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
   },
   deleteById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.delete(`${url}/${id}`);
+    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`);
   },
   updateById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.put(`${url}/${id}`);
+    return axiosClient.put(`${getDataServerUrl(url)}/${id}`);
   }
 };
 
