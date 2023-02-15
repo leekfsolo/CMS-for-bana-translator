@@ -9,7 +9,7 @@ const usersApi = {
   },
   changePassword: (data: IProfile) => {
     const url = '/api/users/changePassword';
-    return axiosClient.post(getUserServerUrl(url), data);
+    return axiosClient.post(getUserServerUrl(url), data, {withCredentials: true});
   }
 };
 

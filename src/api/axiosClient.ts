@@ -1,23 +1,19 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import {getCookie} from 'utils/helpers/getCookie';
 
 // Set up default config for http requests here
 // Please have a look at here `https://github.com/axios/axios#request- config` for the full list of configs
 const axiosClient = axios.create({
-  withCredentials: true,
   headers: {
     'content-type': 'application/json'
   },
+  withCredentials: true,
   paramsSerializer: (params) => queryString.stringify(params)
 });
 
 axiosClient.interceptors.request.use(async (config) => {
-  const tokenValue = getCookie('csrf_access_cookie');
-
-  if (tokenValue && config.headers) {
+  if (config.headers) {
     config.withCredentials = true;
-    config.headers['X-CRSF-TOKEN'] = tokenValue;
   }
   return config;
 });

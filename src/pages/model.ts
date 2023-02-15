@@ -13,11 +13,19 @@ export interface IData {
   quantity: number;
 }
 
-export interface IModel {
-  version: string;
-  createdDate: string;
-  region: string;
-  accuracy: number;
+export interface IModelDisplay {
+  createdDate?: string;
   epoch: number;
-  size: string;
+  filename?: string;
+  model_name: string;
+  model_type: string;
+  region: string;
+  version: number;
+}
+export interface IModel extends IModelDisplay {
+  accuracy?: number;
+  ckpt_file: string;
+  diff_loss?: number;
+  dur_loss?: number;
+  prior_loss?: number;
 }

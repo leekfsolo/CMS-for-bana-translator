@@ -2,11 +2,17 @@ import {configureStore} from '@reduxjs/toolkit';
 import globalReducer from 'app/globalSlice';
 import authReducer from 'pages/Auth/authSlice';
 import registerReducer from 'pages/Register/registerSlice';
+import modelManagementReducer from 'pages/Model-management/modelManagementSlice';
+import dataManagementReducer from 'pages/Data-management/dataManagementSlice';
+import trainingManagementReducer from 'pages/Training/trainingSlice';
 
 const rootReducer = {
   global: globalReducer,
   auth: authReducer,
-  register: registerReducer
+  register: registerReducer,
+  modelManagement: modelManagementReducer,
+  dataManagement: dataManagementReducer,
+  training: trainingManagementReducer
 };
 
 const store = configureStore({reducer: rootReducer});

@@ -1,7 +1,7 @@
 const enviromentConfig = {
   development: {
     userServer: {
-      endPoint: 'http://127.0.0.1:8081'
+      endPoint: 'https://www.ura.hcmut.edu.vn/bana-model'
     },
 
     dataServer: {
@@ -10,7 +10,7 @@ const enviromentConfig = {
   },
   production: {
     userServer: {
-      endPoint: 'http://127.0.0.1:8081'
+      endPoint: 'http://103.176.178.107:8000'
     },
 
     dataServer: {

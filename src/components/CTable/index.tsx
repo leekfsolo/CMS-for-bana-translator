@@ -4,6 +4,7 @@ import {Table, TableBody, TableCell, TableRow, TableContainer} from '@mui/materi
 import CCheckbox from 'components/CCheckbox';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import {getCellData} from 'utils/helpers/getCellData';
 interface Props {
   page: number;
   rowsPerPage: number;
@@ -82,15 +83,13 @@ const CTable = (props: Props) => {
                     }}
                   />
                 </TableCell>
-                {Object.keys(row).map((key, idx) => {
-                  return (
-                    <TableCell key={`cell-${idx}`} align='left'>
-                      <span className={key === 'status' ? `cell-variant cell-variant__${row[key]}` : ''}>
-                        {row[key]}
-                      </span>
-                    </TableCell>
-                  );
-                })}
+                {Object.keys(row).map((key, idx) => (
+                  <TableCell key={`cell-${idx}`} align='left'>
+                    <span className={key === 'status' ? `cell-variant cell-variant__${row[key]}` : ''}>
+                      {getCellData(row[key])}
+                    </span>
+                  </TableCell>
+                ))}
                 {manageType !== '' && (
                   <TableCell align='center' padding='checkbox'>
                     {manageType === 'activate' ? <ArrowCircleUpIcon /> : <EditIcon />}

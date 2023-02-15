@@ -26,7 +26,7 @@ const SidebarItem = ({setActiveSidebarTitle, item, activeSidebarTitle}: Props) =
       dispatch(handleLoading(true));
       try {
         const res: any = await dispatch(logout()).unwrap();
-        const {msg, isSuccess} = res;
+        const {msg, isSuccess = true} = res;
 
         if (isSuccess) {
           customToast(ToastType.SUCCESS, msg);

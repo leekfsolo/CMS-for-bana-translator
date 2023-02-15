@@ -5,6 +5,8 @@ import {FormGroup} from '@mui/material';
 import CInput from 'components/CInput';
 import CSelect from 'components/CSelect';
 import {ICForm, ICFormInput, ICFormSection} from 'components/interface';
+import {useAppDispatch} from 'app/hooks';
+import {changePassword} from 'pages/Profile/profileSlice';
 
 type Props = {
   sections: ICFormSection[];
@@ -13,6 +15,7 @@ type Props = {
 
 const CForm = (props: Props) => {
   const {sections, defaultValues} = props;
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     control,
@@ -21,8 +24,9 @@ const CForm = (props: Props) => {
     getValues
   } = useForm<ICForm>({defaultValues});
 
-  const onValidSubmit: SubmitHandler<ICForm> = (data) => {
+  const onValidSubmit: SubmitHandler<ICForm> = async (data: any) => {
     // test
+    await dispatch(changePassword(data));
     console.log(data);
     reset(defaultValues);
   };

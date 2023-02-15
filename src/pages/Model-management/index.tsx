@@ -1,43 +1,14 @@
 import {TableHeadCell, IModelHead} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import CSelect from 'components/CSelect';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
-
-function createData(
-  version: string,
-  dataVersion: string,
-  createdDate: string,
-  region: string,
-  accuracy: number,
-  epoch: number
-): IModelHead {
-  return {
-    version,
-    dataVersion,
-    createdDate,
-    region,
-    accuracy,
-    epoch
-  };
-}
-
-const rows = [
-  createData('1.0.1', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.0.2', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.0.3', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.0.4', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.0.5', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.0.6', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.1.1', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.1.2', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.1.3', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.2.0', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.2.1', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2),
-  createData('1.3.1', '1.0.1', '2022-10-10', 'Binh Dinh', 90, 2)
-];
+import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {modelManagementSelector} from 'app/selectors';
+import {getAllModelData} from './modelManagementSlice';
+import {handleLoading} from 'app/globalSlice';
 
 const headCells: TableHeadCell[] = [
   {
@@ -49,25 +20,25 @@ const headCells: TableHeadCell[] = [
   {
     id: 'dataVersion',
     disablePadding: false,
-    label: 'Data Version',
+    label: 'Tập dữ liệu',
     align: 'left'
   },
   {
     id: 'createdDate',
     disablePadding: false,
-    label: 'Created Date',
+    label: 'Ngày tạo',
     align: 'left'
   },
   {
     id: 'region',
     disablePadding: false,
-    label: 'Region',
+    label: 'Vùng',
     align: 'left'
   },
   {
     id: 'accuracy',
     disablePadding: false,
-    label: 'Accuracy',
+    label: 'Loại model',
     align: 'left'
   },
   {
@@ -81,9 +52,26 @@ const headCells: TableHeadCell[] = [
 const options: string[] = [];
 
 const ModelManagement = () => {
+  const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {modelData} = useAppSelector(modelManagementSelector);
+
+  useEffect(() => {
+    dispatch(handleLoading(true));
+    try {
+      const fetchData = async () => {
+        await dispatch(getAllModelData());
+      };
+
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  }, []);
 
   return (
     <main className='model-management'>
@@ -102,16 +90,15 @@ const ModelManagement = () => {
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar tableTitle='Model Management' numSelected={selected.length} />
           <CTable
-            data={rows}
+            data={modelData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
             setSelected={setSelected}
-            manageType='activate'
           />
           <CPagination
-            maxLength={rows.length}
+            maxLength={modelData.length}
             page={page}
             setPage={setPage}
             rowsPerPage={rowsPerPage}

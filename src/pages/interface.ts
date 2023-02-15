@@ -1,7 +1,7 @@
 import {HTMLInputTypeAttribute} from 'react';
 import {IProfile} from './model';
 
-type alignPadding = 'left' | 'right';
+type alignPadding = 'left' | 'right' | 'center';
 
 export interface TableHeadCell {
   disablePadding: boolean;
