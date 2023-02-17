@@ -1,3 +1,4 @@
+import {AxiosInterceptor} from 'api/axiosClient';
 import store from 'app/store';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -8,7 +9,9 @@ import '_styles.scss';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
-    <Routers />
+    <AxiosInterceptor>
+      <Routers />
+    </AxiosInterceptor>
   </Provider>
 );
 

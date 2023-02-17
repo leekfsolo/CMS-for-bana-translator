@@ -1,7 +1,8 @@
 const enviromentConfig = {
   development: {
     userServer: {
-      endPoint: 'https://www.ura.hcmut.edu.vn/bana-model'
+      // endPoint: 'https://www.ura.hcmut.edu.vn/bana-model',
+      endPoint: 'http://192.168.1.24:8000'
     },
 
     dataServer: {

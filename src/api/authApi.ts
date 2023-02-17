@@ -1,4 +1,5 @@
-import {getUserServerUrl} from 'configuration';
+import axios from 'axios';
+import Config, {getUserServerUrl} from 'configuration';
 import {IFormLogin} from 'pages/interface';
 import axiosClient from './axiosClient';
 
@@ -12,8 +13,31 @@ const authApi = {
     return axiosClient.post(getUserServerUrl(url));
   },
   refresh: () => {
+    const authJson = localStorage.getItem(Config.storageKey.auth);
+    let refreshToken = '';
+
+    if (authJson) {
+      const authValue = {
+        ...JSON.parse(authJson)
+      };
+      if (authValue) {
+        refreshToken = authValue.refreshToken;
+      }
+
+      console.log(authJson, authValue);
+    }
+
     const url = '/api/authenticate/refresh';
-    return axiosClient.post(getUserServerUrl(url));
+    return axios.post(
+      getUserServerUrl(url),
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
   },
   getMyInfo: () => {
     const url = '/api/authenticate/getMyInfo';

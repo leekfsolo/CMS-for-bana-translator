@@ -26,8 +26,8 @@ const CForm = (props: Props) => {
 
   const onValidSubmit: SubmitHandler<ICForm> = async (data: any) => {
     // test
-    await dispatch(changePassword(data));
-    console.log(data);
+    const {currPassword: password, newPassword: repassword} = data;
+    await dispatch(changePassword({password, repassword}));
     reset(defaultValues);
   };
 

@@ -1,3 +1,8 @@
+export interface IChangePassword {
+  password: string;
+  repassword: string;
+}
+
 export interface IProfile {
   fullname: string;
   phone: string;

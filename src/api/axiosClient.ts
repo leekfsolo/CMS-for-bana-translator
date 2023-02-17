@@ -1,5 +1,12 @@
-import axios from 'axios';
+import {useEffect, ReactElement} from 'react';
+import axios, {AxiosError, AxiosResponse, AxiosRequestConfig} from 'axios';
 import queryString from 'query-string';
+import Config from 'configuration';
+import useRefreshToken from 'utils/hooks/useRefreshToken';
+
+interface retryAxiosResponseConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 
 // Set up default config for http requests here
 // Please have a look at here `https://github.com/axios/axios#request- config` for the full list of configs
@@ -7,30 +14,99 @@ const axiosClient = axios.create({
   headers: {
     'content-type': 'application/json'
   },
-  withCredentials: true,
   paramsSerializer: (params) => queryString.stringify(params)
 });
 
-axiosClient.interceptors.request.use(async (config) => {
-  if (config.headers) {
-    config.withCredentials = true;
-  }
-  return config;
-});
+const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement => {
+  const refresh = useRefreshToken();
 
-axiosClient.interceptors.response.use(
-  (response) => {
-    // handle middleware
-    if (response && response.data) {
-      return response.data;
-    }
+  useEffect(() => {
+    const resInterceptor = (response: AxiosResponse) => {
+      if (response && response.data) {
+        return response.data;
+      }
+      return response;
+    };
 
-    return response;
-  },
-  (error) => {
-    // Handle errors
-    throw error;
-  }
-);
+    const reqInterceptor = (config: AxiosRequestConfig) => {
+      const authJson = localStorage.getItem(Config.storageKey.auth);
 
+      if (authJson) {
+        const authValue = {
+          ...JSON.parse(authJson)
+        };
+        if (authValue && config.headers) {
+          config.headers.Authorization = `Bearer ${authValue.accessToken}`;
+        }
+      }
+      return config;
+    };
+
+    const errInterceptor = async (error: AxiosError) => {
+      const originalRequest = error.config;
+      const retryRequest: retryAxiosResponseConfig = {
+        ...originalRequest
+      };
+      if (error.response?.status === 401 && !retryRequest._retry) {
+        retryRequest._retry = true;
+        const res = await refresh();
+
+        return axiosClient(retryRequest);
+      }
+
+      return Promise.reject(error);
+    };
+
+    const responseInterceptor = axiosClient.interceptors.response.use(resInterceptor, errInterceptor);
+    const requestInterceptor = axiosClient.interceptors.request.use(reqInterceptor, errInterceptor);
+
+    return () => {
+      axiosClient.interceptors.response.eject(responseInterceptor);
+      axiosClient.interceptors.response.eject(requestInterceptor);
+    };
+  }, []);
+
+  return children;
+};
+
+// axiosClient.interceptors.request.use(
+//   async (config) => {
+//     const authJson = localStorage.getItem(Config.storageKey.auth);
+
+//     if (authJson) {
+//       const authValue = {
+//         ...JSON.parse(authJson)
+//       };
+//       if (authValue && config.headers) {
+//         config.headers.Authorization = `Bearer ${authValue.accessToken}`;
+//       }
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
+
+// axiosClient.interceptors.response.use(
+//   (response) => {
+//     // handle middleware
+//     if (response && response.data) {
+//       return response.data;
+//     }
+
+//     return response;
+//   },
+//   async (error) => {
+//     // Handle errors
+//     const originalRequest = error.config;
+//     if (error.response.status === 401 && !originalRequest._retry) {
+//       const res = useRefreshToken();
+//       console.log(res);
+//       // axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
+//       return axiosClient(originalRequest);
+//     }
+//     return Promise.reject(error);
+//   }
+// );
+
+export {AxiosInterceptor};
 export default axiosClient;

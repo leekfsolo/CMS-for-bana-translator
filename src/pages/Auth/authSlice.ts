@@ -31,7 +31,11 @@ export const refreshToken = createAsyncThunk('auth/refresh', async () => {
 const auth = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    saveAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(authenticate.fulfilled, (state, action: PayloadAction<any>) => {
@@ -39,33 +43,26 @@ const auth = createSlice({
         state = loginState;
         localStorage.setItem(Config.storageKey.auth, JSON.stringify(loginState));
       })
-      .addCase(authenticate.rejected, (state, action: PayloadAction<any>) => {
-        console.log(action.payload);
-      })
       .addCase(logout.fulfilled, () => {
         localStorage.removeItem(Config.storageKey.auth);
-      })
-      .addCase(logout.rejected, (state, action: PayloadAction<any>) => {
-        console.log(action.payload);
       })
       .addCase(getMyInfo.fulfilled, (state, action: PayloadAction<any>) => {
         state.userInfo = action.payload;
         localStorage.setItem(Config.storageKey.auth, JSON.stringify(state));
       })
-      .addCase(getMyInfo.rejected, (state, action: PayloadAction<any>) => {
-        console.log(action.payload);
-      })
       .addCase(refreshToken.fulfilled, (state, action: PayloadAction<any>) => {
-        const {msg, ...loginState} = action.payload;
-        state = loginState;
-        localStorage.setItem(Config.storageKey.auth, JSON.stringify(loginState));
-      })
-      .addCase(refreshToken.rejected, (state, action: PayloadAction<any>) => {
-        console.log(action.payload);
+        const {accessToken} = action.payload.data.user;
+        const authJson = localStorage.getItem(Config.storageKey.auth);
+        if (authJson) {
+          const authValue = {...JSON.parse(authJson)};
+
+          authValue.accessToken = accessToken;
+          localStorage.setItem(Config.storageKey.auth, JSON.stringify(authValue));
+        }
       });
   }
 });
 
 const {reducer, actions} = auth;
-export const {} = actions;
+export const {saveAccessToken} = actions;
 export default reducer;

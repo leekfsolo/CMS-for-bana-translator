@@ -1,12 +1,10 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import usersApi from 'api/usersApi';
-import Config from 'configuration';
-import {ILoginState} from 'pages/interface';
-import {IProfile} from 'pages/model';
+import {IChangePassword} from 'pages/model';
 
 const initialState = {};
 
-export const changePassword = createAsyncThunk('model/getAll', async (data: IProfile) => {
+export const changePassword = createAsyncThunk('model/getAll', async (data: IChangePassword) => {
   const res = await usersApi.changePassword(data);
   return res;
 });
