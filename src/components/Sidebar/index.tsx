@@ -2,6 +2,8 @@ import React from 'react';
 import SidebarItem from './SidebarItem';
 import {Logo} from 'assets';
 import {ISidebarItem} from 'components/interface';
+import {useAppSelector} from 'app/hooks';
+import {authSelector} from 'app/selectors';
 
 type Props = {
   sideBarItems: Array<ISidebarItem[]>;
@@ -11,6 +13,8 @@ type Props = {
 
 const Sidebar = (props: Props) => {
   const {sideBarItems, setActiveSidebarTitle, activeSidebarTitle} = props;
+  const auth = useAppSelector(authSelector);
+  const {userInfo} = auth;
 
   return (
     <div className='sidebar'>
@@ -19,8 +23,8 @@ const Sidebar = (props: Props) => {
           <img src={Logo} alt='logo' className='img-fluid' />
         </div>
         <div className='sidebar-info__user'>
-          <div className='username'>Tên người dùng</div>
-          <div className='role'>Admin</div>
+          <div className='username'>{userInfo?.username}</div>
+          <div className='role'>{userInfo?.accountRole}</div>
         </div>
       </div>
       <hr className='section-divider' />

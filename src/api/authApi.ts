@@ -23,8 +23,6 @@ const authApi = {
       if (authValue) {
         refreshToken = authValue.refreshToken;
       }
-
-      console.log(authJson, authValue);
     }
 
     const url = '/api/authenticate/refresh';

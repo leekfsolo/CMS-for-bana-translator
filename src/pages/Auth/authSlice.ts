@@ -3,9 +3,16 @@ import authApi from 'api/authApi';
 import Config from 'configuration';
 import {IFormLogin, ILoginState} from 'pages/interface';
 
-const initialState: ILoginState = {
-  isUserExisted: false,
-  name: ''
+const initialState = (): ILoginState => {
+  const auth = localStorage.getItem(Config.storageKey.auth);
+  if (auth) {
+    return {...JSON.parse(auth)};
+  }
+
+  return {
+    isUserExisted: false,
+    name: ''
+  };
 };
 
 export const authenticate = createAsyncThunk('auth/login', async (data: IFormLogin) => {
@@ -30,7 +37,7 @@ export const refreshToken = createAsyncThunk('auth/refresh', async () => {
 
 const auth = createSlice({
   name: 'auth',
-  initialState,
+  initialState: initialState(),
   reducers: {
     saveAccessToken: (state, action) => {
       state.accessToken = action.payload;
@@ -39,9 +46,9 @@ const auth = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(authenticate.fulfilled, (state, action: PayloadAction<any>) => {
-        const {msg, ...loginState} = action.payload;
-        state = loginState;
+        const {msg, success, ...loginState} = action.payload;
         localStorage.setItem(Config.storageKey.auth, JSON.stringify(loginState));
+        return loginState;
       })
       .addCase(logout.fulfilled, () => {
         localStorage.removeItem(Config.storageKey.auth);

@@ -107,5 +107,6 @@ export interface ILoginState {
   isUserExisted: boolean;
   name: string;
   accessToken?: string;
+  refreshToken?: string;
   userInfo?: IProfile;
 }

@@ -4,15 +4,8 @@ import {useState} from 'react';
 import {ICForm, ICFormSection} from 'components/interface';
 import CForm from 'components/CForm';
 import CButton from 'components/CButton';
-import {IProfile} from 'pages/model';
-
-const userData: IProfile = {
-  username: 'username',
-  password: '**********',
-  fullname: 'Nguyen Van A',
-  phone: '0911 011 011',
-  accountRole: 'sub-admin'
-};
+import {useAppSelector} from 'app/hooks';
+import {authSelector} from 'app/selectors';
 
 const defaultValues: ICForm = {
   currPassword: '',
@@ -21,22 +14,24 @@ const defaultValues: ICForm = {
 };
 
 const Profile = () => {
-  const {username, password, fullname, phone, accountRole}: IProfile = userData;
+  const auth = useAppSelector(authSelector);
+  const {userInfo} = auth;
+
   const profileSections: IProfileSection[] = [
     {
       title: 'Profile',
       items: [
         {
           key: 'Fullname',
-          value: fullname
+          value: userInfo?.fullname || ''
         },
         {
           key: 'Phone',
-          value: phone
+          value: userInfo?.phone || ''
         },
         {
           key: 'Account role',
-          value: accountRole
+          value: userInfo?.accountRole || ''
         }
       ]
     },
@@ -45,11 +40,11 @@ const Profile = () => {
       items: [
         {
           key: 'username',
-          value: username
+          value: userInfo?.username || ''
         },
         {
           key: 'password',
-          value: password
+          value: '*'.repeat(8)
         }
       ]
     }

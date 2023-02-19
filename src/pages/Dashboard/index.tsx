@@ -3,10 +3,13 @@ import CTable from 'components/CTable';
 import CTableToolbar from 'components/CTableToolbar';
 import {Paper} from '@mui/material';
 import {ITrainingHistory, TableHeadCell} from 'pages/interface';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import QueueIcon from '@mui/icons-material/Queue';
+import {useAppDispatch} from 'app/hooks';
+import {getMyInfo} from 'pages/Auth/authSlice';
+import {handleLoading} from 'app/globalSlice';
 
 function createData(
   user: string,
@@ -78,17 +81,31 @@ const headCells: TableHeadCell[] = [
 ];
 
 const Dashboard = () => {
+  const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const cardProgressInnerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTimeout(() => {
       if (cardProgressInnerRef.current) {
         cardProgressInnerRef.current.style.width = '50%';
       }
     }, 200);
+  }, []);
+
+  useEffect(() => {
+    dispatch(handleLoading(true));
+
+    try {
+      dispatch(getMyInfo());
+      dispatch(handleLoading(false));
+    } catch (err) {
+      console.error(err);
+      dispatch(handleLoading(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
