@@ -62,51 +62,12 @@ const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement =>
 
     return () => {
       axiosClient.interceptors.response.eject(responseInterceptor);
-      axiosClient.interceptors.response.eject(requestInterceptor);
+      axiosClient.interceptors.request.eject(requestInterceptor);
     };
   }, []);
 
   return children;
 };
-
-// axiosClient.interceptors.request.use(
-//   async (config) => {
-//     const authJson = localStorage.getItem(Config.storageKey.auth);
-
-//     if (authJson) {
-//       const authValue = {
-//         ...JSON.parse(authJson)
-//       };
-//       if (authValue && config.headers) {
-//         config.headers.Authorization = `Bearer ${authValue.accessToken}`;
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// axiosClient.interceptors.response.use(
-//   (response) => {
-//     // handle middleware
-//     if (response && response.data) {
-//       return response.data;
-//     }
-
-//     return response;
-//   },
-//   async (error) => {
-//     // Handle errors
-//     const originalRequest = error.config;
-//     if (error.response.status === 401 && !originalRequest._retry) {
-//       const res = useRefreshToken();
-//       console.log(res);
-//       // axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
-//       return axiosClient(originalRequest);
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 export {AxiosInterceptor};
 export default axiosClient;

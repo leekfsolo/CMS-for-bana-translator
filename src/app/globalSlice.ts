@@ -1,11 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import Config from 'configuration';
 
 const initGlobal = () => {
-  // const global = localStorage.getItem(Config.storageKey.locale);
-  // if (global) {
-  //   return {locale: global, isLoading: false, isShowModalBackdrop: false};
-  // }
   return {
     isLoading: false,
     isShowModalBackdrop: false,

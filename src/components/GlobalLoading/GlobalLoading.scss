@@ -1,13 +1,13 @@
 .globalLoading {
   display: none;
 
-  &-open {
+  &[aria-hidden='false'] {
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1000;
+    z-index: 10000;
     display: flex;
     justify-content: center;
     align-items: center;

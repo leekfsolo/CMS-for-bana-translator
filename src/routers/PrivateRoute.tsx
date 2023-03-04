@@ -9,7 +9,6 @@ const PrivateRoute = () => {
   const location = useLocation();
   const auth = useAppSelector(authSelector);
   const {accessToken} = auth;
-  console.log(auth);
 
   return accessToken && jwtDecode(accessToken) ? (
     <Outlet />

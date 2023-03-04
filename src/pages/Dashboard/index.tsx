@@ -99,8 +99,12 @@ const Dashboard = () => {
     dispatch(handleLoading(true));
 
     try {
-      dispatch(getMyInfo());
-      dispatch(handleLoading(false));
+      const fetchData = async () => {
+        await dispatch(getMyInfo());
+        dispatch(handleLoading(false));
+      };
+
+      fetchData();
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));

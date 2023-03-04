@@ -17,7 +17,7 @@ import {ToastContainer} from 'react-toastify';
 
 const Routers = () => {
   return (
-    <Router>
+    <Router basename='/bana-model'>
       <GlobalLoading />
       <ToastContainer theme='colored' />
       <Routes>
@@ -31,7 +31,7 @@ const Routers = () => {
             <Route path={PageUrl.PROFILE} element={<Profile />} />
             <Route path={PageUrl.CREATE_ACCOUNT} element={<Register />} />
           </Route>
-          <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.LOGIN} replace={true} />} />
+          <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.HOME} replace={true} />} />
         </Route>
       </Routes>
       <ModalBackdrop />

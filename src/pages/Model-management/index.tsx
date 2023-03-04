@@ -7,8 +7,10 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {getAllModelData} from './modelManagementSlice';
+import {getAllModelData, getAllNMTModelData, getAllTTSModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
+import CButton from 'components/CButton';
+import {useForm} from 'react-hook-form';
 
 const headCells: TableHeadCell[] = [
   {
@@ -49,7 +51,8 @@ const headCells: TableHeadCell[] = [
   }
 ];
 
-const options: string[] = [];
+const modelTypeSelectData = ['NMT', 'TTS'];
+const regionTypeSelectData = ['Gia Lai', 'Kon Tum', 'Bình Định'];
 
 const ModelManagement = () => {
   const dispatch = useAppDispatch();
@@ -57,21 +60,32 @@ const ModelManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {modelData} = useAppSelector(modelManagementSelector);
+  const [modelType, setModelType] = useState<string>('default');
+  const [region, setRegion] = useState<string>('default');
+
+  const handleModelChange = (e: any) => setModelType(e.target.value);
+  const handleRegionChange = (e: any) => setRegion(e.target.value);
 
   useEffect(() => {
-    dispatch(handleLoading(true));
     try {
+      dispatch(handleLoading(true));
       const fetchData = async () => {
-        await dispatch(getAllModelData());
+        await dispatch(
+          modelType === 'default'
+            ? getAllModelData()
+            : modelType === 'NMT'
+            ? getAllNMTModelData()
+            : getAllTTSModelData()
+        );
+        dispatch(handleLoading(false));
       };
 
       fetchData();
     } catch (error) {
       console.error(error);
-    } finally {
       dispatch(handleLoading(false));
     }
-  }, []);
+  }, [modelType]);
 
   return (
     <main className='model-management'>
@@ -79,10 +93,24 @@ const ModelManagement = () => {
         <Box className='model-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
             <div className='control-model__select'>
-              <CSelect className='w-100' options={options} placeholder='Model type' size='small' />
+              <CSelect
+                className='w-100'
+                options={modelTypeSelectData}
+                placeholder='Chọn loại model'
+                size='small'
+                value={modelType}
+                onChange={handleModelChange}
+              />
             </div>
             <div className='control-model__select'>
-              <CSelect className='w-100' options={options} placeholder='Model region' size='small' />
+              <CSelect
+                className='w-100'
+                options={regionTypeSelectData}
+                placeholder='Chọn vùng'
+                size='small'
+                value={region}
+                onChange={handleRegionChange}
+              />
             </div>
           </Box>
         </Box>

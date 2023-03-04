@@ -7,7 +7,7 @@ const GlobalLoading = () => {
   const {isLoading} = useAppSelector(globalSelector);
 
   return (
-    <div className={`globalLoading ${isLoading ? ' globalLoading-open' : ''}`}>
+    <div aria-hidden={!isLoading} className='globalLoading'>
       <CircularProgress />
     </div>
   );
