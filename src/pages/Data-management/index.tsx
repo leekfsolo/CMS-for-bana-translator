@@ -106,7 +106,7 @@ const DataManagement = () => {
               <CSelect
                 className='w-100'
                 options={modelTypeSelectData}
-                placeholder='Data type'
+                placeholder='Chọn loại dữ liệu'
                 size='small'
                 value={modelType}
                 onChange={handleModelChange}
@@ -116,7 +116,7 @@ const DataManagement = () => {
               <CSelect
                 className='w-100'
                 options={regionTypeSelectData}
-                placeholder='Data region'
+                placeholder='Chọn vùng'
                 size='small'
                 value={region}
                 onChange={handleRegionchange}
