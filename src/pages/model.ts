@@ -11,11 +11,16 @@ export interface IProfile {
   password: string;
 }
 
-export interface IData {
+export interface IDataDisplay {
   version: string;
   createdDate: string;
   region: string;
-  quantity: number;
+  nosample: number;
+  type?: string;
+}
+
+export interface IData extends IDataDisplay {
+  filename?: string;
 }
 
 export interface IModelDisplay {

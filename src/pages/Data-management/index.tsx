@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {IDataHead, TableHeadCell} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
@@ -7,31 +7,10 @@ import CTable from 'components/CTable';
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect';
 import FormDialog from './template/FormDialog';
-
-function createData(version: string, createdDate: string, region: string, quantity: number): IDataHead {
-  return {
-    version,
-    createdDate,
-    region,
-    quantity
-  };
-}
-
-const rows = [
-  createData('Cupcake', '305', '3.7', 67),
-  createData('Donut', '452', '25.0', 51),
-  createData('Eclair', '262', '16.0', 24),
-  createData('Frozen yoghurt', '159', '6.0', 24),
-  createData('Gingerbread', '356', '16.0', 49),
-  createData('Honeycomb', '408', '3.2', 87),
-  createData('Ice cream sandwich', '', '237', 9.0),
-  createData('Jelly Bean', '375', '0.0', 94),
-  createData('KitKat', '518', '26.0', 65),
-  createData('Lollipop', '392', '0.2', 98),
-  createData('Marshmallow', '318', '0', 81),
-  createData('Nougat', '360', '19.0', 9),
-  createData('Oreo', '437', '18.0', 63)
-];
+import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {handleLoading} from 'app/globalSlice';
+import {dataManagerSelector} from 'app/selectors';
+import {getAllDataData} from './dataManagementSlice';
 
 const headCells: TableHeadCell[] = [
   {
@@ -43,29 +22,37 @@ const headCells: TableHeadCell[] = [
   {
     id: 'createdDate',
     disablePadding: false,
-    label: 'Created Date',
+    label: 'Ngày tạo',
     align: 'left'
   },
   {
     id: 'region',
     disablePadding: false,
-    label: 'Region',
+    label: 'Vùng',
     align: 'left'
   },
   {
     id: 'quantity',
     disablePadding: false,
-    label: 'Quantity',
+    label: 'Số lượng',
+    align: 'left'
+  },
+  {
+    id: 'type',
+    disablePadding: false,
+    label: 'Loại',
     align: 'left'
   }
 ];
 const options: string[] = [];
 const DataManagement = () => {
+  const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
   const [openImportDataForm, setOpenImportDataForm] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const {dataData} = useAppSelector(dataManagerSelector);
 
   const handleClickOpen = () => {
     setOpenImportDataForm(true);
@@ -88,6 +75,21 @@ const DataManagement = () => {
     const newSelectedFiles = selectedFiles.filter((file) => file.name !== filename);
     setSelectedFiles(newSelectedFiles);
   };
+
+  useEffect(() => {
+    try {
+      dispatch(handleLoading(true));
+      const fetchData = async () => {
+        await dispatch(getAllDataData());
+        dispatch(handleLoading(false));
+      };
+
+      fetchData();
+    } catch (error) {
+      console.log(error);
+      dispatch(handleLoading(false));
+    }
+  }, []);
 
   return (
     <main className='data-management'>
@@ -116,7 +118,7 @@ const DataManagement = () => {
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar tableTitle='Data Management' numSelected={selected.length} />
           <CTable
-            data={rows}
+            data={dataData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -125,7 +127,7 @@ const DataManagement = () => {
             manageType='edit'
           />
           <CPagination
-            maxLength={rows.length}
+            maxLength={dataData.length}
             page={page}
             setPage={setPage}
             rowsPerPage={rowsPerPage}

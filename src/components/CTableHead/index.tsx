@@ -12,7 +12,7 @@ interface Props {
 
 const CTableHead = (props: Props) => {
   const {onSelectAllClick, numSelected, rowCount, headCells, isHavingAction = true} = props;
-  const headCellsDisplay = isHavingAction ? headCells.concat({id: 'Action', label: 'Action'}) : headCells;
+  const headCellsDisplay = isHavingAction ? headCells.concat({id: 'Action', label: ''}) : headCells;
 
   return (
     <TableHead className='ctable-head'>
