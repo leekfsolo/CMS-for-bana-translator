@@ -8,7 +8,7 @@ const dataApi = {
     return axiosClient.post(getDataServerUrl(url), data);
   },
   getAll: () => {
-    const url = '/api/data/getAllData';
+    const url = '/api/data/getAll';
     return axiosClient.get(getDataServerUrl(url));
   },
   getById: (id: string) => {

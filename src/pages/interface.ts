@@ -15,6 +15,7 @@ export interface IDataHead {
   createdDate: string;
   region: string;
   quantity: number;
+  type: string;
 }
 
 export interface IModelHead {
