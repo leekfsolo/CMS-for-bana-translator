@@ -44,7 +44,8 @@ const headCells: TableHeadCell[] = [
     align: 'left'
   }
 ];
-const options: string[] = [];
+const modelTypeSelectData = ['NMT', 'TTS'];
+const regionTypeSelectData = ['Gia Lai', 'Kon Tum', 'Bình Định'];
 const DataManagement = () => {
   const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
@@ -53,6 +54,11 @@ const DataManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const {dataData} = useAppSelector(dataManagerSelector);
+  const [modelType, setModelType] = useState<string>('default');
+  const [region, setRegion] = useState<string>('default');
+
+  const handleModelChange = (e: any) => setModelType(e.target.value);
+  const handleRegionchange = (e: any) => setRegion(e.target.value);
 
   const handleClickOpen = () => {
     setOpenImportDataForm(true);
@@ -97,10 +103,24 @@ const DataManagement = () => {
         <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-data d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
             <div className='control-data__select'>
-              <CSelect className='w-100' options={options} placeholder='Data type' size='small' />
+              <CSelect
+                className='w-100'
+                options={modelTypeSelectData}
+                placeholder='Data type'
+                size='small'
+                value={modelType}
+                onChange={handleModelChange}
+              />
             </div>
             <div className='control-data__select'>
-              <CSelect className='w-100' options={options} placeholder='Data region' size='small' />
+              <CSelect
+                className='w-100'
+                options={regionTypeSelectData}
+                placeholder='Data region'
+                size='small'
+                value={region}
+                onChange={handleRegionchange}
+              />
             </div>
           </Box>
           <CButton className='control-import' variant='outlined' onClick={handleClickOpen}>
