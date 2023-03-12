@@ -1,5 +1,5 @@
 import {HTMLInputTypeAttribute} from 'react';
-import {IProfile, ITaskDisplay} from './model';
+import {IProfile, ITaskDisplay, ITaskUpload} from './model';
 
 type alignPadding = 'left' | 'right' | 'center';
 
@@ -93,17 +93,9 @@ export interface IProfileFormSection {
 
 export interface ITrainingOptionSelect {
   title: string;
-  options: string[];
-  type: keyof ITrainingOptionValues;
+  options?: string[];
+  name: keyof ITaskUpload;
   placeholder: string;
-}
-
-export interface ITrainingOptionValues {
-  dataset: string;
-  model: string;
-  region: string;
-  checkpoint: string;
-  taskType: string;
 }
 
 export interface ILoginState {

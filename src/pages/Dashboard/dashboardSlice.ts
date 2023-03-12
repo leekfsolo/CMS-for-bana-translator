@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import queueApi from 'api/queueApi';
-import Config from 'configuration';
 import {IDashboardData} from 'pages/interface';
 import {ITaskData} from 'pages/model';
 
@@ -19,6 +18,8 @@ export const getTotalTasks = createAsyncThunk('dashboard/getAllTasks', async () 
   return res;
 });
 
+const STATUS = ['waiting', 'start', 'complete', 'error'];
+
 const dashboard = createSlice({
   name: 'dashboard',
   initialState,
@@ -32,13 +33,12 @@ const dashboard = createSlice({
         const tasks = action.payload.map((task: ITaskData) => {
           const {accuracy, task_id, task_type, user_id, model_name, state, filename} = task;
 
-          return {id: task_id, user_id, task_type, accuracy, model_name, state, filename};
+          return {id: task_id, user_id, task_type, accuracy, model_name, status: STATUS[state], filename};
         });
         state.tasksData = tasks;
       });
   }
 });
 
-const {reducer, actions} = dashboard;
-export const {} = actions;
+const {reducer} = dashboard;
 export default reducer;

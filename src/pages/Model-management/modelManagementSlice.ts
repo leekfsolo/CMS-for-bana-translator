@@ -63,6 +63,5 @@ const modelManagement = createSlice({
   }
 });
 
-const {reducer, actions} = modelManagement;
-export const {} = actions;
+const {reducer} = modelManagement;
 export default reducer;

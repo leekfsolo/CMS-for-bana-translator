@@ -1,63 +1,65 @@
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SelectChangeEvent, LinearProgress} from '@mui/material';
-import {ITrainingOptionSelect, ITrainingOptionValues} from 'pages/interface';
-import {useAppDispatch} from 'app/hooks';
-import {sleep} from 'utils/helpers/sleep';
+import {ITrainingOptionSelect} from 'pages/interface';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
 import CInput from 'components/CInput';
-import {addTask} from './trainingSlice';
+import {addTask, getAllNMTModelData, getAllTTSModelData} from './trainingSlice';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {ITaskUpload} from 'pages/model';
+import {trainingSelector} from 'app/selectors';
 
-const trainingOptions: ITrainingOptionSelect[] = [
-  {title: 'Tập dữ liệu', options: ['test', 'asdf'], type: 'dataset', placeholder: 'Chọn tập dữ liệu'},
-  {title: 'Loại Model', options: ['nmt', 'tts'], type: 'model', placeholder: 'Chọn loại model'},
-  {title: 'Vùng', options: ['Gia Lai', 'Kon Tum', 'Bình Định'], type: 'region', placeholder: 'Chọn vùng'},
-  {title: 'File Checkpoint', options: ['.ste', 'asd'], type: 'checkpoint', placeholder: 'Chọn file checkpoint'},
-  {title: 'Loại task', options: ['train', 'test'], type: 'taskType', placeholder: 'Chọn loại task'}
-];
-
-const defaultOptionValues: ITrainingOptionValues = {
-  dataset: 'default',
-  model: 'default',
-  region: 'default',
-  checkpoint: 'default',
-  taskType: 'default'
+const defaultValues: ITaskUpload = {
+  ckpt: '',
+  epoch: '',
+  filename: '',
+  modelType: '',
+  region: '',
+  taskType: ''
 };
 
 const Training = () => {
   const dispatch = useAppDispatch();
-  const [optionValues, setOptionValues] = useState<ITrainingOptionValues>(defaultOptionValues);
-  const [epochNumber, setEpochNumber] = useState<number>();
+  const training = useAppSelector(trainingSelector);
+  const {modelData} = training;
+  const {handleSubmit, control, watch, reset} = useForm<ITaskUpload>({defaultValues});
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const canStartRunning =
-    Object.values(optionValues).every((value) => value !== 'default') && epochNumber !== undefined;
 
-  const resetOptions = () => setOptionValues(defaultOptionValues);
+  const watchAllFields = watch();
+  const modelTypeData = watchAllFields['modelType'];
+  const canStartRunning = Object.values(watchAllFields).every((value) => value !== '');
 
-  const handleFilterChange = (e: SelectChangeEvent<unknown>) => {
-    const newFilterValues = {
-      ...optionValues,
-      [e.target.name]: e.target.value
-    };
+  const trainingOptions: ITrainingOptionSelect[] = [
+    {title: 'Loại Model', options: ['nmt', 'tts'], name: 'modelType', placeholder: 'Chọn loại model'},
+    {
+      title: 'Tập dữ liệu',
+      options: modelData.map((data) => data.model_name),
+      name: 'filename',
+      placeholder: 'Chọn tập dữ liệu'
+    },
+    {
+      title: 'Vùng',
+      options: ['Gia Lai', 'Kon Tum', 'Bình Định'],
+      name: 'region',
+      placeholder: 'Chọn vùng'
+    },
+    {
+      title: 'File Checkpoint',
+      options: modelData.map((data) => data.ckpt_file),
+      name: 'ckpt',
+      placeholder: 'Chọn file checkpoint'
+    },
+    {title: 'Loại task', options: ['train', 'test'], name: 'taskType', placeholder: 'Chọn loại task'},
+    {title: 'Epoch', name: 'epoch', placeholder: 'Chọn số epoch'}
+  ];
 
-    setOptionValues(newFilterValues);
-  };
-
-  const startRunning = async () => {
+  const resetOptions = () => reset(defaultValues);
+  const startRunning: SubmitHandler<ITaskUpload> = async (data) => {
     setIsRunning(true);
     try {
       // Running Model
-      const {checkpoint, dataset, model, region, taskType} = optionValues;
-      await dispatch(
-        addTask({
-          ckpt: checkpoint,
-          epoch: epochNumber ? epochNumber : 0,
-          taskType,
-          region,
-          filename: dataset,
-          modelType: model
-        })
-      );
+      await dispatch(addTask(data));
     } catch (e) {
       console.error(e);
     } finally {
@@ -65,46 +67,66 @@ const Training = () => {
     }
   };
 
+  useEffect(() => {
+    if (modelTypeData && modelTypeData.length > 0) {
+      if (modelTypeData === 'nmt') {
+        dispatch(getAllNMTModelData());
+      } else {
+        dispatch(getAllTTSModelData());
+      }
+    }
+  }, [modelTypeData]);
+
   return (
     <div className='training'>
-      <div className='container-fluid m-0 p-0'>
-        <div className='row justify-content-between m-0'>
-          {trainingOptions.map((filter) => (
-            <div key={filter.title} className='training-filter col-5 p-0'>
-              <p className='mb-2'>{filter.title}</p>
-              <CSelect
-                size='small'
-                options={filter.options}
-                disabled={isRunning}
-                name={filter.type}
-                onChange={handleFilterChange}
-                value={optionValues[filter.type]}
-                variant='standard'
-                placeholder={filter.placeholder}
-              />
-            </div>
-          ))}
+      <form noValidate method='POST' action='#' onSubmit={handleSubmit(startRunning)}>
+        <div className='container-fluid m-0 p-0'>
+          <div className='row justify-content-between m-0'>
+            {trainingOptions.map((input) => {
+              const {title, name, placeholder, options} = input;
 
-          <div className='training-filter col-5 p-0'>
-            <p className='mb-2'>Epoch</p>
-            <CInput
-              type='number'
-              value={epochNumber ? epochNumber : 0}
-              onChange={(e: any) => setEpochNumber(Number(e.target.value))}
-              variant='standard'
-            />
+              return (
+                <div key={name} className='training-filter col-5 p-0'>
+                  <p className='mb-2'>{title}</p>
+                  <Controller
+                    name={name}
+                    control={control}
+                    render={({field}) =>
+                      options ? (
+                        <CSelect
+                          {...field}
+                          options={options}
+                          size='small'
+                          variant='standard'
+                          disabled={isRunning}
+                          placeholder={placeholder}
+                        />
+                      ) : (
+                        <CInput
+                          {...field}
+                          size='small'
+                          variant='standard'
+                          disabled={isRunning}
+                          placeholder={placeholder}
+                        />
+                      )
+                    }
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
-      </div>
 
-      <div className='training-controls d-flex flex-column flex-sm-row justify-content-end align-items-start align-items-sm-center gap-2'>
-        <CButton type='reset' variant='contained' color='error' onClick={resetOptions}>
-          Reset
-        </CButton>
-        <CButton variant='contained' color='success' onClick={startRunning} disabled={!canStartRunning}>
-          Start
-        </CButton>
-      </div>
+        <div className='training-controls d-flex flex-column flex-sm-row justify-content-end align-items-start align-items-sm-center gap-2'>
+          <CButton type='reset' variant='contained' color='error' onClick={resetOptions}>
+            Reset
+          </CButton>
+          <CButton variant='contained' color='success' disabled={!canStartRunning} type='submit'>
+            Start
+          </CButton>
+        </div>
+      </form>
 
       <div className='training-output my-3'>
         <div className='training-output__progress'>{isRunning && <LinearProgress />}</div>

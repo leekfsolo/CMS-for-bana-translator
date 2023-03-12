@@ -46,7 +46,7 @@ export interface ITaskUpload {
   taskType: string;
   modelType: string;
   ckpt: string;
-  epoch: number;
+  epoch: number | string;
 }
 
 export interface ITaskData extends ITaskDisplay {

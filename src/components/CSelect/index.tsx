@@ -7,7 +7,7 @@ interface Props extends SelectProps {
 }
 
 const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
-  const {options, placeholder, className, valid = true} = props;
+  const {options, placeholder, className, value, valid = true} = props;
 
   return (
     <Select
@@ -15,9 +15,9 @@ const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
       className={`cinput ${className} cinput-${valid ? 'valid' : 'invalid'}`}
       ref={ref}
       fullWidth
-      defaultValue='default'
+      value={value ? value : 'defaultValue'}
     >
-      <MenuItem sx={{fontStyle: 'italic'}} value='default' disabled>
+      <MenuItem sx={{fontStyle: 'italic'}} value='defaultValue' disabled>
         <em>{placeholder || 'placeholder'}</em>
       </MenuItem>
       {options.map((opt) => (

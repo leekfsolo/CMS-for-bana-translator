@@ -11,16 +11,20 @@
     text-align: center;
     text-transform: capitalize;
 
-    &__waiting {
-      background-color: $danger-400;
+    &__start {
+      background-color: $primary-500;
     }
 
-    &__pending {
+    &__waiting {
       background-color: $warning-400;
     }
 
-    &__done {
+    &__complete {
       background-color: $success-400;
+    }
+
+    &__error {
+      background-color: $danger-400;
     }
   }
 }

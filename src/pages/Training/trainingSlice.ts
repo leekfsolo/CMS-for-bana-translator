@@ -1,12 +1,10 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import modelApi from 'api/modelApi';
 import queueApi from 'api/queueApi';
-import Config from 'configuration';
-import {ILoginState} from 'pages/interface';
 import {ITaskUpload} from 'pages/model';
 
-const initialState: ILoginState = {
-  isUserExisted: false,
-  name: ''
+const initialState: {modelData: any[]} = {
+  modelData: []
 };
 
 export const addTask = createAsyncThunk('dashboard/getAllTasks', async (data: ITaskUpload) => {
@@ -14,13 +12,30 @@ export const addTask = createAsyncThunk('dashboard/getAllTasks', async (data: IT
   return res;
 });
 
+export const getAllNMTModelData = createAsyncThunk('training/getAllNMT', async (_) => {
+  const res = await modelApi.getAllNMT();
+  return res;
+});
+
+export const getAllTTSModelData = createAsyncThunk('training/getAllTTS', async (_) => {
+  const res = await modelApi.getAllTTS();
+  return res;
+});
+
 const training = createSlice({
   name: 'training',
   initialState,
   reducers: {},
-  extraReducers: (builders) => {}
+  extraReducers: (builders) => {
+    builders
+      .addCase(getAllNMTModelData.fulfilled, (state, action: PayloadAction<any>) => {
+        state.modelData = action.payload;
+      })
+      .addCase(getAllTTSModelData.fulfilled, (state, action: PayloadAction<any>) => {
+        state.modelData = action.payload;
+      });
+  }
 });
 
-const {reducer, actions} = training;
-export const {} = actions;
+const {reducer} = training;
 export default reducer;
