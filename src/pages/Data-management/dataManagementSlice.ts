@@ -22,10 +22,11 @@ export const uploadDataFile = createAsyncThunk('data/', async (data: IData) => {
 
 const transformDataData = (responseData: any): IDataDisplay[] => {
   return responseData.map((data: IData) => {
-    const {version, region, nosample, type, filename} = data;
+    const {version, createdDate, region, nosample, type, filename} = data;
 
     return {
       version,
+      createdDate,
       region,
       nosample,
       type

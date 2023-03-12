@@ -14,6 +14,7 @@ export interface IProfile {
 export interface IDataDisplay {
   version: string;
   region: string;
+  createdDate?: string;
   nosample: number;
   type?: string;
 }
