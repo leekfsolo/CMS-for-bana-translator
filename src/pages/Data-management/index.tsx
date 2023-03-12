@@ -96,7 +96,6 @@ const DataManagement = () => {
       dispatch(handleLoading(false));
     }
   }, []);
-  console.log(dataData);
   return (
     <main className='data-management'>
       <Box sx={{width: '100%'}}>
