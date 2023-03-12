@@ -1,11 +1,12 @@
 import {getDataServerUrl} from 'configuration';
 import {IData} from 'pages/model';
 import axiosClient from './axiosClient';
+import axiosClientForUploadFile from './axiosForUploadFile';
 
 const dataApi = {
   add: (data: IData) => {
     const url = '/api/data';
-    return axiosClient.post(getDataServerUrl(url), data);
+    return axiosClientForUploadFile.post(getDataServerUrl(url), data);
   },
   getAll: () => {
     const url = '/api/data/getAll';

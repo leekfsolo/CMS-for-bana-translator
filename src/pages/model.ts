@@ -13,7 +13,6 @@ export interface IProfile {
 
 export interface IDataDisplay {
   version: string;
-  createdDate: string;
   region: string;
   nosample: number;
   type?: string;
@@ -21,6 +20,7 @@ export interface IDataDisplay {
 
 export interface IData extends IDataDisplay {
   filename?: string;
+  training_file?: any;
 }
 
 export interface IModelDisplay {
