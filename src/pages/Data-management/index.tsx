@@ -69,34 +69,11 @@ const DataManagement = () => {
     setSelectedFiles([]);
   };
 
-  const handleUploadFiles = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
     if (files) {
       setSelectedFiles(Array.from(files));
-    }
-
-    const uploadFile = files ? files['0'] : files;
-
-    const postData = {
-      version: '6',
-      region: 'Binh Dinh',
-      type: 'NMT',
-      nosample: 1000,
-      training_file: uploadFile
-    };
-
-    try {
-      dispatch(handleLoading(true));
-      const fetchData = async () => {
-        await dispatch(uploadDataFile(postData));
-        dispatch(handleLoading(false));
-      };
-
-      fetchData();
-    } catch (err) {
-      console.log(err);
-      dispatch(handleLoading(false));
     }
   };
 
@@ -151,6 +128,8 @@ const DataManagement = () => {
           </CButton>
 
           <FormDialog
+            region={region}
+            modelType={modelType}
             handleClose={handleClose}
             handleRemoveFile={handleRemoveFile}
             handleUploadFiles={handleUploadFiles}
