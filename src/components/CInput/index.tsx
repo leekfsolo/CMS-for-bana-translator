@@ -6,6 +6,7 @@ interface Props extends BaseTextFieldProps {
   endicon?: React.ReactElement;
   starticon?: React.ReactElement;
   valid?: boolean;
+  onChange?: any;
 }
 
 const CInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {

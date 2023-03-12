@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import modelApi from 'api/modelApi';
+import moment from 'moment';
 import {IModel, IModelDisplay} from 'pages/model';
 
 const initialState: {
@@ -29,9 +30,9 @@ const transformModelData = (responseData: any): IModelDisplay[] => {
 
     return {
       version,
-      filename,
-      createdDate,
+      createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
       region,
+      filename,
       model_type,
       epoch
     };

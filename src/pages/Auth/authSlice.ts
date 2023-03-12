@@ -72,6 +72,7 @@ const auth = createSlice({
         console.log(action.payload);
       })
       .addCase(refreshToken.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log(action.payload);
         const {accessToken} = action.payload.data.user;
         const authJson = localStorage.getItem(Config.storageKey.auth);
         if (authJson) {
@@ -79,6 +80,7 @@ const auth = createSlice({
 
           authValue.accessToken = accessToken;
           localStorage.setItem(Config.storageKey.auth, JSON.stringify(authValue));
+          return authValue;
         }
       });
   }

@@ -40,7 +40,7 @@ const headCells: TableHeadCell[] = [
   {
     id: 'type',
     disablePadding: false,
-    label: 'Loại',
+    label: 'Loại Data',
     align: 'left'
   }
 ];

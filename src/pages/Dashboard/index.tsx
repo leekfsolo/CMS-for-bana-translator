@@ -7,75 +7,53 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import QueueIcon from '@mui/icons-material/Queue';
-import {useAppDispatch} from 'app/hooks';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {getMyInfo} from 'pages/Auth/authSlice';
 import {handleLoading} from 'app/globalSlice';
-
-function createData(
-  user: string,
-  dataVersion: string,
-  dataType: string,
-  region: string,
-  time: string,
-  status: string
-): ITrainingHistory {
-  return {
-    user,
-    dataVersion,
-    dataType,
-    region,
-    time,
-    status
-  };
-}
-
-const rows = [
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'waiting'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'pending'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'pending'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'waiting'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'done'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'waiting'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'pending'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'done'),
-  createData('Janne Cooper', '1.0.1', 'NMT', 'Binh Dinh', '27/10/2022 10:00 am', 'done')
-];
+import {getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
+import {dashboardSelector} from 'app/selectors';
 
 const headCells: TableHeadCell[] = [
   {
-    id: 'user',
+    id: 'id',
     disablePadding: true,
-    label: 'User',
+    label: 'ID',
     align: 'left'
   },
   {
-    id: 'dataVersion',
+    id: 'user',
     disablePadding: false,
-    label: 'Data Version',
+    label: 'Người thực hiện',
     align: 'left'
   },
   {
-    id: 'modelType',
+    id: 'taskType',
     disablePadding: false,
-    label: 'Model Type',
+    label: 'Loại task',
     align: 'left'
   },
   {
-    id: 'region',
+    id: 'accuracy',
     disablePadding: false,
-    label: 'Region',
+    label: 'Độ chính xác',
     align: 'left'
   },
   {
-    id: 'time',
+    id: 'modelName',
     disablePadding: false,
-    label: 'Time',
+    label: 'Tên model',
     align: 'left'
   },
   {
-    id: 'status',
+    id: 'state',
     disablePadding: false,
-    label: 'Status',
+    label: 'Trạng thái',
+    align: 'left'
+  },
+  {
+    id: 'filename',
+    disablePadding: false,
+    label: 'Tên tệp',
     align: 'left'
   }
 ];
@@ -86,14 +64,16 @@ const Dashboard = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const cardProgressInnerRef = useRef<HTMLDivElement | null>(null);
+  const dashboard = useAppSelector(dashboardSelector);
+  const {tasksData, totalTasks} = dashboard;
 
   useLayoutEffect(() => {
     setTimeout(() => {
       if (cardProgressInnerRef.current) {
-        cardProgressInnerRef.current.style.width = '50%';
+        cardProgressInnerRef.current.style.width = `${Math.floor(totalTasks / tasksData.length)}%`;
       }
     }, 200);
-  }, []);
+  }, [totalTasks, tasksData]);
 
   useEffect(() => {
     dispatch(handleLoading(true));
@@ -101,6 +81,8 @@ const Dashboard = () => {
     try {
       const fetchData = async () => {
         await dispatch(getMyInfo());
+        await dispatch(getTotalTasksInQueue());
+        await dispatch(getTotalTasks());
         dispatch(handleLoading(false));
       };
 
@@ -161,8 +143,8 @@ const Dashboard = () => {
           <div className='card-info d-flex align-items-center mb-3 justify-content-between'>
             <p className='m-0 pe-1'>Training Queue</p>
             <div className='queue-count'>
-              <span className='current-count'>4</span>
-              <span className='max-count'>/8</span>
+              <span className='current-count'>{totalTasks}</span>
+              <span className='max-count'>/{tasksData.length}</span>
             </div>
           </div>
 
@@ -180,7 +162,7 @@ const Dashboard = () => {
         <Paper sx={{width: '100%', mb: 2}}>
           <CTableToolbar tableTitle='Training History' numSelected={selected.length} />
           <CTable
-            data={rows}
+            data={tasksData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -188,7 +170,7 @@ const Dashboard = () => {
             setSelected={setSelected}
           />
           <CPagination
-            maxLength={rows.length}
+            maxLength={tasksData.length}
             page={page}
             setPage={setPage}
             rowsPerPage={rowsPerPage}

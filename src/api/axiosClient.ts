@@ -47,11 +47,15 @@ const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement =>
       const retryRequest: retryAxiosResponseConfig = {
         ...originalRequest
       };
-      if (error.response?.status === 401 && !retryRequest._retry) {
-        retryRequest._retry = true;
-        const res = await refresh();
+      if (error.response?.status === 401) {
+        if (!retryRequest._retry) {
+          retryRequest._retry = true;
+          const res = await refresh();
 
-        return axiosClient(retryRequest);
+          return axiosClient(retryRequest);
+        } else {
+          localStorage.removeItem(Config.storageKey.auth);
+        }
       }
 
       return Promise.reject(error);

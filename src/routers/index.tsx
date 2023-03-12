@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {PageUrl} from 'configuration/enum';
 import Auth from 'pages/Auth';
 
@@ -16,8 +16,14 @@ import GlobalLoading from 'components/GlobalLoading';
 import {ToastContainer} from 'react-toastify';
 
 const Routers = () => {
+  useEffect(() => {
+    if (!window.location.pathname.includes(PageUrl.BASEURL)) {
+      window.location.pathname = PageUrl.BASEURL;
+    }
+  }, []);
+
   return (
-    <Router basename='/bana-model'>
+    <Router basename={PageUrl.BASEURL}>
       <GlobalLoading />
       <ToastContainer theme='colored' />
       <Routes>
@@ -31,8 +37,8 @@ const Routers = () => {
             <Route path={PageUrl.PROFILE} element={<Profile />} />
             <Route path={PageUrl.CREATE_ACCOUNT} element={<Register />} />
           </Route>
-          <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.HOME} replace={true} />} />
         </Route>
+        <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.HOME} replace={true} />} />
       </Routes>
       <ModalBackdrop />
     </Router>

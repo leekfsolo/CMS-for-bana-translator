@@ -5,6 +5,7 @@ import registerReducer from 'pages/Register/registerSlice';
 import modelManagementReducer from 'pages/Model-management/modelManagementSlice';
 import dataManagementReducer from 'pages/Data-management/dataManagementSlice';
 import trainingManagementReducer from 'pages/Training/trainingSlice';
+import dashboardReducer from 'pages/Dashboard/dashboardSlice';
 
 const rootReducer = {
   global: globalReducer,
@@ -12,7 +13,8 @@ const rootReducer = {
   register: registerReducer,
   modelManagement: modelManagementReducer,
   dataManagement: dataManagementReducer,
-  training: trainingManagementReducer
+  training: trainingManagementReducer,
+  dashboard: dashboardReducer
 };
 
 const store = configureStore({reducer: rootReducer});

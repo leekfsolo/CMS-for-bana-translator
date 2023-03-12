@@ -7,5 +7,6 @@ export enum PageUrl {
   MODEL_MANAGEMENT = 'model-management',
   DATA_MANAGEMENT = 'data-management',
   TRAINING = 'training',
-  ALL = '*'
+  ALL = '*',
+  BASEURL = 'bana-model'
 }

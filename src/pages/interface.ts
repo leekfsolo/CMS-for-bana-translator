@@ -1,5 +1,5 @@
 import {HTMLInputTypeAttribute} from 'react';
-import {IProfile} from './model';
+import {IProfile, ITaskDisplay} from './model';
 
 type alignPadding = 'left' | 'right' | 'center';
 
@@ -95,6 +95,7 @@ export interface ITrainingOptionSelect {
   title: string;
   options: string[];
   type: keyof ITrainingOptionValues;
+  placeholder: string;
 }
 
 export interface ITrainingOptionValues {
@@ -102,6 +103,7 @@ export interface ITrainingOptionValues {
   model: string;
   region: string;
   checkpoint: string;
+  taskType: string;
 }
 
 export interface ILoginState {
@@ -110,4 +112,9 @@ export interface ILoginState {
   accessToken?: string;
   refreshToken?: string;
   userInfo?: IProfile;
+}
+
+export interface IDashboardData {
+  totalTasks: number;
+  tasksData: ITaskDisplay[];
 }

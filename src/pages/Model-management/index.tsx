@@ -1,4 +1,4 @@
-import {TableHeadCell, IModelHead} from 'pages/interface';
+import {TableHeadCell} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import React, {useState, useEffect} from 'react';
 import CSelect from 'components/CSelect';
@@ -9,20 +9,12 @@ import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
 import {getAllModelData, getAllNMTModelData, getAllTTSModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
-import CButton from 'components/CButton';
-import {useForm} from 'react-hook-form';
 
 const headCells: TableHeadCell[] = [
   {
     id: 'version',
     disablePadding: true,
     label: 'Version',
-    align: 'left'
-  },
-  {
-    id: 'dataVersion',
-    disablePadding: false,
-    label: 'Tập dữ liệu',
     align: 'left'
   },
   {
@@ -35,6 +27,12 @@ const headCells: TableHeadCell[] = [
     id: 'region',
     disablePadding: false,
     label: 'Vùng',
+    align: 'left'
+  },
+  {
+    id: 'dataVersion',
+    disablePadding: false,
+    label: 'Tập dữ liệu',
     align: 'left'
   },
   {

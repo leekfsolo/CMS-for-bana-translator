@@ -9,3 +9,5 @@ export const modelManagementSelector = (state: RootState) => state.modelManageme
 export const dataManagerSelector = (state: RootState) => state.dataManagement;
 
 export const trainingSelector = (state: RootState) => state.training;
+
+export const dashboardSelector = (state: RootState) => state.dashboard;
