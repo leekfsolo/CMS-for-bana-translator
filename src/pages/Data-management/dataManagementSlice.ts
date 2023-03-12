@@ -15,6 +15,11 @@ export const getAllDataData = createAsyncThunk('data/getAll', async (_) => {
   return res;
 });
 
+export const uploadDataFile = createAsyncThunk('data/', async (data: IData) => {
+  const res = await dataApi.add(data);
+  return res;
+});
+
 const transformDataData = (responseData: any): IDataDisplay[] => {
   return responseData.map((data: IData) => {
     const {version, createdDate, region, nosample, type, filename} = data;
@@ -34,11 +39,17 @@ const dataManagement = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builders) => {
-    builders.addCase(getAllDataData.fulfilled, (state, action: PayloadAction<any>) => {
-      const responseData = action.payload.datas;
-      const displayData = transformDataData(responseData);
-      state.dataData = displayData;
-    });
+    builders
+      .addCase(getAllDataData.fulfilled, (state, action: PayloadAction<any>) => {
+        const responseData = action.payload.datas;
+        const displayData = transformDataData(responseData);
+        state.dataData = displayData;
+      })
+      .addCase(uploadDataFile.fulfilled, (state, action: PayloadAction<any>) => {
+        const responseData = action.payload.datas;
+        const displayData = transformDataData(responseData);
+        state.dataData = displayData;
+      });
   }
 });
 

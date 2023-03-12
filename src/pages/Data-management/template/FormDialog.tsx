@@ -7,6 +7,9 @@ import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import Box from '@mui/material/Box';
 import CButton from 'components/CButton';
+import {handleLoading} from 'app/globalSlice';
+import {useAppDispatch} from 'app/hooks';
+import {uploadDataFile} from '../dataManagementSlice';
 
 interface Props {
   selectedFiles: File[];
@@ -14,14 +17,37 @@ interface Props {
   handleUploadFiles: (e: ChangeEvent<HTMLInputElement>) => void;
   openImportDataForm: boolean;
   handleRemoveFile: (filename: string) => void;
+  region: string;
+  modelType: string;
 }
 
 const FormDialog = (props: Props) => {
-  const {selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile} = props;
+  const {region, modelType, selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile} =
+    props;
   const {register, handleSubmit} = useForm<{files: File[]}>({defaultValues: {files: []}});
+  const dispatch = useAppDispatch();
 
   const onValidSubmit: SubmitHandler<{files: File[]}> = (data) => {
-    console.log(data);
+    const files = data.files;
+    const uploadFile = files ? files['0'] : files;
+    const postData = {
+      version: '6',
+      region: region,
+      type: modelType.toLowerCase(),
+      nosample: 1000,
+      training_file: uploadFile
+    };
+    try {
+      dispatch(handleLoading(true));
+      const fetchData = async () => {
+        await dispatch(uploadDataFile(postData));
+        dispatch(handleLoading(false));
+      };
+      fetchData();
+    } catch (err) {
+      console.log(err);
+      dispatch(handleLoading(false));
+    }
   };
 
   return (

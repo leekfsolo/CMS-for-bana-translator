@@ -10,7 +10,7 @@ import FormDialog from './template/FormDialog';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {handleLoading} from 'app/globalSlice';
 import {dataManagerSelector} from 'app/selectors';
-import {getAllDataData} from './dataManagementSlice';
+import {getAllDataData, uploadDataFile} from './dataManagementSlice';
 
 const headCells: TableHeadCell[] = [
   {
@@ -96,7 +96,7 @@ const DataManagement = () => {
       dispatch(handleLoading(false));
     }
   }, []);
-
+  console.log(dataData);
   return (
     <main className='data-management'>
       <Box sx={{width: '100%'}}>
@@ -128,6 +128,8 @@ const DataManagement = () => {
           </CButton>
 
           <FormDialog
+            region={region}
+            modelType={modelType}
             handleClose={handleClose}
             handleRemoveFile={handleRemoveFile}
             handleUploadFiles={handleUploadFiles}
