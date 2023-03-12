@@ -1,8 +1,9 @@
-import {useEffect, ReactElement} from 'react';
+import {useEffect, ReactElement, useState} from 'react';
 import axios, {AxiosError, AxiosResponse, AxiosRequestConfig} from 'axios';
 import queryString from 'query-string';
 import Config from 'configuration';
 import useRefreshToken from 'utils/hooks/useRefreshToken';
+import {PageUrl} from 'configuration/enum';
 
 interface retryAxiosResponseConfig extends AxiosRequestConfig {
   _retry?: boolean;
@@ -19,6 +20,7 @@ const axiosClient = axios.create({
 
 const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement => {
   const refresh = useRefreshToken();
+  const [isSet, setIsSet] = useState<Boolean>(false);
 
   useEffect(() => {
     const resInterceptor = (response: AxiosResponse) => {
@@ -54,7 +56,8 @@ const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement =>
 
           return axiosClient(retryRequest);
         } else {
-          localStorage.removeItem(Config.storageKey.auth);
+          localStorage.clear();
+          window.location.pathname = `${PageUrl.BASEURL}/${PageUrl.LOGIN}`;
         }
       }
 
@@ -63,6 +66,7 @@ const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement =>
 
     const responseInterceptor = axiosClient.interceptors.response.use(resInterceptor, errInterceptor);
     const requestInterceptor = axiosClient.interceptors.request.use(reqInterceptor, errInterceptor);
+    setIsSet(true);
 
     return () => {
       axiosClient.interceptors.response.eject(responseInterceptor);
@@ -70,7 +74,7 @@ const AxiosInterceptor = ({children}: {children: ReactElement}): ReactElement =>
     };
   }, []);
 
-  return children;
+  return isSet && children;
 };
 
 export {AxiosInterceptor};
