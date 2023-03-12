@@ -29,7 +29,7 @@ const transformModelData = (responseData: any): IModelDisplay[] => {
     const {version, filename, epoch, model_type, region, createdDate} = data;
 
     return {
-      version,
+      id: version,
       createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
       region,
       filename,

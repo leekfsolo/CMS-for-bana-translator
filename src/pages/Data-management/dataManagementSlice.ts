@@ -20,7 +20,7 @@ const transformDataData = (responseData: any): IDataDisplay[] => {
     const {version, createdDate, region, nosample, type, filename} = data;
 
     return {
-      version,
+      id: version,
       createdDate,
       region,
       nosample,

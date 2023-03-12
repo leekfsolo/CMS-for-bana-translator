@@ -2,7 +2,7 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import CTableToolbar from 'components/CTableToolbar';
 import {Paper} from '@mui/material';
-import {ITrainingHistory, TableHeadCell} from 'pages/interface';
+import {TableHeadCell} from 'pages/interface';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import CampaignIcon from '@mui/icons-material/Campaign';

@@ -32,7 +32,7 @@ const dashboard = createSlice({
         const tasks = action.payload.map((task: ITaskData) => {
           const {accuracy, task_id, task_type, user_id, model_name, state, filename} = task;
 
-          return {task_id, user_id, task_type, accuracy, model_name, state, filename};
+          return {id: task_id, user_id, task_type, accuracy, model_name, state, filename};
         });
         state.tasksData = tasks;
       });

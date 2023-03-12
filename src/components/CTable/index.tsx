@@ -21,7 +21,7 @@ const CTable = (props: Props) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.version);
+      const newSelected = data.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -61,13 +61,13 @@ const CTable = (props: Props) => {
         />
         <TableBody>
           {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-            const isItemSelected = isSelected(row.version);
+            const isItemSelected = isSelected(row.id);
             const labelId = `enhanced-table-checkbox-${index}`;
 
             return (
               <TableRow
                 hover
-                onClick={(event) => handleClick(event, row.version)}
+                onClick={(event) => handleClick(event, row.id)}
                 role='checkbox'
                 aria-checked={isItemSelected}
                 tabIndex={-1}
