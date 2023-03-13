@@ -69,7 +69,7 @@ const ModelManagement = () => {
       dispatch(handleLoading(true));
       const fetchData = async () => {
         await dispatch(
-          modelType === 'default'
+          modelType === 'defaultValue'
             ? getAllModelData()
             : modelType === 'NMT'
             ? getAllNMTModelData()
