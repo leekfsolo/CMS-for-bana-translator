@@ -1,7 +1,7 @@
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect';
 import React, {useState, useEffect} from 'react';
-import {SelectChangeEvent, LinearProgress} from '@mui/material';
+import {LinearProgress} from '@mui/material';
 import {ITrainingOptionSelect} from 'pages/interface';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import CInput from 'components/CInput';

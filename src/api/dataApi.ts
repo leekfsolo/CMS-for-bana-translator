@@ -1,4 +1,4 @@
-import {getDataServerUrl} from 'configuration';
+import {getDataServerUrl, ignoreHttpsAgent} from 'configuration';
 import {IData} from 'pages/model';
 import axiosClient from './axiosClient';
 import axiosClientForUploadFile from './axiosForUploadFile';
@@ -10,7 +10,7 @@ const dataApi = {
   },
   getAll: () => {
     const url = '/api/data/getAll';
-    return axiosClient.get(getDataServerUrl(url));
+    return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
   },
   getById: (id: string) => {
     const url = '/api/data';

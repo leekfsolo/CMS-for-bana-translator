@@ -58,8 +58,8 @@ const ModelManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {modelData} = useAppSelector(modelManagementSelector);
-  const [modelType, setModelType] = useState<string>('default');
-  const [region, setRegion] = useState<string>('default');
+  const [modelType, setModelType] = useState<string>('defaultValue');
+  const [region, setRegion] = useState<string>('defaultValue');
 
   const handleModelChange = (e: any) => setModelType(e.target.value);
   const handleRegionChange = (e: any) => setRegion(e.target.value);
