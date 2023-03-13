@@ -1,27 +1,27 @@
-import {getDataServerUrl} from 'configuration';
+import {getDataServerUrl, ignoreHttpsAgent} from 'configuration';
 import {IModel} from 'pages/model';
 import axiosClient from './axiosClient';
 
 const modelApi = {
   add: (data: IModel) => {
     const url = '/api/model';
-    return axiosClient.post(url, data);
+    return axiosClient.post(url, data, {httpsAgent: ignoreHttpsAgent});
   },
   getById: (id: string) => {
     const url = '/api/model';
-    return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.get(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   deleteById: (id: string) => {
     const url = '/api/model';
-    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   updateById: (id: string) => {
     const url = '/api/model';
-    return axiosClient.put(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.put(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   getAll: () => {
     const url = '/api/model/get_all_models';
-    return axiosClient.get(getDataServerUrl(url));
+    return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
   },
   getAllNMT: () => {
     const url = '/api/model/get_all_NMT_models';

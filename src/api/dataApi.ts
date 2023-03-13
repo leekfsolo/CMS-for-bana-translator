@@ -6,7 +6,7 @@ import axiosClientForUploadFile from './axiosForUploadFile';
 const dataApi = {
   add: (data: IData) => {
     const url = '/api/data';
-    return axiosClientForUploadFile.post(getDataServerUrl(url), data);
+    return axiosClientForUploadFile.post(getDataServerUrl(url), data, {httpsAgent: ignoreHttpsAgent});
   },
   getAll: () => {
     const url = '/api/data/getAll';
@@ -14,15 +14,15 @@ const dataApi = {
   },
   getById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.get(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   deleteById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   updateById: (id: string) => {
     const url = '/api/data';
-    return axiosClient.put(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.put(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   }
 };
 
