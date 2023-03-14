@@ -26,6 +26,11 @@ const queueApi = {
   getStreamLog: (id: string) => {
     const url = `/api/queue/stream_log_task/${id}`;
     return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
+  },
+
+  deleteTask: (id: string) => {
+    const url = `/api/queue/delete/${id}`;
+    return axiosClient.delete(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
   }
 };
 

@@ -10,8 +10,9 @@ import QueueIcon from '@mui/icons-material/Queue';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {getMyInfo} from 'pages/Auth/authSlice';
 import {handleLoading} from 'app/globalSlice';
-import {getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
+import {deleteTask, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
 import {dashboardSelector} from 'app/selectors';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
 
 const headCells: TableHeadCell[] = [
   {
@@ -66,6 +67,48 @@ const Dashboard = () => {
   const cardProgressInnerRef = useRef<HTMLDivElement | null>(null);
   const dashboard = useAppSelector(dashboardSelector);
   const {tasksData, totalTasks} = dashboard;
+
+  const handleDelete = async () => {
+    try {
+      dispatch(handleLoading(true));
+      for (const id of selected) {
+        await dispatch(deleteTask(id));
+      }
+      customToast(ToastType.SUCCESS, 'Xoá thành công');
+    } catch (e: any) {
+      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = tasksData.map((n) => n.task_id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected: string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+    }
+
+    setSelected(newSelected);
+  };
+
+  const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -167,7 +210,10 @@ const Dashboard = () => {
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
-            setSelected={setSelected}
+            handleDelete={handleDelete}
+            handleClick={handleClick}
+            handleSelectAllClick={handleSelectAllClick}
+            isSelected={isSelected}
           />
           <CPagination
             maxLength={tasksData.length}

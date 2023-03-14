@@ -11,9 +11,9 @@ const modelApi = {
     const url = '/api/model';
     return axiosClient.get(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
-  deleteById: (id: string) => {
+  deleteById: ({id, modelType}: {id: number; modelType: string}) => {
     const url = '/api/model';
-    return axiosClient.delete(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
+    return axiosClient.delete(`${getDataServerUrl(url)}/${modelType}/${id}`, {httpsAgent: ignoreHttpsAgent});
   },
   updateById: (id: string) => {
     const url = '/api/model';
@@ -21,7 +21,7 @@ const modelApi = {
   },
   getAllFilterModels: (params: dataGetAllParams) => {
     const url = '/api/model/getModels';
-    return axiosClient.post(getDataServerUrl(url), params, {httpsAgent: ignoreHttpsAgent, params});
+    return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent, params});
   },
   getAll: () => {
     const url = '/api/model/get_all_models';

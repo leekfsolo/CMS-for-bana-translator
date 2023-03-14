@@ -13,13 +13,18 @@ export const getAllDataData = createAsyncThunk('data/getAll', async (params: dat
   return res;
 });
 
-export const uploadDataFile = createAsyncThunk('data/', async (data: IData) => {
+export const uploadDataFile = createAsyncThunk('data/upload', async (data: IData) => {
   const res = await dataApi.add(data);
   return res;
 });
 
+export const deleteDataFile = createAsyncThunk('data/deleteById', async (data: string) => {
+  const res = await dataApi.deleteById(data);
+  return res;
+});
+
 const transformDataData = (responseData: any): IDataDisplay[] => {
-  return responseData.map((data: IData) => {
+  return responseData.map((data: any) => {
     const {version, createdDate, region, nosample, type, filename} = data;
 
     return {

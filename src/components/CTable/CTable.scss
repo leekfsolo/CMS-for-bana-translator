@@ -11,15 +11,15 @@
     text-align: center;
     text-transform: capitalize;
 
-    &__start {
-      background-color: $primary-500;
-    }
-
     &__waiting {
       background-color: $warning-400;
     }
 
-    &__complete {
+    &__processing {
+      background-color: $primary-500;
+    }
+
+    &__completed {
       background-color: $success-400;
     }
 

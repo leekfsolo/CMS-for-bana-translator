@@ -5,11 +5,14 @@ import {LinearProgress} from '@mui/material';
 import {ITrainingOptionSelect} from 'pages/interface';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import CInput from 'components/CInput';
-import {addTask, getAllDataDetail} from './trainingSlice';
+import {addTask, getAllDataDetail, getAllModelDetail} from './trainingSlice';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {ITaskUpload} from 'pages/model';
 import {trainingSelector} from 'app/selectors';
 import {modelTypeSelectData, regionTypeSelectData, taskTypeSelectData} from 'utils/base/constants';
+import {handleLoading} from 'app/globalSlice';
+import {getDataParams} from 'utils/helpers/getDataParams';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
 
 const defaultValues: ITaskUpload = {
   ckpt: '',
@@ -24,14 +27,14 @@ const Training = () => {
   const dispatch = useAppDispatch();
   const training = useAppSelector(trainingSelector);
   const {dataDetail, modelDetail} = training;
-  const {handleSubmit, control, watch, reset} = useForm<ITaskUpload>({defaultValues});
+  const {handleSubmit, control, watch, reset, setValue} = useForm<ITaskUpload>({defaultValues});
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const watchAllFields = watch();
-  const modelTypeData = watchAllFields['modelType'];
+  const modelType = watchAllFields['modelType'];
 
   const canStartRunning = Object.values(watchAllFields).every((value) => value !== '');
-  const canSelectOtherSubSelection = modelTypeData !== '';
+  const canSelectOtherSubSelection = modelType !== '';
 
   const trainingOptions: ITrainingOptionSelect[] = [
     {title: 'Loại Model', options: modelTypeSelectData, name: 'modelType', placeholder: 'Chọn loại model'},
@@ -53,7 +56,7 @@ const Training = () => {
       placeholder: 'Chọn vùng'
     },
     {
-      title: 'Tên model',
+      title: 'Checkpoint',
       options: modelDetail.map((data) => {
         return {
           id: data.model_name,
@@ -61,7 +64,7 @@ const Training = () => {
         };
       }),
       name: 'ckpt',
-      placeholder: 'Chọn tên model'
+      placeholder: 'Chọn Checkpoint'
     },
     {title: 'Loại task', options: taskTypeSelectData, name: 'taskType', placeholder: 'Chọn loại task'},
     {title: 'Epoch', name: 'epoch', placeholder: 'Chọn số epoch'}
@@ -72,7 +75,10 @@ const Training = () => {
     setIsRunning(true);
     try {
       // Running Model
-      await dispatch(addTask(data));
+      const res: any = await dispatch(addTask(data)).unwrap();
+      if (res.task_id) {
+        customToast(ToastType.SUCCESS, 'Thêm task thành công');
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -81,10 +87,23 @@ const Training = () => {
   };
 
   useEffect(() => {
-    if (modelTypeData && modelTypeData.length > 0) {
-      dispatch(getAllDataDetail({type: modelTypeData}));
+    setValue('filename', '');
+    setValue('ckpt', '');
+    try {
+      dispatch(handleLoading(true));
+      const fetchData = async () => {
+        const params = getDataParams('defaultValue', modelType);
+        await dispatch(getAllDataDetail(params));
+        await dispatch(getAllModelDetail(params));
+        dispatch(handleLoading(false));
+      };
+
+      fetchData();
+    } catch (error) {
+      console.error(error);
+      dispatch(handleLoading(false));
     }
-  }, [modelTypeData]);
+  }, [modelType]);
 
   return (
     <div className='training'>

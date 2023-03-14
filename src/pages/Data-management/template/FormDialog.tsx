@@ -31,7 +31,6 @@ const FormDialog = (props: Props) => {
     const files = data.files;
     const uploadFile = files ? files['0'] : files;
     const postData = {
-      version: '6',
       region: region,
       type: modelType.toLowerCase(),
       nosample: 1000,

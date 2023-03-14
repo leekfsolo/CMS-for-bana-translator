@@ -7,10 +7,11 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {getAllModelData} from './modelManagementSlice';
+import {deleteModelFile, getAllModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
 
 const headCells: TableHeadCell[] = [
   {
@@ -69,6 +70,51 @@ const ModelManagement = () => {
   const handleModelChange = (e: any) => setModelType(e.target.value);
   const handleRegionChange = (e: any) => setRegion(e.target.value);
 
+  const handleDelete = async () => {
+    try {
+      dispatch(handleLoading(true));
+      for (const data of selected) {
+        const [id, modelType] = data.split(' ');
+        await dispatch(deleteModelFile({id: Number(id), modelType}));
+      }
+      customToast(ToastType.SUCCESS, 'Xoá thành công');
+    } catch (e: any) {
+      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = modelData.map((n) => {
+        return `${n.id} ${n.model_type}`;
+      });
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected: string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+    }
+
+    setSelected(newSelected);
+  };
+
+  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+
   useEffect(() => {
     try {
       dispatch(handleLoading(true));
@@ -83,7 +129,7 @@ const ModelManagement = () => {
       console.error(error);
       dispatch(handleLoading(false));
     }
-  }, [modelType]);
+  }, [modelType, region]);
 
   return (
     <main className='model-management'>
@@ -121,7 +167,10 @@ const ModelManagement = () => {
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
-            setSelected={setSelected}
+            handleDelete={handleDelete}
+            handleClick={handleClick}
+            handleSelectAllClick={handleSelectAllClick}
+            isSelected={isSelected}
             manageType='activate'
           />
           <CPagination

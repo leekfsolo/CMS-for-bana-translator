@@ -12,14 +12,14 @@ export interface IProfile {
 }
 
 export interface IDataDisplay {
-  version: string;
+  id: string;
   region: string;
   createdDate?: string;
   nosample: number;
   type?: string;
 }
 
-export interface IData extends IDataDisplay {
+export interface IData extends Omit<IDataDisplay, 'id'> {
   filename?: string;
   training_file?: any;
 }
@@ -31,7 +31,7 @@ export interface IModelDisplay {
   model_name: string;
   model_type: string;
   region: string;
-  version: number;
+  id: string;
 }
 export interface IModel extends IModelDisplay {
   accuracy?: number;

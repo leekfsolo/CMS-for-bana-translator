@@ -18,7 +18,12 @@ export const getTotalTasks = createAsyncThunk('dashboard/getAllTasks', async () 
   return res;
 });
 
-const STATUS = ['waiting', 'start', 'complete', 'error'];
+export const deleteTask = createAsyncThunk('dashboard/deletTask', async (id: string) => {
+  const res = await queueApi.deleteTask(id);
+  return res;
+});
+
+const STATUS = ['waiting', 'processing', 'completed', 'error'];
 
 const dashboard = createSlice({
   name: 'dashboard',
@@ -30,10 +35,18 @@ const dashboard = createSlice({
         state.totalTasks = action.payload.num_tasks;
       })
       .addCase(getTotalTasks.fulfilled, (state, action: PayloadAction<any>) => {
-        const tasks = action.payload.map((task: ITaskData) => {
-          const {accuracy, task_id, task_type, user_id, model_name, state, filename} = task;
+        const tasks = action.payload.map(({task, user}: {task: ITaskData; user: any}) => {
+          const {accuracy, task_id, task_type, model_name, state, filename} = task;
 
-          return {id: task_id, user_id, model_name, filename, task_type, accuracy, status: STATUS[state]};
+          return {
+            id: task_id,
+            username: user.username,
+            model_name,
+            filename,
+            task_type,
+            accuracy,
+            status: STATUS[state]
+          };
         });
         state.tasksData = tasks;
       });

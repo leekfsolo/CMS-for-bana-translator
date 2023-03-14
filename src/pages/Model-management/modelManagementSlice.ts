@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import modelApi from 'api/modelApi';
 import moment from 'moment';
-import {dataGetAllParams, IModel, IModelDisplay} from 'pages/model';
+import {dataGetAllParams, IModelDisplay} from 'pages/model';
 
 const initialState: {
   modelData: IModelDisplay[];
@@ -14,12 +14,17 @@ export const getAllModelData = createAsyncThunk('model/getAll', async (params: d
   return res;
 });
 
+export const deleteModelFile = createAsyncThunk('model/deleteById', async (data: {id: number; modelType: string}) => {
+  const res = await modelApi.deleteById(data);
+  return res;
+});
+
 const transformModelData = (responseData: any): IModelDisplay[] => {
-  return responseData.map((data: IModel) => {
+  return responseData.map((data: any) => {
     const {version, filename, epoch, model_type, region, createdDate, model_name} = data;
 
     return {
-      id: version,
+      id: `${version} ${model_type}`,
       model_name,
       createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
       region,

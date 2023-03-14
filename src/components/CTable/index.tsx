@@ -11,41 +11,26 @@ interface Props {
   data: any[];
   headCells: any[];
   viewData?: (id: string) => void;
-  setSelected: (selected: string[]) => void;
-  selected: string[];
   manageType?: 'activate' | 'edit';
+  handleDelete: () => Promise<void>;
+  isSelected: (id: string) => boolean;
+  handleClick: (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, id: string) => void;
+  handleSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selected: string[];
 }
 
 const CTable = (props: Props) => {
-  const {data, headCells, page, rowsPerPage, setSelected, selected, manageType = ''} = props;
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = data.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-
-    setSelected(newSelected);
-  };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const {
+    data,
+    headCells,
+    page,
+    rowsPerPage,
+    selected,
+    handleSelectAllClick,
+    isSelected,
+    handleClick,
+    manageType = ''
+  } = props;
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 

@@ -9,17 +9,17 @@ const initialState: {dataDetail: any[]; modelDetail: any[]} = {
   modelDetail: []
 };
 
-export const addTask = createAsyncThunk('dashboard/getAllTasks', async (data: ITaskUpload) => {
+export const addTask = createAsyncThunk('training/addTask', async (data: ITaskUpload) => {
   const res = await queueApi.addTask(data);
   return res;
 });
 
-export const getAllDataDetail = createAsyncThunk('data/getAllData', async (params: dataGetAllParams) => {
+export const getAllDataDetail = createAsyncThunk('training/getAllData', async (params: dataGetAllParams) => {
   const res = await dataApi.getAll(params);
   return res;
 });
 
-export const getAllModelDetail = createAsyncThunk('model/getAllModel', async (params: dataGetAllParams) => {
+export const getAllModelDetail = createAsyncThunk('training/getAllModel', async (params: dataGetAllParams) => {
   const res = await modelApi.getAllFilterModels(params);
   return res;
 });
