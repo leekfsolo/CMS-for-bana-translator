@@ -57,7 +57,10 @@ const Register = () => {
           required: true,
           placeholder: 'role',
           type: 'text',
-          options: ['admin', 'sub-admin']
+          options: [
+            {id: 'admin', value: 'admin'},
+            {id: 'sub-admin', value: 'sub-admin'}
+          ]
         }
       ]
     }

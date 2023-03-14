@@ -1,5 +1,5 @@
 import {getDataServerUrl, ignoreHttpsAgent} from 'configuration';
-import {IModel} from 'pages/model';
+import {dataGetAllParams, IModel} from 'pages/model';
 import axiosClient from './axiosClient';
 
 const modelApi = {
@@ -18,6 +18,10 @@ const modelApi = {
   updateById: (id: string) => {
     const url = '/api/model';
     return axiosClient.put(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
+  },
+  getAllFilterModels: (params: dataGetAllParams) => {
+    const url = '/api/model/getModels';
+    return axiosClient.post(getDataServerUrl(url), params, {httpsAgent: ignoreHttpsAgent, params});
   },
   getAll: () => {
     const url = '/api/model/get_all_models';

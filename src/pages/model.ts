@@ -65,3 +65,8 @@ export interface ITaskDisplay {
   state: number;
   model_name: string;
 }
+
+export interface dataGetAllParams {
+  type?: string;
+  region?: string;
+}

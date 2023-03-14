@@ -1,4 +1,5 @@
 import {HTMLInputTypeAttribute} from 'react';
+import {SelectDataType} from 'utils/base/model';
 import {IProfile, ITaskDisplay, ITaskUpload} from './model';
 
 type alignPadding = 'left' | 'right' | 'center';
@@ -42,7 +43,7 @@ export interface IRegisterInput {
   type: HTMLInputTypeAttribute;
   placeholder: string;
   id: string;
-  options?: string[];
+  options?: SelectDataType[];
   name: keyof IFormRegister;
 }
 
@@ -82,7 +83,7 @@ export interface IProfileFormInput {
   type: HTMLInputTypeAttribute;
   placeholder: string;
   id: string;
-  options?: string[];
+  options?: SelectDataType[];
   name: keyof IProfileFormTitle;
 }
 
@@ -93,7 +94,7 @@ export interface IProfileFormSection {
 
 export interface ITrainingOptionSelect {
   title: string;
-  options?: string[];
+  options?: SelectDataType[];
   name: keyof ITaskUpload;
   placeholder: string;
 }

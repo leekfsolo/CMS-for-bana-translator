@@ -1,9 +1,10 @@
 import React from 'react';
 import {MenuItem, Select, SelectProps} from '@mui/material';
+import {SelectDataType} from 'utils/base/model';
 
 interface Props extends SelectProps {
   valid?: boolean;
-  options: string[];
+  options: SelectDataType[];
 }
 
 const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
@@ -21,8 +22,8 @@ const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
         <em>{placeholder || 'placeholder'}</em>
       </MenuItem>
       {options.map((opt) => (
-        <MenuItem key={opt} value={opt}>
-          {opt}
+        <MenuItem key={opt.id} value={opt.id}>
+          {opt.value}
         </MenuItem>
       ))}
     </Select>

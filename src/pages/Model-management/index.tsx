@@ -7,14 +7,22 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {getAllModelData, getAllNMTModelData, getAllTTSModelData} from './modelManagementSlice';
+import {getAllModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
+import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
+import {getDataParams} from 'utils/helpers/getDataParams';
 
 const headCells: TableHeadCell[] = [
   {
-    id: 'version',
+    id: 'stt',
     disablePadding: true,
-    label: 'Version',
+    label: 'STT',
+    align: 'left'
+  },
+  {
+    id: 'model_name',
+    disablePadding: false,
+    label: 'Model',
     align: 'left'
   },
   {
@@ -49,9 +57,6 @@ const headCells: TableHeadCell[] = [
   }
 ];
 
-const modelTypeSelectData = ['NMT', 'TTS'];
-const regionTypeSelectData = ['Gia Lai', 'Kon Tum', 'Bình Định'];
-
 const ModelManagement = () => {
   const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
@@ -68,13 +73,8 @@ const ModelManagement = () => {
     try {
       dispatch(handleLoading(true));
       const fetchData = async () => {
-        await dispatch(
-          modelType === 'defaultValue'
-            ? getAllModelData()
-            : modelType === 'NMT'
-            ? getAllNMTModelData()
-            : getAllTTSModelData()
-        );
+        const params = getDataParams(region, modelType);
+        await dispatch(getAllModelData(params));
         dispatch(handleLoading(false));
       };
 
@@ -122,6 +122,7 @@ const ModelManagement = () => {
             rowsPerPage={rowsPerPage}
             selected={selected}
             setSelected={setSelected}
+            manageType='activate'
           />
           <CPagination
             maxLength={modelData.length}

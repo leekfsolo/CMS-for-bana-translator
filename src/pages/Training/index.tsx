@@ -5,10 +5,11 @@ import {LinearProgress} from '@mui/material';
 import {ITrainingOptionSelect} from 'pages/interface';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import CInput from 'components/CInput';
-import {addTask, getAllNMTModelData, getAllTTSModelData} from './trainingSlice';
+import {addTask, getAllDataDetail} from './trainingSlice';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {ITaskUpload} from 'pages/model';
 import {trainingSelector} from 'app/selectors';
+import {modelTypeSelectData, regionTypeSelectData, taskTypeSelectData} from 'utils/base/constants';
 
 const defaultValues: ITaskUpload = {
   ckpt: '',
@@ -22,35 +23,47 @@ const defaultValues: ITaskUpload = {
 const Training = () => {
   const dispatch = useAppDispatch();
   const training = useAppSelector(trainingSelector);
-  const {modelData} = training;
+  const {dataDetail, modelDetail} = training;
   const {handleSubmit, control, watch, reset} = useForm<ITaskUpload>({defaultValues});
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const watchAllFields = watch();
   const modelTypeData = watchAllFields['modelType'];
+
   const canStartRunning = Object.values(watchAllFields).every((value) => value !== '');
+  const canSelectOtherSubSelection = modelTypeData !== '';
 
   const trainingOptions: ITrainingOptionSelect[] = [
-    {title: 'Loại Model', options: ['nmt', 'tts'], name: 'modelType', placeholder: 'Chọn loại model'},
+    {title: 'Loại Model', options: modelTypeSelectData, name: 'modelType', placeholder: 'Chọn loại model'},
     {
       title: 'Tập dữ liệu',
-      options: modelData.map((data) => data.model_name),
+      options: dataDetail.map((data) => {
+        return {
+          id: data.filename,
+          value: data.filename
+        };
+      }),
       name: 'filename',
       placeholder: 'Chọn tập dữ liệu'
     },
     {
       title: 'Vùng',
-      options: ['Gia Lai', 'Kon Tum', 'Bình Định'],
+      options: regionTypeSelectData,
       name: 'region',
       placeholder: 'Chọn vùng'
     },
     {
-      title: 'File Checkpoint',
-      options: modelData.map((data) => data.ckpt_file),
+      title: 'Tên model',
+      options: modelDetail.map((data) => {
+        return {
+          id: data.model_name,
+          value: data.model_name
+        };
+      }),
       name: 'ckpt',
-      placeholder: 'Chọn file checkpoint'
+      placeholder: 'Chọn tên model'
     },
-    {title: 'Loại task', options: ['train', 'test'], name: 'taskType', placeholder: 'Chọn loại task'},
+    {title: 'Loại task', options: taskTypeSelectData, name: 'taskType', placeholder: 'Chọn loại task'},
     {title: 'Epoch', name: 'epoch', placeholder: 'Chọn số epoch'}
   ];
 
@@ -69,11 +82,7 @@ const Training = () => {
 
   useEffect(() => {
     if (modelTypeData && modelTypeData.length > 0) {
-      if (modelTypeData === 'nmt') {
-        dispatch(getAllNMTModelData());
-      } else {
-        dispatch(getAllTTSModelData());
-      }
+      dispatch(getAllDataDetail({type: modelTypeData}));
     }
   }, [modelTypeData]);
 
@@ -82,8 +91,10 @@ const Training = () => {
       <form noValidate method='POST' action='#' onSubmit={handleSubmit(startRunning)}>
         <div className='container-fluid m-0 p-0'>
           <div className='row justify-content-between m-0'>
-            {trainingOptions.map((input) => {
+            {trainingOptions.map((input, idx) => {
               const {title, name, placeholder, options} = input;
+              const isFirstInputs = idx === 0;
+              const disabled = isRunning || (!isFirstInputs && !canSelectOtherSubSelection);
 
               return (
                 <div key={name} className='training-filter col-5 p-0'>
@@ -98,7 +109,7 @@ const Training = () => {
                           options={options}
                           size='small'
                           variant='standard'
-                          disabled={isRunning}
+                          disabled={disabled}
                           placeholder={placeholder}
                         />
                       ) : (
@@ -106,7 +117,7 @@ const Training = () => {
                           {...field}
                           size='small'
                           variant='standard'
-                          disabled={isRunning}
+                          disabled={disabled}
                           placeholder={placeholder}
                         />
                       )

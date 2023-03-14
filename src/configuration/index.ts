@@ -15,6 +15,6 @@ const Config = {
 
 export const getUserServerUrl = (url: string) => Config.apiConfig.userServer.endPoint + url;
 export const getDataServerUrl = (url: string) => Config.apiConfig.dataServer.endPoint + url;
-export const ignoreHttpsAgent = new https.Agent({rejectUnauthorized: false});
+export const ignoreHttpsAgent = new https.Agent({rejectUnauthorized: false, requestCert: false});
 
 export default Config;

@@ -15,15 +15,27 @@ import {dashboardSelector} from 'app/selectors';
 
 const headCells: TableHeadCell[] = [
   {
-    id: 'id',
+    id: 'stt',
     disablePadding: true,
-    label: 'ID',
+    label: 'STT',
     align: 'left'
   },
   {
     id: 'user',
     disablePadding: false,
     label: 'Người thực hiện',
+    align: 'left'
+  },
+  {
+    id: 'model_name',
+    disablePadding: false,
+    label: 'Model',
+    align: 'left'
+  },
+  {
+    id: 'filename',
+    disablePadding: false,
+    label: 'Tập dữ liệu',
     align: 'left'
   },
   {
@@ -39,21 +51,9 @@ const headCells: TableHeadCell[] = [
     align: 'left'
   },
   {
-    id: 'modelName',
-    disablePadding: false,
-    label: 'Tên model',
-    align: 'left'
-  },
-  {
     id: 'state',
     disablePadding: false,
     label: 'Trạng thái',
-    align: 'left'
-  },
-  {
-    id: 'filename',
-    disablePadding: false,
-    label: 'Tên tệp',
     align: 'left'
   }
 ];

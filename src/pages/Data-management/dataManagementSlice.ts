@@ -1,8 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import dataApi from 'api/dataApi';
-import Config from 'configuration';
-import {create} from 'domain';
-import {IData, IDataDisplay} from 'pages/model';
+import {dataGetAllParams, IData, IDataDisplay} from 'pages/model';
 
 const initialState: {
   dataData: IDataDisplay[];
@@ -10,8 +8,8 @@ const initialState: {
   dataData: []
 };
 
-export const getAllDataData = createAsyncThunk('data/getAll', async (_) => {
-  const res = await dataApi.getAll();
+export const getAllDataData = createAsyncThunk('data/getAll', async (params: dataGetAllParams) => {
+  const res = await dataApi.getAll(params);
   return res;
 });
 
@@ -26,6 +24,7 @@ const transformDataData = (responseData: any): IDataDisplay[] => {
 
     return {
       id: version,
+      filename,
       createdDate,
       region,
       nosample,

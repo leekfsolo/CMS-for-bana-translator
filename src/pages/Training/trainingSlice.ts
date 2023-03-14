@@ -1,10 +1,12 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import dataApi from 'api/dataApi';
 import modelApi from 'api/modelApi';
 import queueApi from 'api/queueApi';
-import {ITaskUpload} from 'pages/model';
+import {dataGetAllParams, ITaskUpload} from 'pages/model';
 
-const initialState: {modelData: any[]} = {
-  modelData: []
+const initialState: {dataDetail: any[]; modelDetail: any[]} = {
+  dataDetail: [],
+  modelDetail: []
 };
 
 export const addTask = createAsyncThunk('dashboard/getAllTasks', async (data: ITaskUpload) => {
@@ -12,13 +14,13 @@ export const addTask = createAsyncThunk('dashboard/getAllTasks', async (data: IT
   return res;
 });
 
-export const getAllNMTModelData = createAsyncThunk('training/getAllNMT', async (_) => {
-  const res = await modelApi.getAllNMT();
+export const getAllDataDetail = createAsyncThunk('data/getAllData', async (params: dataGetAllParams) => {
+  const res = await dataApi.getAll(params);
   return res;
 });
 
-export const getAllTTSModelData = createAsyncThunk('training/getAllTTS', async (_) => {
-  const res = await modelApi.getAllTTS();
+export const getAllModelDetail = createAsyncThunk('model/getAllModel', async (params: dataGetAllParams) => {
+  const res = await modelApi.getAllFilterModels(params);
   return res;
 });
 
@@ -28,11 +30,11 @@ const training = createSlice({
   reducers: {},
   extraReducers: (builders) => {
     builders
-      .addCase(getAllNMTModelData.fulfilled, (state, action: PayloadAction<any>) => {
-        state.modelData = action.payload;
+      .addCase(getAllDataDetail.fulfilled, (state, action: PayloadAction<any>) => {
+        state.dataDetail = action.payload.datas;
       })
-      .addCase(getAllTTSModelData.fulfilled, (state, action: PayloadAction<any>) => {
-        state.modelData = action.payload;
+      .addCase(getAllModelDetail.fulfilled, (state, action: PayloadAction<any>) => {
+        state.modelDetail = action.payload;
       });
   }
 });

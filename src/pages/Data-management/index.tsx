@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {IDataHead, TableHeadCell} from 'pages/interface';
+import {TableHeadCell} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
@@ -11,12 +11,20 @@ import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {handleLoading} from 'app/globalSlice';
 import {dataManagerSelector} from 'app/selectors';
 import {getAllDataData, uploadDataFile} from './dataManagementSlice';
+import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
+import {getDataParams} from 'utils/helpers/getDataParams';
 
 const headCells: TableHeadCell[] = [
   {
-    id: 'version',
+    id: 'order',
     disablePadding: true,
-    label: 'Version',
+    label: 'STT',
+    align: 'left'
+  },
+  {
+    id: 'filename',
+    disablePadding: false,
+    label: 'Tập dữ liệu',
     align: 'left'
   },
   {
@@ -44,8 +52,7 @@ const headCells: TableHeadCell[] = [
     align: 'left'
   }
 ];
-const modelTypeSelectData = ['NMT', 'TTS'];
-const regionTypeSelectData = ['Gia Lai', 'Kon Tum', 'Bình Định'];
+
 const DataManagement = () => {
   const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
@@ -54,8 +61,8 @@ const DataManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const {dataData} = useAppSelector(dataManagerSelector);
-  const [modelType, setModelType] = useState<string>('default');
-  const [region, setRegion] = useState<string>('default');
+  const [modelType, setModelType] = useState<string>('defaultValue');
+  const [region, setRegion] = useState<string>('defaultValue');
 
   const handleModelChange = (e: any) => setModelType(e.target.value);
   const handleRegionchange = (e: any) => setRegion(e.target.value);
@@ -84,9 +91,11 @@ const DataManagement = () => {
 
   useEffect(() => {
     try {
+      const params = getDataParams(region, modelType);
+
       dispatch(handleLoading(true));
       const fetchData = async () => {
-        await dispatch(getAllDataData());
+        await dispatch(getAllDataData(params));
         dispatch(handleLoading(false));
       };
 
@@ -95,7 +104,8 @@ const DataManagement = () => {
       console.log(error);
       dispatch(handleLoading(false));
     }
-  }, []);
+  }, [region, modelType]);
+
   return (
     <main className='data-management'>
       <Box sx={{width: '100%'}}>

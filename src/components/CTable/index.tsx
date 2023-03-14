@@ -13,7 +13,7 @@ interface Props {
   viewData?: (id: string) => void;
   setSelected: (selected: string[]) => void;
   selected: string[];
-  manageType?: string;
+  manageType?: 'activate' | 'edit';
 }
 
 const CTable = (props: Props) => {
@@ -63,6 +63,8 @@ const CTable = (props: Props) => {
           {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
             const isItemSelected = isSelected(row.id);
             const labelId = `enhanced-table-checkbox-${index}`;
+            const {id, ...dataRow} = row;
+            const displayData = {order: index + 1, ...dataRow};
 
             return (
               <TableRow
@@ -83,10 +85,10 @@ const CTable = (props: Props) => {
                     }}
                   />
                 </TableCell>
-                {Object.keys(row).map((key, idx) => (
+                {Object.keys(displayData).map((key, idx) => (
                   <TableCell key={`cell-${idx}`} align='left'>
-                    <span className={key === 'status' ? `cell-variant cell-variant__${row[key]}` : ''}>
-                      {getCellData(row[key])}
+                    <span className={key === 'status' ? `cell-variant cell-variant__${displayData[key]}` : ''}>
+                      {getCellData(displayData[key])}
                     </span>
                   </TableCell>
                 ))}

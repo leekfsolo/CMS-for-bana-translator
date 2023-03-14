@@ -1,4 +1,5 @@
 import {HTMLInputTypeAttribute} from 'react';
+import {SelectDataType} from 'utils/base/model';
 
 export interface ISidebarItem {
   label: string;
@@ -25,7 +26,7 @@ export interface ICFormInput {
   type: HTMLInputTypeAttribute;
   placeholder: string;
   id: string;
-  options?: string[];
+  options?: SelectDataType[];
   name: keyof ICForm;
 }
 

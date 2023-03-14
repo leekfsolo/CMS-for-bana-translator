@@ -3,3 +3,8 @@ export type BaseProps = {
 };
 
 export type NonNullable<T> = Exclude<T, undefined | null>;
+
+export type SelectDataType = {
+  id: string;
+  value: string;
+};
