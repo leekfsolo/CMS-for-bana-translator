@@ -2,37 +2,23 @@ import React from 'react';
 import CTableHead from 'components/CTableHead';
 import {Table, TableBody, TableCell, TableRow, TableContainer} from '@mui/material';
 import CCheckbox from 'components/CCheckbox';
-import EditIcon from '@mui/icons-material/Edit';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import {getCellData} from 'utils/helpers/getCellData';
+import {TableHeadCell} from 'pages/interface';
 interface Props {
   page: number;
   rowsPerPage: number;
   data: any[];
-  headCells: any[];
+  headCells: TableHeadCell[];
   viewData?: (id: string) => void;
-  manageType?: 'activate' | 'edit';
-  handleDelete: () => Promise<void>;
   isSelected: (id: string) => boolean;
   handleClick: (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, id: string) => void;
   handleSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selected: string[];
+  handleAction?: (id: string) => Promise<void>;
 }
 
 const CTable = (props: Props) => {
-  const {
-    data,
-    headCells,
-    page,
-    rowsPerPage,
-    selected,
-    handleSelectAllClick,
-    isSelected,
-    handleClick,
-    manageType = ''
-  } = props;
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
+  const {data, headCells, selected, handleSelectAllClick, isSelected, handleClick} = props;
 
   return (
     <TableContainer>
@@ -42,19 +28,18 @@ const CTable = (props: Props) => {
           onSelectAllClick={handleSelectAllClick}
           rowCount={data.length}
           headCells={headCells}
-          isHavingAction={manageType !== ''}
         />
         <TableBody>
-          {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-            const isItemSelected = isSelected(row.id);
-            const labelId = `enhanced-table-checkbox-${index}`;
+          {data.map((row, index) => {
             const {id, ...dataRow} = row;
+            const isItemSelected = isSelected(id);
+            const labelId = `enhanced-table-checkbox-${index}`;
             const displayData = {order: index + 1, ...dataRow};
 
             return (
               <TableRow
                 hover
-                onClick={(event) => handleClick(event, row.id)}
+                onClick={(event) => handleClick(event, id)}
                 role='checkbox'
                 aria-checked={isItemSelected}
                 tabIndex={-1}
@@ -71,29 +56,15 @@ const CTable = (props: Props) => {
                   />
                 </TableCell>
                 {Object.keys(displayData).map((key, idx) => (
-                  <TableCell key={`cell-${idx}`} align='left'>
+                  <TableCell key={`cell-${idx}`} align={idx < Object.keys(displayData).length - 1 ? 'left' : 'center'}>
                     <span className={key === 'status' ? `cell-variant cell-variant__${displayData[key]}` : ''}>
                       {getCellData(displayData[key])}
                     </span>
                   </TableCell>
                 ))}
-                {manageType !== '' && (
-                  <TableCell align='center' padding='checkbox'>
-                    {manageType === 'activate' ? <ArrowCircleUpIcon /> : <EditIcon />}
-                  </TableCell>
-                )}
               </TableRow>
             );
           })}
-          {emptyRows > 0 && (
-            <TableRow
-              style={{
-                height: 53 * emptyRows
-              }}
-            >
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
         </TableBody>
       </Table>
     </TableContainer>

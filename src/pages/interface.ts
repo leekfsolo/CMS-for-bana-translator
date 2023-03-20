@@ -3,9 +3,10 @@ import {SelectDataType} from 'utils/base/model';
 import {IProfile, ITaskDisplay, ITaskUpload} from './model';
 
 type alignPadding = 'left' | 'right' | 'center';
+type cellPadding = 'checkbox' | 'none' | 'normal';
 
 export interface TableHeadCell {
-  disablePadding: boolean;
+  padding: cellPadding;
   id: string;
   label: string;
   align: alignPadding;
@@ -109,5 +110,5 @@ export interface ILoginState {
 
 export interface IDashboardData {
   totalTasks: number;
-  tasksData: ITaskDisplay[];
+  tasksData: (Omit<ITaskDisplay, 'task_id'> & {id: string; status: string})[];
 }

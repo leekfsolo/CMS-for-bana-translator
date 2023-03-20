@@ -1,3 +1,5 @@
+import {ReactElement} from 'react';
+
 export interface IChangePassword {
   password: string;
   repassword: string;
@@ -11,7 +13,7 @@ export interface IProfile {
   password: string;
 }
 
-export interface IDataDisplay {
+export interface IDataDisplay extends ActionColumn {
   id: string;
   region: string;
   createdDate?: string;
@@ -24,7 +26,7 @@ export interface IData extends Omit<IDataDisplay, 'id'> {
   training_file?: any;
 }
 
-export interface IModelDisplay {
+export interface IModelDisplay extends ActionColumn {
   createdDate?: string;
   epoch: number;
   filename?: string;
@@ -56,7 +58,7 @@ export interface ITaskData extends ITaskDisplay {
   prior_loss?: string;
 }
 
-export interface ITaskDisplay {
+export interface ITaskDisplay extends ActionColumn {
   filename?: string;
   accuracy?: string;
   task_id: string;
@@ -69,4 +71,8 @@ export interface ITaskDisplay {
 export interface dataGetAllParams {
   type?: string;
   region?: string;
+}
+
+export interface ActionColumn {
+  action?: ReactElement;
 }

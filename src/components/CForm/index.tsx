@@ -41,7 +41,7 @@ const CForm = (props: Props) => {
       Object.assign(validator, {pattern: {value: /\d{10}/, message: 'Invalid phone number'}});
     }
     if (item.name === 'accountRole') {
-      Object.assign(validator, {validate: (value: string) => value !== 'default' || 'This field is required'});
+      Object.assign(validator, {validate: (value: string) => value !== 'defaultValue' || 'This field is required'});
     }
     if (item.name === 'confirmPassword') {
       Object.assign(validator, {

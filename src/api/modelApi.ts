@@ -35,16 +35,8 @@ const modelApi = {
     const url = '/api/model/get_all_TTS_models';
     return axiosClient.get(getDataServerUrl(url));
   },
-  getAllMyNMT: () => {
-    const url = '/api/model/get_all_my_NMT_models';
-    return axiosClient.get(getDataServerUrl(url));
-  },
-  getAllMyTTS: () => {
-    const url = '/api/model/get_all_my_TTS_models';
-    return axiosClient.get(getDataServerUrl(url));
-  },
-  getAllMy: () => {
-    const url = '/api/model/get_all_my_models';
+  activate: (id: string) => {
+    const url = `/api/model/activate_a_model/${id}`;
     return axiosClient.get(getDataServerUrl(url));
   }
 };

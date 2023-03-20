@@ -79,6 +79,7 @@ const auth = createSlice({
 
           authValue.accessToken = accessToken;
           localStorage.setItem(Config.storageKey.auth, JSON.stringify(authValue));
+          console.log(authValue);
           return authValue;
         }
       });

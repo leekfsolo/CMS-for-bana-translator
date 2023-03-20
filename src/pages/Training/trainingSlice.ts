@@ -34,7 +34,10 @@ const training = createSlice({
         state.dataDetail = action.payload.datas;
       })
       .addCase(getAllModelDetail.fulfilled, (state, action: PayloadAction<any>) => {
-        state.modelDetail = action.payload;
+        const data = action.payload;
+        data.unshift({model_name: 'random'});
+
+        state.modelDetail = data;
       });
   }
 });

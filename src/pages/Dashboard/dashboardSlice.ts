@@ -23,6 +23,11 @@ export const deleteTask = createAsyncThunk('dashboard/deletTask', async (id: str
   return res;
 });
 
+export const cancelTask = createAsyncThunk('dashboard/deletTask', async (id: string) => {
+  const res = await queueApi.cancelTask(id);
+  return res;
+});
+
 const STATUS = ['waiting', 'processing', 'completed', 'error'];
 
 const dashboard = createSlice({

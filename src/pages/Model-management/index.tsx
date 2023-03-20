@@ -7,55 +7,58 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {deleteModelFile, getAllModelData} from './modelManagementSlice';
+import {activateModel, deleteModelFile, getAllModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
+import IconButton from '@mui/material/IconButton';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 
 const headCells: TableHeadCell[] = [
   {
     id: 'stt',
-    disablePadding: true,
+    padding: 'normal',
     label: 'STT',
     align: 'left'
   },
   {
     id: 'model_name',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Model',
     align: 'left'
   },
   {
     id: 'createdDate',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Ngày tạo',
     align: 'left'
   },
   {
     id: 'region',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Vùng',
     align: 'left'
   },
   {
     id: 'dataVersion',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Tập dữ liệu',
     align: 'left'
   },
   {
     id: 'accuracy',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Loại model',
     align: 'left'
   },
   {
     id: 'epoch',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Epoch',
     align: 'left'
-  }
+  },
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
 ];
 
 const ModelManagement = () => {
@@ -66,14 +69,29 @@ const ModelManagement = () => {
   const {modelData} = useAppSelector(modelManagementSelector);
   const [modelType, setModelType] = useState<string>('defaultValue');
   const [region, setRegion] = useState<string>('defaultValue');
+  const displayData = modelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
+    return {
+      ...data,
+      action: (
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            handleActivate(data.model_name);
+          }}
+        >
+          <ArrowCircleUpIcon />
+        </IconButton>
+      )
+    };
+  });
 
   const handleModelChange = (e: any) => setModelType(e.target.value);
   const handleRegionChange = (e: any) => setRegion(e.target.value);
 
-  const handleDelete = async () => {
+  const handleDelete = async (selectedIds: string[]) => {
     try {
       dispatch(handleLoading(true));
-      for (const data of selected) {
+      for (const data of selectedIds) {
         const [id, modelType] = data.split(' ');
         await dispatch(deleteModelFile({id: Number(id), modelType}));
       }
@@ -87,9 +105,7 @@ const ModelManagement = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = modelData.map((n) => {
-        return `${n.id} ${n.model_type}`;
-      });
+      const newSelected = displayData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -115,6 +131,18 @@ const ModelManagement = () => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
+  const handleActivate = async (id: string) => {
+    try {
+      dispatch(handleLoading(true));
+      await dispatch(activateModel(id));
+      customToast(ToastType.SUCCESS, 'Kích hoạt thành công');
+    } catch (e: any) {
+      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
   useEffect(() => {
     try {
       dispatch(handleLoading(true));
@@ -129,6 +157,7 @@ const ModelManagement = () => {
       console.error(error);
       dispatch(handleLoading(false));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modelType, region]);
 
   return (
@@ -160,18 +189,17 @@ const ModelManagement = () => {
         </Box>
 
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Model Management' numSelected={selected.length} />
+          <CTableToolbar tableTitle='Model Management' selected={selected} handleDelete={handleDelete} />
           <CTable
-            data={modelData}
+            data={displayData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
-            handleDelete={handleDelete}
             handleClick={handleClick}
             handleSelectAllClick={handleSelectAllClick}
             isSelected={isSelected}
-            manageType='activate'
+            handleAction={handleActivate}
           />
           <CPagination
             maxLength={modelData.length}

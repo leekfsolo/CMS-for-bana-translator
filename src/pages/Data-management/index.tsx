@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {TableHeadCell} from 'pages/interface';
-import {Box, Paper} from '@mui/material';
+import {Box, IconButton, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
@@ -14,44 +14,46 @@ import {deleteDataFile, getAllDataData, uploadDataFile} from './dataManagementSl
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const headCells: TableHeadCell[] = [
   {
     id: 'order',
-    disablePadding: true,
+    padding: 'normal',
     label: 'STT',
     align: 'left'
   },
   {
     id: 'filename',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Tập dữ liệu',
     align: 'left'
   },
   {
     id: 'createdDate',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Ngày tạo',
     align: 'left'
   },
   {
     id: 'region',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Vùng',
     align: 'left'
   },
   {
     id: 'quantity',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Số lượng',
     align: 'left'
   },
   {
     id: 'type',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Loại Data',
     align: 'left'
-  }
+  },
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
 ];
 
 const DataManagement = () => {
@@ -64,6 +66,27 @@ const DataManagement = () => {
   const {dataData} = useAppSelector(dataManagerSelector);
   const [modelType, setModelType] = useState<string>('defaultValue');
   const [region, setRegion] = useState<string>('defaultValue');
+  const displayData = dataData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
+    const {id} = data;
+
+    return {
+      ...data,
+      action: (
+        <div className='d-flex align-items-center justify-content-center'>
+          <IconButton
+            disableFocusRipple
+            sx={{padding: '4px'}}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete([id]);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      )
+    };
+  });
 
   const handleModelChange = (e: any) => setModelType(e.target.value);
   const handleRegionchange = (e: any) => setRegion(e.target.value);
@@ -90,10 +113,10 @@ const DataManagement = () => {
     setSelectedFiles(newSelectedFiles);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (selectedIds: string[]) => {
     try {
       dispatch(handleLoading(true));
-      for (const id of selected) {
+      for (const id of selectedIds) {
         await dispatch(deleteDataFile(id));
       }
       customToast(ToastType.SUCCESS, 'Xoá thành công');
@@ -106,7 +129,7 @@ const DataManagement = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = dataData.map((n) => n.id);
+      const newSelected = displayData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -147,6 +170,7 @@ const DataManagement = () => {
       console.log(error);
       dispatch(handleLoading(false));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region, modelType]);
 
   return (
@@ -190,15 +214,13 @@ const DataManagement = () => {
           />
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Data Management' numSelected={selected.length} />
+          <CTableToolbar tableTitle='Data Management' selected={selected} handleDelete={handleDelete} />
           <CTable
-            data={dataData}
+            data={displayData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
-            manageType='edit'
-            handleDelete={handleDelete}
             handleClick={handleClick}
             handleSelectAllClick={handleSelectAllClick}
             isSelected={isSelected}

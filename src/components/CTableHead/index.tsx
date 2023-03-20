@@ -1,18 +1,18 @@
 import React from 'react';
 import {TableHead, TableRow, TableCell} from '@mui/material';
 import CCheckbox from 'components/CCheckbox';
+import {TableHeadCell} from 'pages/interface';
 
 interface Props {
   numSelected: number;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   rowCount: number;
-  headCells: Array<any>;
+  headCells: TableHeadCell[];
   isHavingAction?: boolean;
 }
 
 const CTableHead = (props: Props) => {
-  const {onSelectAllClick, numSelected, rowCount, headCells, isHavingAction = true} = props;
-  const headCellsDisplay = isHavingAction ? headCells.concat({id: 'Action', label: ''}) : headCells;
+  const {onSelectAllClick, numSelected, rowCount, headCells} = props;
 
   return (
     <TableHead className='ctable-head'>
@@ -28,8 +28,8 @@ const CTableHead = (props: Props) => {
             }}
           />
         </TableCell>
-        {headCellsDisplay.map((headCell) => (
-          <TableCell key={headCell.id} align='left' padding='normal'>
+        {headCells.map((headCell) => (
+          <TableCell key={headCell.id} align={headCell.align} padding={headCell.padding}>
             {headCell.label}
           </TableCell>
         ))}

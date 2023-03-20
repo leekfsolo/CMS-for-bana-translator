@@ -4,26 +4,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
   tableTitle: string;
-  numSelected: number;
+  selected: string[];
+  handleDelete?: (id: string[]) => Promise<void>;
 }
 
 const CTableToolbar = (props: Props) => {
-  const {tableTitle, numSelected} = props;
+  const {tableTitle, selected, handleDelete} = props;
 
   return (
     <Toolbar className='table-toolbar'>
-      {numSelected > 0 ? (
-        <Typography sx={{flex: '1 1 100%'}} color='inherit' variant='subtitle1' component='div'>
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography sx={{flex: '1 1 100%'}} variant='h6' id='tableTitle' component='div'>
-          {tableTitle}
-        </Typography>
-      )}
-      {numSelected > 0 && (
+      <Typography sx={{flex: '1 1 100%'}} variant='h6' id='tableTitle' component='div'>
+        {tableTitle}
+      </Typography>
+      {selected.length > 0 && handleDelete && (
         <Tooltip className='table-toolbar__delete' title='Delete'>
-          <IconButton>
+          <IconButton onClick={() => handleDelete(selected)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

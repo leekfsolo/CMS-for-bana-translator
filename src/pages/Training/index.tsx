@@ -77,6 +77,12 @@ const Training = () => {
       // Running Model
       const res: any = await dispatch(addTask(data)).unwrap();
       if (res.task_id) {
+        const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${res.task_id}`);
+
+        source.onmessage = (e) => {
+          console.log(e);
+        };
+        source.onerror = (e) => source.close();
         customToast(ToastType.SUCCESS, 'Thêm task thành công');
       }
     } catch (e) {

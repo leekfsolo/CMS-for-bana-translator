@@ -10,53 +10,57 @@ import QueueIcon from '@mui/icons-material/Queue';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {getMyInfo} from 'pages/Auth/authSlice';
 import {handleLoading} from 'app/globalSlice';
-import {deleteTask, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
+import {cancelTask, deleteTask, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
 import {dashboardSelector} from 'app/selectors';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
+import IconButton from '@mui/material/IconButton';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const headCells: TableHeadCell[] = [
   {
     id: 'stt',
-    disablePadding: true,
+    padding: 'normal',
     label: 'STT',
     align: 'left'
   },
   {
     id: 'user',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Người thực hiện',
     align: 'left'
   },
   {
     id: 'model_name',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Model',
     align: 'left'
   },
   {
     id: 'filename',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Tập dữ liệu',
     align: 'left'
   },
   {
     id: 'taskType',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Loại task',
     align: 'left'
   },
   {
     id: 'accuracy',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Độ chính xác',
     align: 'left'
   },
   {
     id: 'state',
-    disablePadding: false,
+    padding: 'normal',
     label: 'Trạng thái',
     align: 'left'
-  }
+  },
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
 ];
 
 const Dashboard = () => {
@@ -67,13 +71,60 @@ const Dashboard = () => {
   const cardProgressInnerRef = useRef<HTMLDivElement | null>(null);
   const dashboard = useAppSelector(dashboardSelector);
   const {tasksData, totalTasks} = dashboard;
+  const displayData = tasksData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
+    const {status, id} = data;
 
-  const handleDelete = async () => {
+    return {
+      ...data,
+      action: (
+        <div className='d-flex align-items-center justify-content-center'>
+          {(status === 'processing' || status === 'waiting') && (
+            <IconButton
+              disableFocusRipple
+              sx={{padding: '4px'}}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCancelTask(id);
+              }}
+            >
+              <DoNotDisturbIcon />
+            </IconButton>
+          )}
+          <IconButton
+            disableFocusRipple
+            sx={{padding: '4px'}}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete([id]);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      )
+    };
+  });
+
+  const handleCancelTask = async (id: string) => {
     try {
       dispatch(handleLoading(true));
-      for (const id of selected) {
+      await dispatch(cancelTask(id));
+      handleUpdate();
+      customToast(ToastType.SUCCESS, 'Hủy task thành công');
+    } catch (e: any) {
+      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
+  const handleDelete = async (selectedIds: string[]) => {
+    try {
+      dispatch(handleLoading(true));
+      for (const id of selectedIds) {
         await dispatch(deleteTask(id));
       }
+      handleUpdate();
       customToast(ToastType.SUCCESS, 'Xoá thành công');
     } catch (e: any) {
       customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
@@ -84,7 +135,7 @@ const Dashboard = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = tasksData.map((n) => n.task_id);
+      const newSelected = displayData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -118,14 +169,29 @@ const Dashboard = () => {
     }, 200);
   }, [totalTasks, tasksData]);
 
+  const handleUpdate = async () => {
+    try {
+      dispatch(handleLoading(true));
+      await dispatch(getTotalTasksInQueue());
+      await dispatch(getTotalTasks());
+      dispatch(handleLoading(false));
+    } catch (err) {
+      console.error(err);
+      dispatch(handleLoading(false));
+    }
+  };
+
+  useEffect(() => {
+    handleUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     dispatch(handleLoading(true));
 
     try {
       const fetchData = async () => {
         await dispatch(getMyInfo());
-        await dispatch(getTotalTasksInQueue());
-        await dispatch(getTotalTasks());
         dispatch(handleLoading(false));
       };
 
@@ -203,14 +269,13 @@ const Dashboard = () => {
       </div>
       <div className='dashboard-training'>
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Training History' numSelected={selected.length} />
+          <CTableToolbar tableTitle='Lịch sử train' selected={selected} handleDelete={handleDelete} />
           <CTable
-            data={tasksData}
+            data={displayData}
             headCells={headCells}
             page={page}
             rowsPerPage={rowsPerPage}
             selected={selected}
-            handleDelete={handleDelete}
             handleClick={handleClick}
             handleSelectAllClick={handleSelectAllClick}
             isSelected={isSelected}

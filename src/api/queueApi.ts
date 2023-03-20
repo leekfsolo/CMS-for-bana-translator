@@ -29,7 +29,7 @@ const queueApi = {
   },
 
   deleteTask: (id: string) => {
-    const url = `/api/queue/delete/${id}`;
+    const url = `/api/queue/deleteTasks/${id}`;
     return axiosClient.delete(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
   }
 };

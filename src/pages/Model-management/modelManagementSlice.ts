@@ -19,6 +19,11 @@ export const deleteModelFile = createAsyncThunk('model/deleteById', async (data:
   return res;
 });
 
+export const activateModel = createAsyncThunk('model/activate', async (id: string) => {
+  const res = await modelApi.activate(id);
+  return res;
+});
+
 const transformModelData = (responseData: any): IModelDisplay[] => {
   return responseData.map((data: any) => {
     const {version, filename, epoch, model_type, region, createdDate, model_name} = data;
