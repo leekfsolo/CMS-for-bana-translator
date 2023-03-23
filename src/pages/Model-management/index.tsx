@@ -1,6 +1,6 @@
 import {TableHeadCell} from 'pages/interface';
 import {Box, Paper} from '@mui/material';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, Suspense, lazy} from 'react';
 import CSelect from 'components/CSelect';
 import CTableToolbar from 'components/CTableToolbar';
 import CPagination from 'components/CPagination';
@@ -13,7 +13,12 @@ import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
 import IconButton from '@mui/material/IconButton';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import {IHandleActionParams} from 'components/interface';
+import {CModalProps} from 'components/CModal/CModal';
+import {ActionType} from 'configuration/enum';
+import DeleteIcon from '@mui/icons-material/Delete';
+const CModal = lazy(() => import('components/CModal/CModal'));
 
 const headCells: TableHeadCell[] = [
   {
@@ -69,19 +74,87 @@ const ModelManagement = () => {
   const {modelData} = useAppSelector(modelManagementSelector);
   const [modelType, setModelType] = useState<string>('defaultValue');
   const [region, setRegion] = useState<string>('defaultValue');
+  const [modelContent, setModelContent] = useState<CModalProps>();
+
+  const handleAction = async ({type, payload}: IHandleActionParams) => {
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: '',
+      title: 'Xác nhận'
+    };
+
+    let contentText = '';
+
+    switch (type) {
+      case ActionType.ACTIVATE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const id of payload) {
+              await dispatch(activateModel(id));
+            }
+            customToast(ToastType.SUCCESS, 'Kích hoạt thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xác nhận',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn chọn model này?';
+        break;
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const data of payload) {
+              const [id, modelType] = data.split(' ');
+              await dispatch(deleteModelFile({id: Number(id), modelType}));
+            }
+            customToast(ToastType.SUCCESS, 'Xoá thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn xóa model này?';
+        break;
+      default:
+        break;
+    }
+
+    modalPopupState.content = (
+      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
+    );
+
+    setModelContent(modalPopupState);
+  };
+
   const displayData = modelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
     return {
       ...data,
-      action: (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            handleActivate(data.model_name);
-          }}
-        >
-          <ArrowCircleUpIcon />
-        </IconButton>
-      )
+      action: [
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <PowerSettingsNewIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.ACTIVATE,
+          title: 'Kích hoạt model',
+          handle: handleAction
+        },
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <DeleteIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.DELETE,
+          title: 'Xóa model',
+          handle: handleAction
+        }
+      ]
     };
   });
 
@@ -89,18 +162,7 @@ const ModelManagement = () => {
   const handleRegionChange = (e: any) => setRegion(e.target.value);
 
   const handleDelete = async (selectedIds: string[]) => {
-    try {
-      dispatch(handleLoading(true));
-      for (const data of selectedIds) {
-        const [id, modelType] = data.split(' ');
-        await dispatch(deleteModelFile({id: Number(id), modelType}));
-      }
-      customToast(ToastType.SUCCESS, 'Xoá thành công');
-    } catch (e: any) {
-      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
-    } finally {
-      dispatch(handleLoading(false));
-    }
+    await handleAction({type: ActionType.DELETE, payload: selectedIds});
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +174,7 @@ const ModelManagement = () => {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: string[] = [];
 
@@ -131,37 +193,25 @@ const ModelManagement = () => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  const handleActivate = async (id: string) => {
+  const handleUpdate = useCallback(async () => {
+    dispatch(handleLoading(true));
     try {
-      dispatch(handleLoading(true));
-      await dispatch(activateModel(id));
-      customToast(ToastType.SUCCESS, 'Kích hoạt thành công');
-    } catch (e: any) {
-      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
-    } finally {
+      const params = getDataParams(region, modelType);
+      await dispatch(getAllModelData(params));
+      dispatch(handleLoading(false));
+    } catch (err) {
+      console.error(err);
       dispatch(handleLoading(false));
     }
-  };
+  }, [region, modelType]);
 
   useEffect(() => {
-    try {
-      dispatch(handleLoading(true));
-      const fetchData = async () => {
-        const params = getDataParams(region, modelType);
-        await dispatch(getAllModelData(params));
-        dispatch(handleLoading(false));
-      };
-
-      fetchData();
-    } catch (error) {
-      console.error(error);
-      dispatch(handleLoading(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modelType, region]);
+    handleUpdate();
+  }, [handleUpdate]);
 
   return (
     <main className='model-management'>
+      <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='model-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
@@ -199,7 +249,6 @@ const ModelManagement = () => {
             handleClick={handleClick}
             handleSelectAllClick={handleSelectAllClick}
             isSelected={isSelected}
-            handleAction={handleActivate}
           />
           <CPagination
             maxLength={modelData.length}

@@ -18,8 +18,8 @@ export const getTotalTasks = createAsyncThunk('dashboard/getAllTasks', async () 
   return res;
 });
 
-export const deleteTask = createAsyncThunk('dashboard/deletTask', async (id: string) => {
-  const res = await queueApi.deleteTask(id);
+export const deleteTask = createAsyncThunk('dashboard/deletTask', async (data: {taskID: string[]}) => {
+  const res = await queueApi.deleteTask(data);
   return res;
 });
 

@@ -10,3 +10,10 @@ export enum PageUrl {
   ALL = '*',
   BASEURL = 'bana-model'
 }
+
+export enum ActionType {
+  DELETE = 'delete',
+  CANCEL = 'cancel',
+  LOG = 'log',
+  ACTIVATE = 'activate'
+}

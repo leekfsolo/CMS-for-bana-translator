@@ -1,18 +1,19 @@
 import CButton from 'components/CButton';
 import CSelect from 'components/CSelect';
-import React, {useState, useEffect} from 'react';
-import {LinearProgress} from '@mui/material';
+import React, {useEffect} from 'react';
 import {ITrainingOptionSelect} from 'pages/interface';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import CInput from 'components/CInput';
 import {addTask, getAllDataDetail, getAllModelDetail} from './trainingSlice';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {ITaskUpload} from 'pages/model';
-import {trainingSelector} from 'app/selectors';
+import {globalSelector, trainingSelector} from 'app/selectors';
 import {modelTypeSelectData, regionTypeSelectData, taskTypeSelectData} from 'utils/base/constants';
 import {handleLoading} from 'app/globalSlice';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
+import {useNavigate} from 'react-router-dom';
+import {PageUrl} from 'configuration/enum';
 
 const defaultValues: ITaskUpload = {
   ckpt: '',
@@ -25,10 +26,11 @@ const defaultValues: ITaskUpload = {
 
 const Training = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const training = useAppSelector(trainingSelector);
+  const global = useAppSelector(globalSelector);
   const {dataDetail, modelDetail} = training;
   const {handleSubmit, control, watch, reset, setValue} = useForm<ITaskUpload>({defaultValues});
-  const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const watchAllFields = watch();
   const modelType = watchAllFields['modelType'];
@@ -72,23 +74,24 @@ const Training = () => {
 
   const resetOptions = () => reset(defaultValues);
   const startRunning: SubmitHandler<ITaskUpload> = async (data) => {
-    setIsRunning(true);
+    dispatch(handleLoading(true));
     try {
       // Running Model
       const res: any = await dispatch(addTask(data)).unwrap();
       if (res.task_id) {
-        const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${res.task_id}`);
+        // const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${res.task_id}`);
 
-        source.onmessage = (e) => {
-          console.log(e);
-        };
-        source.onerror = (e) => source.close();
-        customToast(ToastType.SUCCESS, 'Thêm task thành công');
+        // source.onmessage = (e) => {
+        //   console.log(e);
+        // };
+        // source.onerror = (e) => source.close();
+        // customToast(ToastType.SUCCESS, 'Thêm task thành công');
+        navigate(PageUrl.DASHBOARD);
       }
     } catch (e) {
       console.error(e);
     } finally {
-      setIsRunning(false);
+      dispatch(handleLoading(false));
     }
   };
 
@@ -119,7 +122,7 @@ const Training = () => {
             {trainingOptions.map((input, idx) => {
               const {title, name, placeholder, options} = input;
               const isFirstInputs = idx === 0;
-              const disabled = isRunning || (!isFirstInputs && !canSelectOtherSubSelection);
+              const disabled = global.isLoading || (!isFirstInputs && !canSelectOtherSubSelection);
 
               return (
                 <div key={name} className='training-filter col-5 p-0'>
@@ -163,17 +166,6 @@ const Training = () => {
           </CButton>
         </div>
       </form>
-
-      <div className='training-output my-3'>
-        <div className='training-output__progress'>{isRunning && <LinearProgress />}</div>
-
-        <div className='training-output__content'></div>
-      </div>
-      <div className='training-cancel d-flex justify-content-end'>
-        <CButton variant='outlined' color='primary'>
-          Cancel
-        </CButton>
-      </div>
     </div>
   );
 };

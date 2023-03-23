@@ -28,9 +28,9 @@ const queueApi = {
     return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
   },
 
-  deleteTask: (id: string) => {
-    const url = `/api/queue/deleteTasks/${id}`;
-    return axiosClient.delete(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
+  deleteTask: (params: {taskID: string[]}) => {
+    const url = `/api/queue/deleteTasks`;
+    return axiosClient.delete(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent, params});
   }
 };
 

@@ -56,7 +56,7 @@ const FormDialog = (props: Props) => {
       scroll='paper'
       fullWidth={true}
       maxWidth='md'
-      className='dialog'
+      className='dialog dialog-form'
     >
       <DialogTitle className='d-flex justify-content-between'>
         Upload data

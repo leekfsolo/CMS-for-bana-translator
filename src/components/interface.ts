@@ -1,4 +1,5 @@
-import {HTMLInputTypeAttribute} from 'react';
+import {ActionType} from 'configuration/enum';
+import {HTMLInputTypeAttribute, ReactNode} from 'react';
 import {SelectDataType} from 'utils/base/model';
 
 export interface ISidebarItem {
@@ -33,4 +34,16 @@ export interface ICFormInput {
 export interface ICFormSection {
   title: string;
   items: ICFormInput[];
+}
+
+export interface IRowAction {
+  title: string;
+  handle: (data: IHandleActionParams) => Promise<void>;
+  icon?: ReactNode;
+  actionType: ActionType;
+}
+
+export interface IHandleActionParams {
+  type: ActionType;
+  payload: string[];
 }

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, lazy, Suspense, useCallback, useEffect, useState} from 'react';
 import {TableHeadCell} from 'pages/interface';
 import {Box, IconButton, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
@@ -15,6 +15,10 @@ import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {ActionType} from 'configuration/enum';
+import {CModalProps} from 'components/CModal/CModal';
+import {IHandleActionParams} from 'components/interface';
+const CModal = lazy(() => import('components/CModal/CModal'));
 
 const headCells: TableHeadCell[] = [
   {
@@ -66,25 +70,62 @@ const DataManagement = () => {
   const {dataData} = useAppSelector(dataManagerSelector);
   const [modelType, setModelType] = useState<string>('defaultValue');
   const [region, setRegion] = useState<string>('defaultValue');
+  const [modelContent, setModelContent] = useState<CModalProps>();
+
+  const handleAction = async ({type, payload}: IHandleActionParams) => {
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: '',
+      title: 'Xác nhận'
+    };
+
+    let contentText = '';
+
+    switch (type) {
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const id of payload) {
+              await dispatch(deleteDataFile(id));
+            }
+            customToast(ToastType.SUCCESS, 'Xoá thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn xóa data này?';
+        break;
+      default:
+        break;
+    }
+
+    modalPopupState.content = (
+      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
+    );
+
+    setModelContent(modalPopupState);
+  };
+
   const displayData = dataData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
     const {id} = data;
 
     return {
       ...data,
-      action: (
-        <div className='d-flex align-items-center justify-content-center'>
-          <IconButton
-            disableFocusRipple
-            sx={{padding: '4px'}}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete([id]);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      )
+      action: [
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <DeleteIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.DELETE,
+          title: 'Xóa model',
+          handle: handleAction
+        }
+      ]
     };
   });
 
@@ -114,17 +155,7 @@ const DataManagement = () => {
   };
 
   const handleDelete = async (selectedIds: string[]) => {
-    try {
-      dispatch(handleLoading(true));
-      for (const id of selectedIds) {
-        await dispatch(deleteDataFile(id));
-      }
-      customToast(ToastType.SUCCESS, 'Xoá thành công');
-    } catch (e: any) {
-      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
-    } finally {
-      dispatch(handleLoading(false));
-    }
+    await handleAction({type: ActionType.DELETE, payload: selectedIds});
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +167,7 @@ const DataManagement = () => {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: string[] = [];
 
@@ -155,26 +186,26 @@ const DataManagement = () => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  useEffect(() => {
+  const handleUpdate = useCallback(async () => {
+    dispatch(handleLoading(true));
     try {
       const params = getDataParams(region, modelType);
-
-      dispatch(handleLoading(true));
-      const fetchData = async () => {
-        await dispatch(getAllDataData(params));
-        dispatch(handleLoading(false));
-      };
-
-      fetchData();
-    } catch (error) {
-      console.log(error);
+      await dispatch(getAllDataData(params));
+      dispatch(handleLoading(false));
+    } catch (err) {
+      console.error(err);
       dispatch(handleLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region, modelType]);
 
+  useEffect(() => {
+    handleUpdate();
+  }, [handleUpdate]);
+
   return (
     <main className='data-management'>
+      <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-data d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>

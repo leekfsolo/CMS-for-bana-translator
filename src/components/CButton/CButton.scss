@@ -27,6 +27,23 @@
       }
     }
 
+    &-text {
+      background-color: transparent;
+
+      &-primary {
+        color: $info-550;
+        font-weight: 500;
+      }
+
+      &-success {
+        color: $success-400;
+      }
+
+      &-error {
+        color: $danger-500;
+      }
+    }
+
     &-outlined {
       &-primary {
         border: 1px solid $primary-500;

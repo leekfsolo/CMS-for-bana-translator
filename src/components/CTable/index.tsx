@@ -1,9 +1,9 @@
 import React from 'react';
 import CTableHead from 'components/CTableHead';
-import {Table, TableBody, TableCell, TableRow, TableContainer} from '@mui/material';
-import CCheckbox from 'components/CCheckbox';
-import {getCellData} from 'utils/helpers/getCellData';
+import {Table, TableBody, TableContainer} from '@mui/material';
+
 import {TableHeadCell} from 'pages/interface';
+import CTableRow from 'components/CTableRow';
 interface Props {
   page: number;
   rowsPerPage: number;
@@ -11,10 +11,9 @@ interface Props {
   headCells: TableHeadCell[];
   viewData?: (id: string) => void;
   isSelected: (id: string) => boolean;
-  handleClick: (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, id: string) => void;
+  handleClick: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   handleSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selected: string[];
-  handleAction?: (id: string) => Promise<void>;
 }
 
 const CTable = (props: Props) => {
@@ -31,38 +30,11 @@ const CTable = (props: Props) => {
         />
         <TableBody>
           {data.map((row, index) => {
-            const {id, ...dataRow} = row;
+            const {id} = row;
             const isItemSelected = isSelected(id);
-            const labelId = `enhanced-table-checkbox-${index}`;
-            const displayData = {order: index + 1, ...dataRow};
 
             return (
-              <TableRow
-                hover
-                onClick={(event) => handleClick(event, id)}
-                role='checkbox'
-                aria-checked={isItemSelected}
-                tabIndex={-1}
-                key={`row-${index}`}
-                selected={isItemSelected}
-              >
-                <TableCell padding='checkbox'>
-                  <CCheckbox
-                    color='primary'
-                    checked={isItemSelected}
-                    inputProps={{
-                      'aria-labelledby': labelId
-                    }}
-                  />
-                </TableCell>
-                {Object.keys(displayData).map((key, idx) => (
-                  <TableCell key={`cell-${idx}`} align={idx < Object.keys(displayData).length - 1 ? 'left' : 'center'}>
-                    <span className={key === 'status' ? `cell-variant cell-variant__${displayData[key]}` : ''}>
-                      {getCellData(displayData[key])}
-                    </span>
-                  </TableCell>
-                ))}
-              </TableRow>
+              <CTableRow row={row} key={index} isSelected={isItemSelected} index={index} handleClick={handleClick} />
             );
           })}
         </TableBody>

@@ -3,7 +3,7 @@ import CTable from 'components/CTable';
 import CTableToolbar from 'components/CTableToolbar';
 import {Paper} from '@mui/material';
 import {TableHeadCell} from 'pages/interface';
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import QueueIcon from '@mui/icons-material/Queue';
@@ -16,6 +16,11 @@ import customToast, {ToastType} from 'components/CustomToast/customToast';
 import IconButton from '@mui/material/IconButton';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {IHandleActionParams, IRowAction} from 'components/interface';
+import {ActionType} from 'configuration/enum';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import {CModalProps} from 'components/CModal/CModal';
+const CModal = lazy(() => import('components/CModal/CModal'));
 
 const headCells: TableHeadCell[] = [
   {
@@ -66,71 +71,114 @@ const headCells: TableHeadCell[] = [
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const [selected, setSelected] = useState<string[]>([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [modelContent, setModelContent] = useState<CModalProps>();
   const cardProgressInnerRef = useRef<HTMLDivElement | null>(null);
   const dashboard = useAppSelector(dashboardSelector);
   const {tasksData, totalTasks} = dashboard;
+
+  const handleAction = async ({type, payload}: IHandleActionParams) => {
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: '',
+      title: 'Xác nhận'
+    };
+
+    let contentText = '';
+
+    switch (type) {
+      case ActionType.LOG:
+        break;
+      case ActionType.CANCEL:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const id of payload) {
+              await dispatch(cancelTask(id));
+            }
+            customToast(ToastType.SUCCESS, 'Hủy task thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Hủy',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn hủy task này?';
+        break;
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const id of payload) {
+              await dispatch(deleteTask({taskID: [id]}));
+            }
+            customToast(ToastType.SUCCESS, 'Xóa task thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn xóa task này?';
+        break;
+      default:
+        break;
+    }
+
+    modalPopupState.content = (
+      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
+    );
+
+    setModelContent(modalPopupState);
+  };
+
   const displayData = tasksData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
-    const {status, id} = data;
+    const {status} = data;
+    let tableRowActions: IRowAction[] = [
+      {
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <AssignmentIcon />
+          </IconButton>
+        ),
+        actionType: ActionType.LOG,
+        title: 'Xem chi tiết',
+        handle: handleAction
+      },
+      {
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <DeleteIcon />
+          </IconButton>
+        ),
+        actionType: ActionType.DELETE,
+        title: 'Xóa Task',
+        handle: handleAction
+      }
+    ];
+
+    if (status === 'processing' || status === 'waiting') {
+      tableRowActions.splice(1, 0, {
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <DoNotDisturbIcon />
+          </IconButton>
+        ),
+        actionType: ActionType.CANCEL,
+        title: 'Hủy Task',
+        handle: handleAction
+      });
+    }
 
     return {
       ...data,
-      action: (
-        <div className='d-flex align-items-center justify-content-center'>
-          {(status === 'processing' || status === 'waiting') && (
-            <IconButton
-              disableFocusRipple
-              sx={{padding: '4px'}}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCancelTask(id);
-              }}
-            >
-              <DoNotDisturbIcon />
-            </IconButton>
-          )}
-          <IconButton
-            disableFocusRipple
-            sx={{padding: '4px'}}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete([id]);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      )
+      action: tableRowActions
     };
   });
 
-  const handleCancelTask = async (id: string) => {
-    try {
-      dispatch(handleLoading(true));
-      await dispatch(cancelTask(id));
-      handleUpdate();
-      customToast(ToastType.SUCCESS, 'Hủy task thành công');
-    } catch (e: any) {
-      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
-    } finally {
-      dispatch(handleLoading(false));
-    }
-  };
-
   const handleDelete = async (selectedIds: string[]) => {
-    try {
-      dispatch(handleLoading(true));
-      for (const id of selectedIds) {
-        await dispatch(deleteTask(id));
-      }
-      handleUpdate();
-      customToast(ToastType.SUCCESS, 'Xoá thành công');
-    } catch (e: any) {
-      customToast(ToastType.ERROR, 'Có lỗi vừa xảy ra, xin hãy thử lại');
-    } finally {
-      dispatch(handleLoading(false));
-    }
+    await handleAction({type: ActionType.DELETE, payload: selectedIds});
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +190,7 @@ const Dashboard = () => {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: string[] = [];
 
@@ -169,9 +217,9 @@ const Dashboard = () => {
     }, 200);
   }, [totalTasks, tasksData]);
 
-  const handleUpdate = async () => {
+  const handleUpdate = useCallback(async () => {
+    dispatch(handleLoading(true));
     try {
-      dispatch(handleLoading(true));
       await dispatch(getTotalTasksInQueue());
       await dispatch(getTotalTasks());
       dispatch(handleLoading(false));
@@ -179,12 +227,12 @@ const Dashboard = () => {
       console.error(err);
       dispatch(handleLoading(false));
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     handleUpdate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleUpdate]);
 
   useEffect(() => {
     dispatch(handleLoading(true));
@@ -205,6 +253,7 @@ const Dashboard = () => {
 
   return (
     <div className='dashboard'>
+      <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <div className='dashboard-overview w-100 d-flex flex-wrap gap-3 justify-content-between mb-3'>
         <div className='dashboard-overview__card card-translate'>
           <div className='card-info d-flex align-items-center mb-3'>
