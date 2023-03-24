@@ -1,12 +1,14 @@
 import {getDataServerUrl, ignoreHttpsAgent} from 'configuration';
-import {dataGetAllParams, IData} from 'pages/model';
+import {dataGetAllParams} from 'pages/model';
 import axiosClient from './axiosClient';
-import axiosClientForUploadFile from './axiosForUploadFile';
 
 const dataApi = {
-  add: (data: IData) => {
+  add: (data: FormData) => {
     const url = '/api/data';
-    return axiosClientForUploadFile.post(getDataServerUrl(url), data, {httpsAgent: ignoreHttpsAgent});
+    return axiosClient.post(getDataServerUrl(url), data, {
+      httpsAgent: ignoreHttpsAgent,
+      headers: {'Content-Type': 'multipart/form-data'}
+    });
   },
   getAll: (params: dataGetAllParams) => {
     const url = '/api/data/getAll';

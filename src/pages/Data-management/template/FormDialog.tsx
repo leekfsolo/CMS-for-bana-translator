@@ -4,12 +4,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import PreviewFiles from './PreviewFiles';
 import {NoContent, UploadFile} from 'assets';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {SubmitHandler, useForm} from 'react-hook-form';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import Box from '@mui/material/Box';
 import CButton from 'components/CButton';
 import {handleLoading} from 'app/globalSlice';
 import {useAppDispatch} from 'app/hooks';
 import {uploadDataFile} from '../dataManagementSlice';
+import CSelect from 'components/CSelect';
+import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 
 interface Props {
   selectedFiles: File[];
@@ -17,35 +19,33 @@ interface Props {
   handleUploadFiles: (e: ChangeEvent<HTMLInputElement>) => void;
   openImportDataForm: boolean;
   handleRemoveFile: (filename: string) => void;
-  region: string;
-  modelType: string;
 }
 
+interface SubmitDataProps {
+  files: File[];
+  modelType: string;
+  region: string;
+}
+
+const defaultValues = {files: [], modelType: 'nmt', region: 'Gia Lai'};
+
 const FormDialog = (props: Props) => {
-  const {region, modelType, selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile} =
-    props;
-  const {register, handleSubmit} = useForm<{files: File[]}>({defaultValues: {files: []}});
+  const {selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile} = props;
+  const {register, handleSubmit, control} = useForm<SubmitDataProps>({
+    defaultValues
+  });
   const dispatch = useAppDispatch();
 
-  const onValidSubmit: SubmitHandler<{files: File[]}> = (data) => {
-    const files = data.files;
-    const uploadFile = files ? files['0'] : files;
-    const postData = {
-      region: region,
-      type: modelType.toLowerCase(),
-      nosample: 1000,
-      training_file: uploadFile
-    };
-    try {
-      dispatch(handleLoading(true));
-      const fetchData = async () => {
-        await dispatch(uploadDataFile(postData));
-        dispatch(handleLoading(false));
-      };
-      fetchData();
-    } catch (err) {
-      console.log(err);
-      dispatch(handleLoading(false));
+  const onValidSubmit: SubmitHandler<SubmitDataProps> = async (data) => {
+    const {files, modelType, region} = data;
+
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('region', region);
+      formData.append('type', modelType);
+      formData.append('nosample', '1000');
+      formData.append('training_file', file);
+      await dispatch(uploadDataFile(formData));
     }
   };
 
@@ -71,6 +71,38 @@ const FormDialog = (props: Props) => {
         className='dialog-form'
       >
         <DialogContent>
+          <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100 ps-3'>
+            <div className='control-model__select'>
+              <Controller
+                name='modelType'
+                control={control}
+                render={({field}) => (
+                  <CSelect
+                    {...field}
+                    className='w-100'
+                    options={modelTypeSelectData}
+                    placeholder='Chọn loại model'
+                    size='small'
+                  />
+                )}
+              />
+            </div>
+            <div className='control-model__select'>
+              <Controller
+                name='region'
+                control={control}
+                render={({field}) => (
+                  <CSelect
+                    {...field}
+                    className='w-100'
+                    options={regionTypeSelectData}
+                    placeholder='Chọn vùng'
+                    size='small'
+                  />
+                )}
+              />
+            </div>
+          </Box>
           <div className='row align-items-center dialog-content'>
             <div className='col-12 col-md-6 h-100'>
               <FormGroup className='dialog-content__files'>

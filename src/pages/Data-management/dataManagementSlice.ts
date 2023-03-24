@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import dataApi from 'api/dataApi';
-import {dataGetAllParams, IData, IDataDisplay} from 'pages/model';
+import {dataGetAllParams, IDataDisplay} from 'pages/model';
 
 const initialState: {
   dataData: IDataDisplay[];
@@ -13,7 +13,7 @@ export const getAllDataData = createAsyncThunk('data/getAll', async (params: dat
   return res;
 });
 
-export const uploadDataFile = createAsyncThunk('data/upload', async (data: IData) => {
+export const uploadDataFile = createAsyncThunk('data/upload', async (data: FormData) => {
   const res = await dataApi.add(data);
   return res;
 });

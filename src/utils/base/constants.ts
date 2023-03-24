@@ -8,7 +8,7 @@ export const modelTypeSelectData: SelectDataType[] = [
 export const regionTypeSelectData: SelectDataType[] = [
   {id: 'Gia Lai', value: 'Gia Lai'},
   {id: 'Kon Tum', value: 'Kon Tum'},
-  {id: 'Bình Định', value: 'Bình Định'}
+  {id: 'Binh Dinh', value: 'Bình Định'}
 ];
 
 export const taskTypeSelectData: SelectDataType[] = [

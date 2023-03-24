@@ -15,6 +15,7 @@ import {CModalProps} from 'components/CModal/CModal';
 import DashboardMainView, {DashboardMainViewProps} from './DashboardMainView';
 import {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
+import CInput from 'components/CInput';
 
 const headCells: TableHeadCell[] = [
   {
@@ -75,14 +76,48 @@ const Dashboard = () => {
   const handleAction = async ({type, payload}: IHandleActionParams) => {
     const modalPopupState: CModalProps = {
       closeText: 'Đóng',
-      content: '',
-      title: 'Xác nhận'
+      content: ''
     };
-
-    let contentText = '';
 
     switch (type) {
       case ActionType.LOG:
+        dispatch(handleLoading(true));
+        Object.assign(modalPopupState, {
+          title: 'Task Log',
+          content: (
+            <div className='d-flex flex-column justify-content-center gap-2 w-100 mt-3 log-textarea'>
+              <CInput
+                id='log-input'
+                rows={15}
+                className='w-100'
+                label='Log'
+                InputLabelProps={{shrink: true}}
+                multiline
+                disabled
+              />
+            </div>
+          )
+        });
+
+        const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${payload[0]}`);
+
+        source.onmessage = (e: MessageEvent<any>) => {
+          dispatch(handleLoading(false));
+          const {data} = e;
+          const log = document.getElementById('log-input') as HTMLTextAreaElement;
+          let logValue = log?.value;
+
+          if (data[0] === '{') {
+            const msg = e.data.slice(1, e.data.length - 1).replaceAll(', ', '\n');
+            logValue += msg + '\n';
+          } else {
+            logValue += data + '\n';
+          }
+
+          log.value = logValue;
+        };
+        source.onerror = (e) => source.close();
+
         break;
       case ActionType.CANCEL:
         Object.assign(modalPopupState, {
@@ -96,9 +131,14 @@ const Dashboard = () => {
             handleUpdate();
           },
           confirmText: 'Hủy',
-          maxWidth: 'xs'
+          maxWidth: 'xs',
+          title: 'Xác nhận'
         });
-        contentText = 'Bạn có chắc chắn hủy task này?';
+        modalPopupState.content = (
+          <div className='d-flex justify-content-center align-items-center gap-2 mt-3'>
+            Bạn có chắc chắn hủy task này?
+          </div>
+        );
         break;
       case ActionType.DELETE:
         Object.assign(modalPopupState, {
@@ -112,17 +152,18 @@ const Dashboard = () => {
             handleUpdate();
           },
           confirmText: 'Xóa',
-          maxWidth: 'xs'
+          maxWidth: 'xs',
+          title: 'Xác nhận'
         });
-        contentText = 'Bạn có chắc chắn xóa task này?';
+        modalPopupState.content = (
+          <div className='d-flex justify-content-center align-items-center gap-2 mt-3'>
+            Bạn có chắc chắn xóa task này?
+          </div>
+        );
         break;
       default:
         break;
     }
-
-    modalPopupState.content = (
-      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
-    );
 
     setModelContent(modalPopupState);
   };

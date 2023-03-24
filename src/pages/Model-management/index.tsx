@@ -220,6 +220,7 @@ const ModelManagement = () => {
       const params = getDataParams(region, modelType);
       await dispatch(getAllModelData(params));
       dispatch(handleLoading(false));
+      setSelected([]);
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));

@@ -10,7 +10,7 @@ import FormDialog from './template/FormDialog';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {handleLoading} from 'app/globalSlice';
 import {dataManagerSelector} from 'app/selectors';
-import {deleteDataFile, getAllDataData, uploadDataFile} from './dataManagementSlice';
+import {deleteDataFile, getAllDataData} from './dataManagementSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
@@ -112,8 +112,6 @@ const DataManagement = () => {
   };
 
   const displayData = dataData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
-    const {id} = data;
-
     return {
       ...data,
       action: [
@@ -194,6 +192,7 @@ const DataManagement = () => {
       const params = getDataParams(region, modelType);
       await dispatch(getAllDataData(params));
       dispatch(handleLoading(false));
+      setSelected([]);
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));
@@ -246,8 +245,6 @@ const DataManagement = () => {
           </CButton>
 
           <FormDialog
-            region={region}
-            modelType={modelType}
             handleClose={handleClose}
             handleRemoveFile={handleRemoveFile}
             handleUploadFiles={handleUploadFiles}

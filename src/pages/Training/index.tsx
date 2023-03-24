@@ -11,7 +11,6 @@ import {globalSelector, trainingSelector} from 'app/selectors';
 import {modelTypeSelectData, regionTypeSelectData, taskTypeSelectData} from 'utils/base/constants';
 import {handleLoading} from 'app/globalSlice';
 import {getDataParams} from 'utils/helpers/getDataParams';
-import customToast, {ToastType} from 'components/CustomToast/customToast';
 import {useNavigate} from 'react-router-dom';
 import {PageUrl} from 'configuration/enum';
 
@@ -79,13 +78,6 @@ const Training = () => {
       // Running Model
       const res: any = await dispatch(addTask(data)).unwrap();
       if (res.task_id) {
-        // const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${res.task_id}`);
-
-        // source.onmessage = (e) => {
-        //   console.log(e);
-        // };
-        // source.onerror = (e) => source.close();
-        // customToast(ToastType.SUCCESS, 'Thêm task thành công');
         navigate(PageUrl.DASHBOARD);
       }
     } catch (e) {
