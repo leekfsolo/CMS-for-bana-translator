@@ -34,13 +34,13 @@ export interface IModelDisplay extends ActionColumn {
   model_type: string;
   region: string;
   id: string;
+  diff_loss?: number;
+  dur_loss?: number;
+  prior_loss?: number;
 }
 export interface IModel extends IModelDisplay {
   accuracy?: number;
   ckpt_file: string;
-  diff_loss?: number;
-  dur_loss?: number;
-  prior_loss?: number;
 }
 
 export interface ITaskUpload {

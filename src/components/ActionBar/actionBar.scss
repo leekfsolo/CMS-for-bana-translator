@@ -1,0 +1,27 @@
+@use 'styles/index' as *;
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  box-shadow: 0 -6px 6px 0 rgba(0, 83, 125, 0.1);
+  margin-top: 24px;
+  position: sticky;
+  bottom: 20px;
+  z-index: 100;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: $neutral-900;
+  }
+
+  &__control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+}

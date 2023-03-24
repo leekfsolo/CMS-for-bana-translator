@@ -1,26 +1,20 @@
-import CPagination from 'components/CPagination';
-import CTable from 'components/CTable';
-import CTableToolbar from 'components/CTableToolbar';
-import {Paper} from '@mui/material';
 import {TableHeadCell} from 'pages/interface';
-import React, {lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
-import TranslateIcon from '@mui/icons-material/Translate';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import QueueIcon from '@mui/icons-material/Queue';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {getMyInfo} from 'pages/Auth/authSlice';
 import {handleLoading} from 'app/globalSlice';
 import {cancelTask, deleteTask, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
 import {dashboardSelector} from 'app/selectors';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
-import IconButton from '@mui/material/IconButton';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {IHandleActionParams, IRowAction} from 'components/interface';
 import {ActionType} from 'configuration/enum';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import {CModalProps} from 'components/CModal/CModal';
-const CModal = lazy(() => import('components/CModal/CModal'));
+import DashboardMainView, {DashboardMainViewProps} from './DashboardMainView';
+import {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
+import {formatQuantity} from 'utils/helpers/formatQuantity';
 
 const headCells: TableHeadCell[] = [
   {
@@ -137,21 +131,13 @@ const Dashboard = () => {
     const {status} = data;
     let tableRowActions: IRowAction[] = [
       {
-        icon: (
-          <IconButton disableFocusRipple sx={{padding: '4px'}}>
-            <AssignmentIcon />
-          </IconButton>
-        ),
+        icon: <AssignmentIcon />,
         actionType: ActionType.LOG,
         title: 'Xem chi tiết',
         handle: handleAction
       },
       {
-        icon: (
-          <IconButton disableFocusRipple sx={{padding: '4px'}}>
-            <DeleteIcon />
-          </IconButton>
-        ),
+        icon: <DeleteIcon />,
         actionType: ActionType.DELETE,
         title: 'Xóa Task',
         handle: handleAction
@@ -160,11 +146,7 @@ const Dashboard = () => {
 
     if (status === 'processing' || status === 'waiting') {
       tableRowActions.splice(1, 0, {
-        icon: (
-          <IconButton disableFocusRipple sx={{padding: '4px'}}>
-            <DoNotDisturbIcon />
-          </IconButton>
-        ),
+        icon: <DoNotDisturbIcon />,
         actionType: ActionType.CANCEL,
         title: 'Hủy Task',
         handle: handleAction
@@ -223,12 +205,34 @@ const Dashboard = () => {
       await dispatch(getTotalTasksInQueue());
       await dispatch(getTotalTasks());
       dispatch(handleLoading(false));
+      setSelected([]);
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));
+      setSelected([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const canceledTasks = displayData
+    .filter((task) => task.status === 'processing' || task.status === 'waiting')
+    .map((task) => task.id);
+  const selectedCanceledTasks = selected.filter((id) => canceledTasks.includes(id));
+
+  const actionBarControlButtons: actionBarControlButtonsProps[] = [
+    {
+      label: `Xóa tất cả (${formatQuantity(selected.length)})`,
+      variant: 'text',
+      color: 'error',
+      onClick: () => handleDelete(selected)
+    },
+    {
+      label: `Hủy tất cả (${formatQuantity(selectedCanceledTasks.length)})`,
+      variant: 'contained',
+      color: 'warning',
+      onClick: () => handleAction({type: ActionType.CANCEL, payload: selectedCanceledTasks})
+    }
+  ];
 
   useEffect(() => {
     handleUpdate();
@@ -251,95 +255,24 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className='dashboard'>
-      <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
-      <div className='dashboard-overview w-100 d-flex flex-wrap gap-3 justify-content-between mb-3'>
-        <div className='dashboard-overview__card card-translate'>
-          <div className='card-info d-flex align-items-center mb-3'>
-            <p className='m-0 pe-1'>NMT</p>
-            <span className='ps-1 card-version'>1.0.1</span>
-          </div>
+  const dashboardMainViewProps: DashboardMainViewProps = {
+    modelContent,
+    dashboardData: dashboard,
+    headCells,
+    page,
+    rowsPerPage,
+    setPage,
+    setRowsPerPage,
+    cardRef: cardProgressInnerRef,
+    selected,
+    handleSelectAllClick,
+    isSelected,
+    handleClick,
+    displayData,
+    actionBarControlButtons
+  };
 
-          <div className='card-icon d-flex align-items-center gap-3'>
-            <div className='card-icon__svg'>
-              <TranslateIcon />
-            </div>
-
-            <div className='card-extend'>
-              <p className='card-extend__accuracy mb-1'>
-                Accuracy: <span>93.8%</span>
-              </p>
-              <p className='card-extend__date'>
-                Training date: <span>10/21/2022</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className='dashboard-overview__card card-speech'>
-          <div className='card-info d-flex align-items-center mb-3'>
-            <p className='m-0 pe-1'>TTS</p>
-            <span className='ps-1 card-version'>1.0.1</span>
-          </div>
-
-          <div className='card-icon d-flex align-items-center gap-3'>
-            <div className='card-icon__svg'>
-              <CampaignIcon />
-            </div>
-
-            <div className='card-extend'>
-              <p className='card-extend__accuracy mb-1'>
-                Accuracy: <span>93.8%</span>
-              </p>
-              <p className='card-extend__date'>
-                Training date: <span>10/21/2022</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className='dashboard-overview__card card-queue'>
-          <div className='card-info d-flex align-items-center mb-3 justify-content-between'>
-            <p className='m-0 pe-1'>Training Queue</p>
-            <div className='queue-count'>
-              <span className='current-count'>{totalTasks}</span>
-              <span className='max-count'>/{tasksData.length}</span>
-            </div>
-          </div>
-
-          <div className='card-icon d-flex align-items-center gap-4'>
-            <div className='card-icon__svg'>
-              <QueueIcon />
-            </div>
-            <div className='card-progress'>
-              <div className='progress-inner' ref={cardProgressInnerRef}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className='dashboard-training'>
-        <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Lịch sử train' selected={selected} handleDelete={handleDelete} />
-          <CTable
-            data={displayData}
-            headCells={headCells}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            selected={selected}
-            handleClick={handleClick}
-            handleSelectAllClick={handleSelectAllClick}
-            isSelected={isSelected}
-          />
-          <CPagination
-            maxLength={tasksData.length}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            setRowsPerPage={setRowsPerPage}
-          />
-        </Paper>
-      </div>
-    </div>
-  );
+  return <DashboardMainView {...dashboardMainViewProps} />;
 };
 
 export default Dashboard;

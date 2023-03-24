@@ -18,6 +18,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {ActionType} from 'configuration/enum';
 import {CModalProps} from 'components/CModal/CModal';
 import {IHandleActionParams} from 'components/interface';
+import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
+import {formatQuantity} from 'utils/helpers/formatQuantity';
 const CModal = lazy(() => import('components/CModal/CModal'));
 
 const headCells: TableHeadCell[] = [
@@ -122,7 +124,7 @@ const DataManagement = () => {
             </IconButton>
           ),
           actionType: ActionType.DELETE,
-          title: 'Xóa model',
+          title: 'Xóa tập dữ liệu',
           handle: handleAction
         }
       ]
@@ -203,6 +205,15 @@ const DataManagement = () => {
     handleUpdate();
   }, [handleUpdate]);
 
+  const actionBarControlButtons: actionBarControlButtonsProps[] = [
+    {
+      label: `Xóa tất cả (${formatQuantity(selected.length)})`,
+      variant: 'text',
+      color: 'error',
+      onClick: () => handleDelete(selected)
+    }
+  ];
+
   return (
     <main className='data-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
@@ -245,7 +256,7 @@ const DataManagement = () => {
           />
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Data Management' selected={selected} handleDelete={handleDelete} />
+          <CTableToolbar tableTitle='Data Management' />
           <CTable
             data={displayData}
             headCells={headCells}
@@ -264,6 +275,14 @@ const DataManagement = () => {
             setRowsPerPage={setRowsPerPage}
           />
         </Paper>
+        {selected.length > 0 && (
+          <ActionBar
+            handleSelectAllClick={handleSelectAllClick}
+            selectedRows={selected.length}
+            rowCount={displayData.length}
+            actionBarControlButtons={actionBarControlButtons}
+          />
+        )}
       </Box>
     </main>
   );

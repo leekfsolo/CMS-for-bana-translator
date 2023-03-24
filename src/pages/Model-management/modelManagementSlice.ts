@@ -26,7 +26,17 @@ export const activateModel = createAsyncThunk('model/activate', async (id: strin
 
 const transformModelData = (responseData: any): IModelDisplay[] => {
   return responseData.map((data: any) => {
-    const {version, filename, epoch, model_type, region, createdDate, model_name} = data;
+    const {version, filename, epoch, model_type, region, createdDate, model_name, diff_loss, dur_loss, prior_loss} =
+      data;
+
+    const lossData =
+      model_type === 'tts'
+        ? {
+            diff_loss,
+            dur_loss,
+            prior_loss
+          }
+        : {};
 
     return {
       id: `${version} ${model_type}`,
@@ -35,7 +45,8 @@ const transformModelData = (responseData: any): IModelDisplay[] => {
       region,
       filename,
       model_type,
-      epoch
+      epoch,
+      ...lossData
     };
   });
 };

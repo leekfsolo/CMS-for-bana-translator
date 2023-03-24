@@ -18,53 +18,9 @@ import {IHandleActionParams} from 'components/interface';
 import {CModalProps} from 'components/CModal/CModal';
 import {ActionType} from 'configuration/enum';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
+import {formatQuantity} from 'utils/helpers/formatQuantity';
 const CModal = lazy(() => import('components/CModal/CModal'));
-
-const headCells: TableHeadCell[] = [
-  {
-    id: 'stt',
-    padding: 'normal',
-    label: 'STT',
-    align: 'left'
-  },
-  {
-    id: 'model_name',
-    padding: 'normal',
-    label: 'Model',
-    align: 'left'
-  },
-  {
-    id: 'createdDate',
-    padding: 'normal',
-    label: 'Ngày tạo',
-    align: 'left'
-  },
-  {
-    id: 'region',
-    padding: 'normal',
-    label: 'Vùng',
-    align: 'left'
-  },
-  {
-    id: 'dataVersion',
-    padding: 'normal',
-    label: 'Tập dữ liệu',
-    align: 'left'
-  },
-  {
-    id: 'accuracy',
-    padding: 'normal',
-    label: 'Loại model',
-    align: 'left'
-  },
-  {
-    id: 'epoch',
-    padding: 'normal',
-    label: 'Epoch',
-    align: 'left'
-  },
-  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
-];
 
 const ModelManagement = () => {
   const dispatch = useAppDispatch();
@@ -72,9 +28,65 @@ const ModelManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {modelData} = useAppSelector(modelManagementSelector);
-  const [modelType, setModelType] = useState<string>('defaultValue');
+  const [modelType, setModelType] = useState<string>('nmt');
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
+
+  const headCells: TableHeadCell[] = [
+    {
+      id: 'stt',
+      padding: 'normal',
+      label: 'STT',
+      align: 'left'
+    },
+    {
+      id: 'model_name',
+      padding: 'normal',
+      label: 'Model',
+      align: 'left'
+    },
+    {
+      id: 'createdDate',
+      padding: 'normal',
+      label: 'Ngày tạo',
+      align: 'left'
+    },
+    {
+      id: 'region',
+      padding: 'normal',
+      label: 'Vùng',
+      align: 'left'
+    },
+    {
+      id: 'dataVersion',
+      padding: 'normal',
+      label: 'Tập dữ liệu',
+      align: 'left'
+    },
+    {
+      id: 'accuracy',
+      padding: 'normal',
+      label: 'Loại model',
+      align: 'left'
+    },
+    {
+      id: 'epoch',
+      padding: 'normal',
+      label: 'Epoch',
+      align: 'left'
+    },
+    {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
+  ];
+
+  if (modelType === 'tts') {
+    headCells.splice(
+      headCells.length - 1,
+      0,
+      {align: 'left', label: 'diff_loss', padding: 'normal', id: 'diff_loss'},
+      {align: 'left', label: 'dur_loss', padding: 'normal', id: 'dur_loss'},
+      {align: 'left', label: 'prior_loss', padding: 'normal', id: 'prior_loss'}
+    );
+  }
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
     const modalPopupState: CModalProps = {
@@ -193,6 +205,15 @@ const ModelManagement = () => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
+  const actionBarControlButtons: actionBarControlButtonsProps[] = [
+    {
+      label: `Xóa tất cả (${formatQuantity(selected.length)})`,
+      variant: 'text',
+      color: 'error',
+      onClick: () => handleDelete(selected)
+    }
+  ];
+
   const handleUpdate = useCallback(async () => {
     dispatch(handleLoading(true));
     try {
@@ -239,7 +260,7 @@ const ModelManagement = () => {
         </Box>
 
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Model Management' selected={selected} handleDelete={handleDelete} />
+          <CTableToolbar tableTitle='Model Management' />
           <CTable
             data={displayData}
             headCells={headCells}
@@ -258,6 +279,14 @@ const ModelManagement = () => {
             setRowsPerPage={setRowsPerPage}
           />
         </Paper>
+        {selected.length > 0 && (
+          <ActionBar
+            handleSelectAllClick={handleSelectAllClick}
+            selectedRows={selected.length}
+            rowCount={displayData.length}
+            actionBarControlButtons={actionBarControlButtons}
+          />
+        )}
       </Box>
     </main>
   );
