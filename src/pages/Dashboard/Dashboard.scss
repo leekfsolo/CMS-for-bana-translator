@@ -163,6 +163,12 @@
     }
   }
 
+  &__bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
   .Mui-disabled {
     padding-right: 0;
   }

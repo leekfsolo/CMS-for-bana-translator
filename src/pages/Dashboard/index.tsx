@@ -98,7 +98,8 @@ const Dashboard = () => {
                   ))}
               </div>
             </div>
-          )
+          ),
+          handleClose: () => source.close()
         });
 
         const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${payload[0]}`);
@@ -107,6 +108,7 @@ const Dashboard = () => {
           const {data} = e;
           const log = document.getElementById('log-input') as HTMLTextAreaElement;
           const loadingLog = document.getElementById('log-loading');
+
           loadingLog?.classList.add('d-none');
 
           let logValue = log?.value;
@@ -119,6 +121,7 @@ const Dashboard = () => {
           }
 
           log.value = logValue;
+          log.scrollTop = log.scrollHeight;
         };
         source.onerror = (e) => source.close();
 

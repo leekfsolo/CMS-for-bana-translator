@@ -55,7 +55,7 @@ const FormDialog = (props: Props) => {
       onClose={handleClose}
       scroll='paper'
       fullWidth={true}
-      maxWidth='md'
+      maxWidth='sm'
       className='dialog dialog-form'
     >
       <DialogTitle className='d-flex justify-content-between'>
