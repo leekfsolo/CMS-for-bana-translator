@@ -152,7 +152,24 @@
 }
 
 .log-textarea {
+  position: relative;
+
+  &__loading {
+    position: absolute;
+    inset: 20px;
+
+    .MuiSkeleton-root {
+      margin-bottom: 20px;
+    }
+  }
+
   .Mui-disabled {
     padding-right: 0;
+  }
+
+  textarea {
+    overflow-x: hidden;
+    font-size: 14px;
+    -webkit-text-fill-color: $neutral-700 !important;
   }
 }

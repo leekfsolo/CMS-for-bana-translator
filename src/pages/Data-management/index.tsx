@@ -59,7 +59,7 @@ const headCells: TableHeadCell[] = [
     label: 'Loại Data',
     align: 'left'
   },
-  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'normal'}
 ];
 
 const DataManagement = () => {

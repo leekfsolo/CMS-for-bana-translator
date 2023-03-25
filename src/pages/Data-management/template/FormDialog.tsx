@@ -71,37 +71,40 @@ const FormDialog = (props: Props) => {
         className='dialog-form'
       >
         <DialogContent>
-          <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100 ps-3'>
-            <div className='control-model__select'>
-              <Controller
-                name='modelType'
-                control={control}
-                render={({field}) => (
-                  <CSelect
-                    {...field}
-                    className='w-100'
-                    options={modelTypeSelectData}
-                    placeholder='Chọn loại model'
-                    size='small'
-                  />
-                )}
-              />
+          <Box className='control-model d-flex flex-column flex-sm-row align-items-center justify-content-between w-100 ps-3'>
+            <div className='d-flex align-items-center gap-2'>
+              <div className='control-model__select'>
+                <Controller
+                  name='modelType'
+                  control={control}
+                  render={({field}) => (
+                    <CSelect
+                      {...field}
+                      className='w-100'
+                      options={modelTypeSelectData}
+                      placeholder='Chọn loại model'
+                      size='small'
+                    />
+                  )}
+                />
+              </div>
+              <div className='control-model__select'>
+                <Controller
+                  name='region'
+                  control={control}
+                  render={({field}) => (
+                    <CSelect
+                      {...field}
+                      className='w-100'
+                      options={regionTypeSelectData}
+                      placeholder='Chọn vùng'
+                      size='small'
+                    />
+                  )}
+                />
+              </div>
             </div>
-            <div className='control-model__select'>
-              <Controller
-                name='region'
-                control={control}
-                render={({field}) => (
-                  <CSelect
-                    {...field}
-                    className='w-100'
-                    options={regionTypeSelectData}
-                    placeholder='Chọn vùng'
-                    size='small'
-                  />
-                )}
-              />
-            </div>
+            <CButton type='submit'>Upload</CButton>
           </Box>
           <div className='row align-items-center dialog-content'>
             <div className='col-12 col-md-6 h-100'>
@@ -140,11 +143,6 @@ const FormDialog = (props: Props) => {
             </div>
           </div>
         </DialogContent>
-        <DialogActions className='d-flex justify-content-center px-4'>
-          <CButton type='submit' className='w-50'>
-            Upload
-          </CButton>
-        </DialogActions>
       </form>
     </Dialog>
   );

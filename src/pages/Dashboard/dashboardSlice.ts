@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import queueApi from 'api/queueApi';
 import {IDashboardData} from 'pages/interface';
 import {ITaskData} from 'pages/model';
+import {getRoundedFloat} from 'utils/helpers/getRoundedFloat';
 
 const initialState: IDashboardData = {
   tasksData: [],
@@ -41,7 +42,7 @@ const dashboard = createSlice({
       })
       .addCase(getTotalTasks.fulfilled, (state, action: PayloadAction<any>) => {
         const tasks = action.payload.map(({task, user}: {task: ITaskData; user: any}) => {
-          const {accuracy, task_id, task_type, model_name, state, filename} = task;
+          const {accuracy, task_id, task_type, model_name, state, filename, diff_loss, dur_loss, prior_loss} = task;
 
           return {
             id: task_id,
@@ -49,7 +50,10 @@ const dashboard = createSlice({
             model_name,
             filename,
             task_type,
-            accuracy,
+            accuracy: getRoundedFloat(accuracy),
+            diff_loss: getRoundedFloat(diff_loss),
+            dur_loss: getRoundedFloat(dur_loss),
+            prior_loss: getRoundedFloat(prior_loss),
             status: STATUS[state]
           };
         });

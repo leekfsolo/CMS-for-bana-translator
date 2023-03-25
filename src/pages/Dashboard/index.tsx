@@ -16,6 +16,7 @@ import DashboardMainView, {DashboardMainViewProps} from './DashboardMainView';
 import {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import CInput from 'components/CInput';
+import {Skeleton} from '@mui/material';
 
 const headCells: TableHeadCell[] = [
   {
@@ -51,16 +52,19 @@ const headCells: TableHeadCell[] = [
   {
     id: 'accuracy',
     padding: 'normal',
-    label: 'Độ chính xác',
+    label: 'bleu score',
     align: 'left'
   },
+  {align: 'left', label: 'diff_loss', padding: 'normal', id: 'diff_loss'},
+  {align: 'left', label: 'dur_loss', padding: 'normal', id: 'dur_loss'},
+  {align: 'left', label: 'prior_loss', padding: 'normal', id: 'prior_loss'},
   {
     id: 'state',
     padding: 'normal',
     label: 'Trạng thái',
     align: 'left'
   },
-  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'normal'}
 ];
 
 const Dashboard = () => {
@@ -81,20 +85,18 @@ const Dashboard = () => {
 
     switch (type) {
       case ActionType.LOG:
-        dispatch(handleLoading(true));
         Object.assign(modalPopupState, {
           title: 'Task Log',
           content: (
             <div className='d-flex flex-column justify-content-center gap-2 w-100 mt-3 log-textarea'>
-              <CInput
-                id='log-input'
-                rows={15}
-                className='w-100'
-                label='Log'
-                InputLabelProps={{shrink: true}}
-                multiline
-                disabled
-              />
+              <CInput id='log-input' rows={15} className='w-100' InputLabelProps={{shrink: true}} multiline disabled />
+              <div className='log-textarea__loading' id='log-loading'>
+                {Array(10)
+                  .fill(0)
+                  .map((_, idx) => (
+                    <Skeleton key={idx} animation={'wave'} />
+                  ))}
+              </div>
             </div>
           )
         });
@@ -102,16 +104,18 @@ const Dashboard = () => {
         const source = new EventSource(`https://bahnar.dscilab.site:20007/api/queue/stream_log_task/${payload[0]}`);
 
         source.onmessage = (e: MessageEvent<any>) => {
-          dispatch(handleLoading(false));
           const {data} = e;
           const log = document.getElementById('log-input') as HTMLTextAreaElement;
+          const loadingLog = document.getElementById('log-loading');
+          loadingLog?.classList.add('d-none');
+
           let logValue = log?.value;
 
           if (data[0] === '{') {
-            const msg = e.data.slice(1, e.data.length - 1).replaceAll(', ', '\n');
+            const msg = e.data.slice(1, e.data.length - 1);
             logValue += msg + '\n';
           } else {
-            logValue += data + '\n';
+            logValue += data.replaceAll('[ENTER_CHAR]', '\n');
           }
 
           log.value = logValue;

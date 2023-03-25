@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import modelApi from 'api/modelApi';
 import moment from 'moment';
 import {dataGetAllParams, IModelDisplay} from 'pages/model';
+import {getRoundedFloat} from 'utils/helpers/getRoundedFloat';
 
 const initialState: {
   modelData: IModelDisplay[];
@@ -26,17 +27,28 @@ export const activateModel = createAsyncThunk('model/activate', async (id: strin
 
 const transformModelData = (responseData: any): IModelDisplay[] => {
   return responseData.map((data: any) => {
-    const {version, filename, epoch, model_type, region, createdDate, model_name, diff_loss, dur_loss, prior_loss} =
-      data;
+    const {
+      version,
+      filename,
+      epoch,
+      model_type,
+      region,
+      createdDate,
+      model_name,
+      diff_loss,
+      dur_loss,
+      prior_loss,
+      accuracy
+    } = data;
 
     const lossData =
       model_type === 'tts'
         ? {
-            diff_loss,
-            dur_loss,
-            prior_loss
+            diff_loss: getRoundedFloat(diff_loss),
+            dur_loss: getRoundedFloat(dur_loss),
+            prior_loss: getRoundedFloat(prior_loss)
           }
-        : {};
+        : {bleu_score: getRoundedFloat(accuracy)};
 
     return {
       id: `${version} ${model_type}`,

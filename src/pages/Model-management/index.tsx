@@ -75,7 +75,7 @@ const ModelManagement = () => {
       label: 'Epoch',
       align: 'left'
     },
-    {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
+    {id: 'Action', label: 'Thao tác', align: 'center', padding: 'normal'}
   ];
 
   if (modelType === 'tts') {
@@ -86,6 +86,13 @@ const ModelManagement = () => {
       {align: 'left', label: 'dur_loss', padding: 'normal', id: 'dur_loss'},
       {align: 'left', label: 'prior_loss', padding: 'normal', id: 'prior_loss'}
     );
+  } else {
+    headCells.splice(headCells.length - 1, 0, {
+      id: 'score',
+      padding: 'normal',
+      label: 'bleu score',
+      align: 'left'
+    });
   }
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
