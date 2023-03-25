@@ -1,74 +1,175 @@
-import React from 'react';
-import {StaffData, StaffHeadCell} from 'pages/interface';
-import {Box, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from '@mui/material';
+import React, {ChangeEvent, lazy, Suspense, useCallback, useEffect, useState} from 'react';
+import {TableHeadCell} from 'pages/interface';
+import {Box, IconButton, Paper} from '@mui/material';
 import CTableToolbar from 'components/CTableToolbar';
-import CTableHead from 'components/CTableHead';
 import CPagination from 'components/CPagination';
+import CTable from 'components/CTable';
+import CButton from 'components/CButton';
+import CSelect from 'components/CSelect';
+import FormDialog from './template/FormDialog';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {handleLoading} from 'app/globalSlice';
+import {dataManagerSelector} from 'app/selectors';
+import {deleteDataFile, getAllDataData} from './dataManagementSlice';
+import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
+import {getDataParams} from 'utils/helpers/getDataParams';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {ActionType} from 'configuration/enum';
+import {CModalProps} from 'components/CModal/CModal';
+import {IHandleActionParams} from 'components/interface';
+import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
+import {formatQuantity} from 'utils/helpers/formatQuantity';
+const CModal = lazy(() => import('components/CModal/CModal'));
 
-function createData(version: string, createdDate: string, region: string, quantity: number): StaffData {
-  return {
-    version,
-    createdDate,
-    region,
-    quantity
-  };
-}
-
-const rows = [
-  createData('Cupcake', '305', '3.7', 67),
-  createData('Donut', '452', '25.0', 51),
-  createData('Eclair', '262', '16.0', 24),
-  createData('Frozen yoghurt', '159', '6.0', 24),
-  createData('Gingerbread', '356', '16.0', 49),
-  createData('Honeycomb', '408', '3.2', 87),
-  createData('Ice cream sandwich', '', '237', 9.0),
-  createData('Jelly Bean', '375', '0.0', 94),
-  createData('KitKat', '518', '26.0', 65),
-  createData('Lollipop', '392', '0.2', 98),
-  createData('Marshmallow', '318', '0', 81),
-  createData('Nougat', '360', '19.0', 9),
-  createData('Oreo', '437', '18.0', 63)
-];
-
-const headCells: StaffHeadCell[] = [
+const headCells: TableHeadCell[] = [
   {
-    id: 'version',
-    disablePadding: true,
-    label: 'Version'
+    id: 'order',
+    padding: 'normal',
+    label: 'STT',
+    align: 'left'
+  },
+  {
+    id: 'filename',
+    padding: 'normal',
+    label: 'Tập dữ liệu',
+    align: 'left'
   },
   {
     id: 'createdDate',
-    disablePadding: false,
-    label: 'Created Date'
+    padding: 'normal',
+    label: 'Ngày tạo',
+    align: 'left'
   },
   {
     id: 'region',
-    disablePadding: false,
-    label: 'Region'
+    padding: 'normal',
+    label: 'Vùng',
+    align: 'left'
   },
   {
     id: 'quantity',
-    disablePadding: false,
-    label: 'Quantity'
-  }
+    padding: 'normal',
+    label: 'Số lượng',
+    align: 'left'
+  },
+  {
+    id: 'type',
+    padding: 'normal',
+    label: 'Loại Data',
+    align: 'left'
+  },
+  {id: 'Action', label: 'Thao tác', align: 'center', padding: 'none'}
 ];
+
 const DataManagement = () => {
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const dispatch = useAppDispatch();
+  const [selected, setSelected] = useState<string[]>([]);
+  const [openImportDataForm, setOpenImportDataForm] = useState<boolean>(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const {dataData} = useAppSelector(dataManagerSelector);
+  const [modelType, setModelType] = useState<string>('defaultValue');
+  const [region, setRegion] = useState<string>('defaultValue');
+  const [modelContent, setModelContent] = useState<CModalProps>();
+
+  const handleAction = async ({type, payload}: IHandleActionParams) => {
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: '',
+      title: 'Xác nhận'
+    };
+
+    let contentText = '';
+
+    switch (type) {
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const id of payload) {
+              await dispatch(deleteDataFile(id));
+            }
+            customToast(ToastType.SUCCESS, 'Xoá thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn xóa data này?';
+        break;
+      default:
+        break;
+    }
+
+    modalPopupState.content = (
+      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
+    );
+
+    setModelContent(modalPopupState);
+  };
+
+  const displayData = dataData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {
+    return {
+      ...data,
+      action: [
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <DeleteIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.DELETE,
+          title: 'Xóa tập dữ liệu',
+          handle: handleAction
+        }
+      ]
+    };
+  });
+
+  const handleModelChange = (e: any) => setModelType(e.target.value);
+  const handleRegionchange = (e: any) => setRegion(e.target.value);
+
+  const handleClickOpen = () => {
+    setOpenImportDataForm(true);
+  };
+
+  const handleClose = () => {
+    setOpenImportDataForm(false);
+    setSelectedFiles([]);
+  };
+
+  const handleUploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files) {
+      setSelectedFiles(Array.from(files));
+    }
+  };
+
+  const handleRemoveFile = (filename: string) => {
+    const newSelectedFiles = selectedFiles.filter((file) => file.name !== filename);
+    setSelectedFiles(newSelectedFiles);
+  };
+
+  const handleDelete = async (selectedIds: string[]) => {
+    await handleAction({type: ActionType.DELETE, payload: selectedIds});
+  };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.version);
+      const newSelected = displayData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -85,75 +186,100 @@ const DataManagement = () => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const handleUpdate = useCallback(async () => {
+    dispatch(handleLoading(true));
+    try {
+      const params = getDataParams(region, modelType);
+      await dispatch(getAllDataData(params));
+      dispatch(handleLoading(false));
+      setSelected([]);
+    } catch (err) {
+      console.error(err);
+      dispatch(handleLoading(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [region, modelType]);
+
+  useEffect(() => {
+    handleUpdate();
+  }, [handleUpdate]);
+
+  const actionBarControlButtons: actionBarControlButtonsProps[] = [
+    {
+      label: `Xóa tất cả (${formatQuantity(selected.length)})`,
+      variant: 'text',
+      color: 'error',
+      onClick: () => handleDelete(selected)
+    }
+  ];
 
   return (
-    <main className='dashboard'>
+    <main className='data-management'>
+      <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <Box sx={{width: '100%'}}>
-        <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar numSelected={selected.length} />
-          <TableContainer>
-            <Table sx={{minWidth: 750}} aria-labelledby='tableTitle' size='medium'>
-              <CTableHead
-                numSelected={selected.length}
-                onSelectAllClick={handleSelectAllClick}
-                rowCount={rows.length}
-                headCells={headCells}
+        <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
+          <Box className='control-data d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
+            <div className='control-data__select'>
+              <CSelect
+                className='w-100'
+                options={modelTypeSelectData}
+                placeholder='Chọn loại dữ liệu'
+                size='small'
+                value={modelType}
+                onChange={handleModelChange}
               />
-              <TableBody>
-                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                  const isItemSelected = isSelected(row.version);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            </div>
+            <div className='control-data__select'>
+              <CSelect
+                className='w-100'
+                options={regionTypeSelectData}
+                placeholder='Chọn vùng'
+                size='small'
+                value={region}
+                onChange={handleRegionchange}
+              />
+            </div>
+          </Box>
+          <CButton className='control-import' variant='outlined' onClick={handleClickOpen}>
+            + Import Data
+          </CButton>
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.version)}
-                      role='checkbox'
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.version}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          color='primary'
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {row.version}
-                      </TableCell>
-                      <TableCell align='left'>{row.createdDate}</TableCell>
-                      <TableCell align='left'>{row.region}</TableCell>
-                      <TableCell align='left'>{row.quantity}</TableCell>
-                    </TableRow>
-                  );
-                })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: 53 * emptyRows
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <FormDialog
+            handleClose={handleClose}
+            handleRemoveFile={handleRemoveFile}
+            handleUploadFiles={handleUploadFiles}
+            openImportDataForm={openImportDataForm}
+            selectedFiles={selectedFiles}
+          />
+        </Box>
+        <Paper sx={{width: '100%', mb: 2}}>
+          <CTableToolbar tableTitle='Data Management' />
+          <CTable
+            data={displayData}
+            headCells={headCells}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            selected={selected}
+            handleClick={handleClick}
+            handleSelectAllClick={handleSelectAllClick}
+            isSelected={isSelected}
+          />
           <CPagination
-            maxLength={rows.length}
+            maxLength={dataData.length}
             page={page}
             setPage={setPage}
             rowsPerPage={rowsPerPage}
             setRowsPerPage={setRowsPerPage}
           />
         </Paper>
+        {selected.length > 0 && (
+          <ActionBar
+            handleSelectAllClick={handleSelectAllClick}
+            selectedRows={selected.length}
+            rowCount={displayData.length}
+            actionBarControlButtons={actionBarControlButtons}
+          />
+        )}
       </Box>
     </main>
   );

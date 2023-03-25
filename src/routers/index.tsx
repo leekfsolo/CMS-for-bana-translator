@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {PageUrl} from 'configuration/enum';
 import Auth from 'pages/Auth';
 
@@ -8,12 +8,24 @@ import Dashboard from 'pages/Dashboard';
 import ModelManagement from 'pages/Model-management';
 import DataManagement from 'pages/Data-management';
 import Training from 'pages/Training';
-import Testing from 'pages/Testing';
 import MainLayout from 'components/MainLayout';
+import ModalBackdrop from 'components/ModalBackdrop';
+import Profile from 'pages/Profile';
+import Register from 'pages/Register';
+import GlobalLoading from 'components/GlobalLoading';
+import {ToastContainer} from 'react-toastify';
 
 const Routers = () => {
+  useEffect(() => {
+    if (!window.location.pathname.includes(PageUrl.BASEURL)) {
+      window.location.pathname = PageUrl.BASEURL;
+    }
+  }, []);
+
   return (
-    <Router>
+    <Router basename={PageUrl.BASEURL}>
+      <GlobalLoading />
+      <ToastContainer theme='colored' />
       <Routes>
         <Route path={PageUrl.LOGIN} element={<Auth />} />
         <Route element={<PrivateRoute />}>
@@ -22,11 +34,13 @@ const Routers = () => {
             <Route path={PageUrl.MODEL_MANAGEMENT} element={<ModelManagement />} />
             <Route path={PageUrl.DATA_MANAGEMENT} element={<DataManagement />} />
             <Route path={PageUrl.TRAINING} element={<Training />} />
-            <Route path={PageUrl.TESTING} element={<Testing />} />
+            <Route path={PageUrl.PROFILE} element={<Profile />} />
+            <Route path={PageUrl.CREATE_ACCOUNT} element={<Register />} />
           </Route>
-          <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.LOGIN} replace={true} />} />
         </Route>
+        <Route path={PageUrl.ALL} element={<Navigate to={PageUrl.HOME} replace={true} />} />
       </Routes>
+      <ModalBackdrop />
     </Router>
   );
 };

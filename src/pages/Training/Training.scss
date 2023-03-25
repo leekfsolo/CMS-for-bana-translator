@@ -1,0 +1,46 @@
+@use 'styles/index' as *;
+
+.training {
+  padding: 24px 30px;
+  height: 100%;
+
+  &-label {
+    span.MuiFormControlLabel-label {
+      color: $primary-500;
+      font-weight: 700;
+    }
+  }
+
+  &-filter {
+    margin-bottom: 30px;
+
+    p {
+      font-weight: 700;
+      color: $primary-500;
+    }
+  }
+
+  &-output {
+    width: 100%;
+    min-height: 400px;
+    border-radius: $radius-m;
+    background-color: $white;
+    box-shadow: $shadow-s;
+    position: relative;
+
+    &__progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+
+      .MuiLinearProgress-root {
+        background-color: $primary-150;
+
+        .MuiLinearProgress-bar {
+          background-color: $primary-500;
+        }
+      }
+    }
+  }
+}

@@ -1,23 +1,16 @@
 import React from 'react';
-import {Logo} from 'assets';
 import Login from './template/Login';
+import LoginLayout from './template/LoginLayout';
 
 const Auth = () => {
   return (
     <div className='auth'>
-      <div className='container-fluid h-100'>
-        <div className='row align-items-start align-items-lg-center'>
-          <div className='col-12 col-lg-5'>
-            <div className='auth-content'>
-              <img src={Logo} alt='logo' className='auth-content__logo img-fluid' />
-            </div>
+      <div className='container-fluid h-100 p-0'>
+        <LoginLayout>
+          <div className='auth-content'>
+            <Login />
           </div>
-          <div className='col'>
-            <div className='auth-content flex-column'>
-              <Login />
-            </div>
-          </div>
-        </div>
+        </LoginLayout>
       </div>
     </div>
   );

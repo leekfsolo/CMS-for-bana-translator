@@ -1,2 +1,16 @@
 @use 'components/Sidebar/Sidebar.scss';
 @use 'components/MainLayout/MainLayout.scss';
+@use 'components/Header/Header.scss';
+@use 'components/ModalBackdrop/ModalBackdrop.scss';
+@use 'components/CInput/CInput.scss';
+@use 'components/CForm/CForm.scss';
+@use 'components/CButton/CButton.scss';
+@use 'components/CSwitch/CSwitch.scss';
+@use 'components/GlobalLoading/GlobalLoading.scss';
+@use 'components/CTableHead/CTableHead.scss';
+@use 'components/CTableToolbar/CTableToolbar.scss';
+@use 'components/CCheckbox/CCheckbox.scss';
+@use 'components/CTable/CTable.scss';
+@use 'components/CModal/CModal.scss';
+@use 'components/CellPopover/cellPopover.scss';
+@use 'components/ActionBar/actionBar.scss';

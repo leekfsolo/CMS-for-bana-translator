@@ -1,3 +1,4 @@
 export const storageKey = {
-  auth: 'AUTH'
+  auth: 'AUTH',
+  locale: 'locale'
 };

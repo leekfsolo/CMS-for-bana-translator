@@ -1,0 +1,31 @@
+@use 'styles/index' as *;
+
+.cell-popover {
+  box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 4px 10px 4px 0;
+  font-family: Inter, sans-serif;
+
+  &__action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 8px;
+    cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+
+      path {
+        fill: $neutral-500;
+      }
+    }
+
+    span {
+      font-size: 13px;
+      font-weight: 500;
+    }
+  }
+}

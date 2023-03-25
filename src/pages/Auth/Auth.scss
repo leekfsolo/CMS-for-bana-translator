@@ -1,4 +1,5 @@
 @use 'styles/index' as *;
+@import './template/LoginDesign.scss';
 
 .auth {
   font-family: 'Inter', sans-serif;
@@ -8,57 +9,69 @@
 
   &-content {
     display: flex;
-    justify-content: center;
     align-items: center;
     width: 100%;
+    height: 100%;
+    position: relative;
+    left: 200px;
+    z-index: 3;
 
-    &__logo {
-      @include tablet {
-        margin-top: 20px;
-        margin-bottom: 50px;
-        width: 100px;
-      }
+    @include tablet {
+      left: 0;
+      justify-content: center;
     }
 
     &__login {
-      padding: 50px 100px;
+      width: 460px;
+      background-color: white;
+      box-shadow: $shadow-xl;
+      border-radius: 10px;
+      padding: 30px 35px;
 
-      @include desktop {
-        padding: 30px;
+      @include tablet {
+        width: 400px;
+        padding: 16px;
       }
 
       @include mobile {
-        padding: 15px;
+        width: 360px;
       }
 
-      h1 {
-        font-size: 30px;
-        line-height: 2.2rem;
-        color: $info-700;
-        text-transform: uppercase;
-        margin-bottom: 50px;
+      @include for-mobile-down {
+        width: 300px;
+      }
 
-        @include desktop {
-          font-size: 26px;
+      .login-header {
+        text-align: center;
+
+        img {
+          width: 75px;
+          margin-bottom: 15px;
+
+          @include mobile {
+            width: 50px;
+            margin-bottom: 5px;
+          }
+        }
+
+        h1 {
+          font-size: 24px;
+          color: $neutral-900;
+          font-weight: 600;
+          margin-bottom: 40px;
+
+          @include mobile {
+            margin-bottom: 20px;
+          }
         }
       }
 
       .login-wrapper {
-        padding: 0px 50px;
-
-        @include tablet {
-          padding: 0;
-        }
-
         .login-form {
-          background-color: $white;
-          padding: 50px 35px;
-          border-radius: 10px;
-          box-shadow: $shadow-m;
           max-width: 500px;
           margin: 0 auto;
 
-          &__input {
+          &__group {
             width: 100%;
             position: relative;
 
@@ -66,17 +79,11 @@
               position: relative;
               top: -25px;
               left: auto;
-              color: $info-700;
+              color: $info-800;
               display: flex;
               align-items: center;
               gap: 5px;
               margin-bottom: 8px;
-            }
-
-            input {
-              width: 100%;
-              background-color: $neutral-150;
-              padding-right: 50px;
             }
 
             .show-password {
@@ -87,19 +94,45 @@
             }
           }
 
-          &__forgotpassword {
-            color: $info-500;
-            margin-bottom: 30px;
-            cursor: pointer;
+          &__support {
+            .save-account {
+              span {
+                @include for-mobile-down {
+                  font-size: 13px;
+                }
+              }
+            }
+
+            .forgot-account {
+              color: $info-600;
+              cursor: pointer;
+
+              &:hover {
+                text-decoration: underline;
+              }
+
+              @include for-mobile-down {
+                font-size: 13px;
+              }
+            }
           }
 
           &__button {
-            button {
-              width: 200px;
-              background-color: $info-700;
+            position: relative;
 
-              @include tablet {
-                width: 100%;
+            button {
+              background-color: $info-800;
+            }
+
+            .button-svg {
+              position: absolute;
+              right: 10px;
+              top: 3px;
+              transform: translateY(50%);
+              pointer-events: none;
+
+              svg {
+                fill: $neutral-500;
               }
             }
           }

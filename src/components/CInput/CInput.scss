@@ -1,0 +1,36 @@
+@use 'styles/index' as *;
+
+.wasvalidated {
+  .cinput {
+    &-valid {
+      .MuiInputBase-input {
+        border: 1px solid $success-500;
+        border-radius: 4px;
+      }
+
+      fieldset {
+        border: none;
+      }
+    }
+
+    &-invalid {
+      .MuiInputBase-input {
+        border: 1px solid $danger-500;
+        border-radius: 4px;
+      }
+
+      fieldset {
+        border: none;
+      }
+    }
+  }
+
+  .form-helper-text {
+    display: inline-block;
+    color: $danger-500;
+    font-size: 13px;
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+  }
+}

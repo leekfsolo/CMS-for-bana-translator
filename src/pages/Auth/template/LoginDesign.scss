@@ -1,0 +1,57 @@
+@use 'styles/index' as *;
+
+.login-layout {
+  background-color: $neutral-150;
+  position: relative;
+  overflow: hidden;
+
+  &__design {
+    .img-bottom-left {
+      position: absolute;
+      bottom: -200px;
+      left: -140px;
+      width: 432px;
+      height: 432px;
+      border-radius: 50%;
+      background-color: $info-400;
+      z-index: 1;
+
+      @include tablet {
+        width: 350px;
+        height: 350px;
+      }
+    }
+
+    .img-top-right {
+      position: absolute;
+      top: -108px;
+      right: -120px;
+      width: 432px;
+      height: 432px;
+      border-radius: 50%;
+      background-color: $info-200;
+      z-index: 1;
+
+      @include tablet {
+        width: 300px;
+        height: 300px;
+      }
+    }
+
+    .img-vector {
+      width: 570px;
+      position: absolute;
+      right: 100px;
+      top: 60px;
+      z-index: 2;
+
+      @include tablet {
+        right: auto;
+        top: auto;
+        left: -20px;
+        bottom: 0;
+        width: 250px;
+      }
+    }
+  }
+}

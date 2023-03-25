@@ -1,9 +1,21 @@
 const enviromentConfig = {
   development: {
-    endPoint: ''
+    userServer: {
+      endPoint: 'https://www.ura.hcmut.edu.vn/bana-model'
+    },
+
+    dataServer: {
+      endPoint: 'https://bahnar.dscilab.site:20007'
+    }
   },
   production: {
-    endPoint: ''
+    userServer: {
+      endPoint: 'https://www.ura.hcmut.edu.vn/bana-model'
+    },
+
+    dataServer: {
+      endPoint: 'https://bahnar.dscilab.site:20007'
+    }
   }
 };
 

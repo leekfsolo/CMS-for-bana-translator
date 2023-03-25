@@ -1,5 +1,5 @@
-import React from "react";
-import TablePagination from "@mui/material/TablePagination";
+import React from 'react';
+import TablePagination from '@mui/material/TablePagination';
 
 interface Props {
   maxLength: number;
@@ -10,15 +10,13 @@ interface Props {
 }
 
 const CPagination = (props: Props) => {
-  const { setPage, setRowsPerPage, maxLength, page, rowsPerPage } = props;
+  const {setPage, setRowsPerPage, maxLength, page, rowsPerPage} = props;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -26,7 +24,7 @@ const CPagination = (props: Props) => {
   return (
     <TablePagination
       rowsPerPageOptions={[5, 10, 25]}
-      component="div"
+      component='div'
       count={maxLength}
       rowsPerPage={rowsPerPage}
       page={page}

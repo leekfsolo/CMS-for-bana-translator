@@ -1,4 +1,6 @@
+@use './variables' as *;
 @import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@300;400;500;600;700;800;900&family=Inter:wght@100;300;400;500;600;700&display=swap');
+@import 'react-toastify/dist/ReactToastify.css';
 
 html {
   -webkit-box-sizing: border-box;
@@ -12,4 +14,53 @@ html {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Epilogue', 'helvetica', sans-serif !important;
+}
+
+p,
+div,
+span,
+small,
+label {
+  font-family: 'Inter', 'helvetica', sans-serif !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+
+  /* Track */
+  &-track {
+    background: $neutral-300;
+  }
+
+  /* Handle */
+  &-thumb {
+    background: $neutral-500;
+    border-radius: 20px;
+
+    /* Handle on hover */
+    &:hover {
+      background: $neutral-600;
+    }
+  }
+}
+
+input {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
 }

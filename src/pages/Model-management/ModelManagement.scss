@@ -1,0 +1,39 @@
+@use 'styles/index' as *;
+
+.model-management {
+  padding: 20px 30px;
+
+  &__controls {
+    .control-model {
+      &__select {
+        width: 300px;
+
+        @include mobile {
+          width: 150px;
+        }
+
+        @include for-mobile-down {
+          width: 100%;
+        }
+      }
+
+      @include for-mobile-down {
+        order: 2;
+      }
+    }
+
+    .control-import {
+      width: 200px;
+      order: 1;
+
+      @include mobile {
+        width: 180px;
+      }
+
+      @include for-mobile-down {
+        width: 100%;
+        margin-bottom: 12px;
+      }
+    }
+  }
+}

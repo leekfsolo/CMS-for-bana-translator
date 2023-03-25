@@ -1,0 +1,46 @@
+@use 'styles/index' as *;
+
+.dialog {
+  .MuiPaper-root {
+    border-radius: 12px;
+
+    &.MuiDialog-paperWidthXs {
+      max-width: 400px;
+    }
+  }
+
+  &-basic {
+    .dialog-content {
+      min-height: 80px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+
+    &__close {
+      background-color: transparent;
+      border: 0;
+      outline: 0;
+      padding: 0;
+    }
+  }
+
+  &-content {
+    padding: 16px;
+  }
+
+  &-actions {
+    padding: 10px 16px;
+
+    button {
+      text-transform: capitalize;
+    }
+  }
+}

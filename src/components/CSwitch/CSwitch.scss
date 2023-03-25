@@ -1,0 +1,13 @@
+@use 'styles/index' as *;
+
+.MuiSwitch-root {
+  .MuiSwitch-switchBase {
+    &.Mui-checked {
+      color: $primary-500 !important;
+
+      & + .MuiSwitch-track {
+        background-color: $primary-500 !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@use 'styles/index' as *;
+
+#cbutton {
+  color: $white;
+  pointer-events: all !important;
+  padding: 8px 20px;
+  white-space: nowrap;
+
+  &.cbutton {
+    &-disabled {
+      background-color: $neutral-300 !important;
+      color: $neutral-700 !important;
+      cursor: not-allowed !important;
+    }
+
+    &-contained {
+      &-primary {
+        background-color: $primary-500;
+      }
+
+      &-success {
+        background-color: $success-400;
+      }
+
+      &-error {
+        background-color: $danger-500;
+      }
+    }
+
+    &-text {
+      background-color: transparent;
+
+      &-primary {
+        color: $info-550;
+        font-weight: 500;
+      }
+
+      &-success {
+        color: $success-400;
+      }
+
+      &-error {
+        color: $danger-500;
+      }
+    }
+
+    &-outlined {
+      &-primary {
+        border: 1px solid $primary-500;
+        background-color: $white;
+        color: $primary-500;
+      }
+
+      &-success {
+        border: 1px solid $success-400;
+        background-color: $white;
+        color: $success-400;
+      }
+
+      &-error {
+        border: 1px solid $danger-500;
+        background-color: $white;
+        color: $danger-500;
+      }
+    }
+  }
+}

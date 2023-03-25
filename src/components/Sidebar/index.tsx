@@ -2,6 +2,8 @@ import React from 'react';
 import SidebarItem from './SidebarItem';
 import {Logo} from 'assets';
 import {ISidebarItem} from 'components/interface';
+import {useAppSelector} from 'app/hooks';
+import {authSelector} from 'app/selectors';
 
 type Props = {
   sideBarItems: Array<ISidebarItem[]>;
@@ -11,6 +13,8 @@ type Props = {
 
 const Sidebar = (props: Props) => {
   const {sideBarItems, setActiveSidebarTitle, activeSidebarTitle} = props;
+  const auth = useAppSelector(authSelector);
+  const {userInfo} = auth;
 
   return (
     <div className='sidebar'>
@@ -19,11 +23,12 @@ const Sidebar = (props: Props) => {
           <img src={Logo} alt='logo' className='img-fluid' />
         </div>
         <div className='sidebar-info__user'>
-          <div className='username'>Tên người dùng</div>
-          <div className='role'>Admin</div>
+          <div className='username'>{userInfo?.username}</div>
+          <div className='role'>{userInfo?.accountRole}</div>
         </div>
       </div>
-      <nav className='sidebar-list'>
+      <hr className='section-divider' />
+      <nav className='sidebar-list pt-1'>
         {sideBarItems.map((section, idx) => (
           <section key={`sidebar-section-${idx}`} className='sidebar-list__section'>
             {section.map((item) => (
@@ -35,7 +40,7 @@ const Sidebar = (props: Props) => {
               />
             ))}
 
-            {idx < sideBarItems.length - 1 && <div className='section-divider'></div>}
+            {idx < sideBarItems.length - 1 && <hr className='section-divider' />}
           </section>
         ))}
       </nav>

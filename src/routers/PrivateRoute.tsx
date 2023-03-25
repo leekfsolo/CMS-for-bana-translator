@@ -1,13 +1,20 @@
 import React from 'react';
-import Config from 'configuration';
 import {PageUrl} from 'configuration/enum';
 import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {useAppSelector} from 'app/hooks';
+import {authSelector} from 'app/selectors';
+import jwtDecode from 'jwt-decode';
 
 const PrivateRoute = () => {
-  const isAuth = localStorage.getItem(Config.storageKey.auth)?.length;
   const location = useLocation();
+  const auth = useAppSelector(authSelector);
+  const {accessToken} = auth;
 
-  return isAuth ? <Outlet /> : <Navigate to={PageUrl.LOGIN} state={{from: location}} replace />;
+  return accessToken && jwtDecode(accessToken) ? (
+    <Outlet />
+  ) : (
+    <Navigate to={PageUrl.LOGIN} state={{from: location}} replace />
+  );
 };
 
 export default PrivateRoute;

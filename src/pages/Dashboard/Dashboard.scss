@@ -1,0 +1,158 @@
+@use 'styles/index' as *;
+
+.dashboard {
+  padding: 20px 30px;
+
+  &-overview {
+    &__card {
+      width: 32%;
+      height: 120px;
+      border-radius: $radius-m;
+      background-color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      @include desktop {
+        width: 48%;
+
+        &:last-child {
+          width: 100%;
+        }
+      }
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .card-info {
+        p {
+          font-size: 20px;
+          font-weight: 500;
+          color: $neutral-700;
+        }
+
+        span.card-version {
+          border-left: 1px solid $neutral-500;
+          color: $neutral-500;
+        }
+
+        .queue-count {
+          span {
+            color: $neutral-500;
+          }
+        }
+      }
+
+      .card-icon {
+        margin-left: 8px;
+
+        &__svg {
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          z-index: 2;
+          position: relative;
+
+          svg {
+            fill: white;
+            width: 100%;
+            height: 100%;
+            padding: 7px;
+          }
+
+          &.card-icon__translate {
+            background-color: $info-500;
+            box-shadow: 0 0 0 0.5rem $info-150;
+          }
+        }
+
+        .card-extend {
+          font-size: 14px;
+
+          p {
+            color: $neutral-500;
+            font-weight: 500;
+          }
+        }
+      }
+
+      &.card-translate {
+        &:hover {
+          box-shadow: 0 0 10px 0 $info-200;
+        }
+
+        .card-icon__svg {
+          background-color: $info-500;
+          box-shadow: 0 0 0 0.5rem $info-150;
+        }
+
+        .card-extend {
+          p {
+            span {
+              color: $info-500;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      &.card-speech {
+        &:hover {
+          box-shadow: 0 0 10px 0 $success-200;
+        }
+
+        .card-icon__svg {
+          background-color: $success-600;
+          box-shadow: 0 0 0 0.5rem $success-150;
+        }
+
+        .card-extend {
+          p {
+            span {
+              color: $success-600;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      &.card-queue {
+        &:hover {
+          box-shadow: 0 0 10px 0 $secondary-200;
+        }
+
+        .card-icon__svg {
+          background-color: $secondary-700;
+          box-shadow: 0 0 0 0.5rem $secondary-150;
+        }
+
+        .card-progress {
+          position: relative;
+          flex: 1;
+          height: 10px;
+          border-radius: 20px;
+          background-color: $secondary-200;
+
+          .progress-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: $secondary-700;
+            border-radius: 20px;
+            transition: width 0.4s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+}
+
+.log-textarea {
+  .Mui-disabled {
+    padding-right: 0;
+  }
+}

@@ -1,9 +1,16 @@
 // screens
+$screen-xxs-max: 400px;
 $screen-xs-max: 576px;
 $screen-sm-max: 768px;
 $screen-md-max: 992px;
 $screen-lg-max: 1200px;
 $screen-xl-up: 1400px;
+
+// z-index
+$z-index-modalBackdrop: 999;
+$z-index-header: 1000;
+$z-index-sidebar: 1001;
+$z-index-modalPopup: 1002;
 
 // colors
 $white: #fff;
