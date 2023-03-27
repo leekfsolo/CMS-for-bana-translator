@@ -38,7 +38,7 @@
           color: $neutral-500;
         }
 
-        .queue-count {
+        .card-sub {
           span {
             color: $neutral-500;
           }
@@ -54,6 +54,7 @@
           height: 40px;
           z-index: 2;
           position: relative;
+          flex-shrink: 0;
 
           svg {
             fill: white;
@@ -70,6 +71,10 @@
 
         .card-extend {
           font-size: 14px;
+
+          > div {
+            gap: 0 10px;
+          }
 
           p {
             color: $neutral-500;

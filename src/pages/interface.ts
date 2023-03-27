@@ -1,6 +1,6 @@
 import {HTMLInputTypeAttribute} from 'react';
 import {SelectDataType} from 'utils/base/model';
-import {IProfile, ITaskDisplay, ITaskUpload} from './model';
+import {IModel, IProfile, ITaskDisplay, ITaskUpload} from './model';
 
 type alignPadding = 'left' | 'right' | 'center';
 type cellPadding = 'checkbox' | 'none' | 'normal';
@@ -111,4 +111,5 @@ export interface ILoginState {
 export interface IDashboardData {
   totalTasks: number;
   tasksData: (Omit<ITaskDisplay, 'task_id'> & {id: string; status: string})[];
+  currentModels: IModel[];
 }

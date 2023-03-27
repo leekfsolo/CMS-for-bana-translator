@@ -9,6 +9,7 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import QueueIcon from '@mui/icons-material/Queue';
 import {IDashboardData, TableHeadCell} from '../interface';
 import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
+import {getCellData} from 'utils/helpers/getCellData';
 const CModal = lazy(() => import('components/CModal/CModal'));
 
 export interface DashboardMainViewProps {
@@ -45,58 +46,56 @@ const DashboardMainView = (props: DashboardMainViewProps) => {
     displayData,
     actionBarControlButtons
   } = props;
-  const {tasksData, totalTasks} = dashboardData;
+  const {tasksData, totalTasks, currentModels} = dashboardData;
 
   return (
     <div className='dashboard'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <div className='dashboard-overview w-100 d-flex flex-wrap gap-3 justify-content-between mb-3'>
-        <div className='dashboard-overview__card card-translate'>
-          <div className='card-info d-flex align-items-center mb-3'>
-            <p className='m-0 pe-1'>NMT</p>
-            <span className='ps-1 card-version'>1.0.1</span>
-          </div>
+        {currentModels.map((model, idx) => {
+          const {id, model_type, createdDate, accuracy, ...modelLoss} = model;
+          const isTranslate: boolean = model_type === 'NMT';
 
-          <div className='card-icon d-flex align-items-center gap-3'>
-            <div className='card-icon__svg'>
-              <TranslateIcon />
-            </div>
+          return (
+            <div className={`dashboard-overview__card card-${isTranslate ? 'translate' : 'speech'}`} key={idx}>
+              <div className='card-info d-flex align-items-center justify-content-between mb-3'>
+                <div className='d-flex align-items-center'>
+                  <p className='m-0 pe-1'>{model_type}</p>
+                  <span className='ps-1 card-version'>{id}</span>
+                </div>
+                {true && (
+                  <div className='card-sub'>
+                    <span>{createdDate}</span>
+                  </div>
+                )}
+              </div>
 
-            <div className='card-extend'>
-              <p className='card-extend__accuracy mb-1'>
-                Accuracy: <span>93.8%</span>
-              </p>
-              <p className='card-extend__date'>
-                Training date: <span>10/21/2022</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className='dashboard-overview__card card-speech'>
-          <div className='card-info d-flex align-items-center mb-3'>
-            <p className='m-0 pe-1'>TTS</p>
-            <span className='ps-1 card-version'>1.0.1</span>
-          </div>
+              <div className='card-icon d-flex align-items-center gap-3'>
+                <div className='card-icon__svg'>{isTranslate ? <TranslateIcon /> : <CampaignIcon />}</div>
 
-          <div className='card-icon d-flex align-items-center gap-3'>
-            <div className='card-icon__svg'>
-              <CampaignIcon />
+                <div className='card-extend'>
+                  {isTranslate ? (
+                    <p className='card-extend__item mb-1'>
+                      Bleu score: <span>{getCellData(accuracy)}</span>
+                    </p>
+                  ) : (
+                    <div className='d-flex flex-wrap align-items-center'>
+                      {Object.entries(modelLoss).map(([key, value]) => (
+                        <p className='card-extend__item mb-1' key={key}>
+                          {key}: <span>{getCellData(value)}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <div className='card-extend'>
-              <p className='card-extend__accuracy mb-1'>
-                Accuracy: <span>93.8%</span>
-              </p>
-              <p className='card-extend__date'>
-                Training date: <span>10/21/2022</span>
-              </p>
-            </div>
-          </div>
-        </div>
+          );
+        })}
         <div className='dashboard-overview__card card-queue'>
           <div className='card-info d-flex align-items-center mb-3 justify-content-between'>
             <p className='m-0 pe-1'>Training Queue</p>
-            <div className='queue-count'>
+            <div className='card-sub'>
               <span className='current-count'>{totalTasks}</span>
               <span className='max-count'>/{tasksData.length}</span>
             </div>

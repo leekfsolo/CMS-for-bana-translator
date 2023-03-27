@@ -1,12 +1,15 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import modelApi from 'api/modelApi';
 import queueApi from 'api/queueApi';
+import moment from 'moment';
 import {IDashboardData} from 'pages/interface';
 import {ITaskData} from 'pages/model';
 import {getRoundedFloat} from 'utils/helpers/getRoundedFloat';
 
 const initialState: IDashboardData = {
   tasksData: [],
-  totalTasks: 0
+  totalTasks: 0,
+  currentModels: []
 };
 
 export const getTotalTasksInQueue = createAsyncThunk('dashboard/getTaskInQueue', async () => {
@@ -29,6 +32,11 @@ export const cancelTask = createAsyncThunk('dashboard/deletTask', async (id: str
   return res;
 });
 
+export const getCurrentModels = createAsyncThunk('dashboard/currentModel', async () => {
+  const res = await modelApi.getCurrentModels();
+  return res;
+});
+
 const STATUS = ['waiting', 'processing', 'completed', 'error'];
 
 const dashboard = createSlice({
@@ -39,6 +47,29 @@ const dashboard = createSlice({
     builders
       .addCase(getTotalTasksInQueue.fulfilled, (state, action: PayloadAction<any>) => {
         state.totalTasks = action.payload.num_tasks;
+      })
+      .addCase(getCurrentModels.fulfilled, (state, action: PayloadAction<any>) => {
+        const currentModels = action.payload.map((model: any) => {
+          const {model_type, version, accuracy, createdDate, diff_loss, dur_loss, prior_loss} = model;
+
+          const lossData =
+            model_type === 'tts'
+              ? {
+                  diff_loss: getRoundedFloat(diff_loss),
+                  dur_loss: getRoundedFloat(dur_loss),
+                  prior_loss: getRoundedFloat(prior_loss)
+                }
+              : {bleu_score: getRoundedFloat(accuracy)};
+
+          return {
+            model_type: model_type.toUpperCase(),
+            id: version,
+            createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
+            ...lossData
+          };
+        });
+
+        state.currentModels = currentModels;
       })
       .addCase(getTotalTasks.fulfilled, (state, action: PayloadAction<any>) => {
         const tasks = action.payload.map(({task, user}: {task: ITaskData; user: any}) => {

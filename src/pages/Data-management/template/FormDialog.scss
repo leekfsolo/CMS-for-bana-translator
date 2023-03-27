@@ -1,9 +1,9 @@
 .dialog-form {
   .dialog-content {
-    height: 400px;
+    height: 250px;
 
     @include mobile {
-      height: 300px;
+      height: 150px;
     }
 
     &__files {
@@ -30,8 +30,8 @@
 
       .input-content {
         img {
-          width: 260px;
-          height: 260px;
+          width: 140px;
+          height: 140px;
           object-fit: cover;
 
           @include mobile {
@@ -82,7 +82,7 @@
       &__file {
         display: flex;
         align-items: center;
-        padding: 8px;
+        padding: 8px 0;
         border-radius: $radius-m;
         width: 100%;
 

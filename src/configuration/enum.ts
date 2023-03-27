@@ -15,5 +15,7 @@ export enum ActionType {
   DELETE = 'delete',
   CANCEL = 'cancel',
   LOG = 'log',
-  ACTIVATE = 'activate'
+  ACTIVATE = 'activate',
+  DOWNLOAD = 'download',
+  EDIT = 'edit'
 }

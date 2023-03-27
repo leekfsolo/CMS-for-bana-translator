@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from '
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {getMyInfo} from 'pages/Auth/authSlice';
 import {handleLoading} from 'app/globalSlice';
-import {cancelTask, deleteTask, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
+import {cancelTask, deleteTask, getCurrentModels, getTotalTasks, getTotalTasksInQueue} from './dashboardSlice';
 import {dashboardSelector} from 'app/selectors';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
@@ -16,7 +16,7 @@ import DashboardMainView, {DashboardMainViewProps} from './DashboardMainView';
 import {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import CInput from 'components/CInput';
-import {Skeleton} from '@mui/material';
+import {IconButton, Skeleton} from '@mui/material';
 
 const headCells: TableHeadCell[] = [
   {
@@ -117,7 +117,7 @@ const Dashboard = () => {
             const msg = e.data.slice(1, e.data.length - 1);
             logValue += msg + '\n';
           } else {
-            logValue += data.replaceAll('[ENTER_CHAR]', '\n');
+            logValue += data.replaceAll('[ENTER_CHAR]', '\n') + '\n';
           }
 
           log.value = logValue;
@@ -179,13 +179,21 @@ const Dashboard = () => {
     const {status} = data;
     let tableRowActions: IRowAction[] = [
       {
-        icon: <AssignmentIcon />,
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <AssignmentIcon />
+          </IconButton>
+        ),
         actionType: ActionType.LOG,
         title: 'Xem chi tiết',
         handle: handleAction
       },
       {
-        icon: <DeleteIcon />,
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <DeleteIcon />
+          </IconButton>
+        ),
         actionType: ActionType.DELETE,
         title: 'Xóa Task',
         handle: handleAction
@@ -194,7 +202,11 @@ const Dashboard = () => {
 
     if (status === 'processing' || status === 'waiting') {
       tableRowActions.splice(1, 0, {
-        icon: <DoNotDisturbIcon />,
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <DoNotDisturbIcon />
+          </IconButton>
+        ),
         actionType: ActionType.CANCEL,
         title: 'Hủy Task',
         handle: handleAction
@@ -292,6 +304,7 @@ const Dashboard = () => {
     try {
       const fetchData = async () => {
         await dispatch(getMyInfo());
+        await dispatch(getCurrentModels());
         dispatch(handleLoading(false));
       };
 

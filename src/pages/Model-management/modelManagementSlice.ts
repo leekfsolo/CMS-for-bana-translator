@@ -6,8 +6,10 @@ import {getRoundedFloat} from 'utils/helpers/getRoundedFloat';
 
 const initialState: {
   modelData: IModelDisplay[];
+  currentModels: any;
 } = {
-  modelData: []
+  modelData: [],
+  currentModels: []
 };
 
 export const getAllModelData = createAsyncThunk('model/getAll', async (params: dataGetAllParams) => {
@@ -15,7 +17,7 @@ export const getAllModelData = createAsyncThunk('model/getAll', async (params: d
   return res;
 });
 
-export const deleteModelFile = createAsyncThunk('model/deleteById', async (data: {id: number; modelType: string}) => {
+export const deleteModelFile = createAsyncThunk('model/deleteById', async (data: {name: string}) => {
   const res = await modelApi.deleteById(data);
   return res;
 });
@@ -25,10 +27,14 @@ export const activateModel = createAsyncThunk('model/activate', async (id: strin
   return res;
 });
 
+export const downloadModelFile = createAsyncThunk('model/downloadById', async (id: string) => {
+  const res = await modelApi.downloadById(id);
+  return res;
+});
+
 const transformModelData = (responseData: any): IModelDisplay[] => {
   return responseData.map((data: any) => {
     const {
-      version,
       filename,
       epoch,
       model_type,
@@ -38,7 +44,8 @@ const transformModelData = (responseData: any): IModelDisplay[] => {
       diff_loss,
       dur_loss,
       prior_loss,
-      accuracy
+      accuracy,
+      size
     } = data;
 
     const lossData =
@@ -51,12 +58,13 @@ const transformModelData = (responseData: any): IModelDisplay[] => {
         : {bleu_score: getRoundedFloat(accuracy)};
 
     return {
-      id: `${version} ${model_type}`,
+      id: model_name,
       model_name,
       createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
       region,
       filename,
       model_type,
+      size: Math.round(size / (1024 * 1024)),
       epoch,
       ...lossData
     };

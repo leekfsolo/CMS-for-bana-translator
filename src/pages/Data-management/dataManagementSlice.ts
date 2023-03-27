@@ -1,11 +1,13 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import dataApi from 'api/dataApi';
-import {dataGetAllParams, IDataDisplay} from 'pages/model';
+import {dataGetAllParams, IData, IDataDisplay} from 'pages/model';
 
 const initialState: {
   dataData: IDataDisplay[];
+  detailData: Partial<IData>;
 } = {
-  dataData: []
+  dataData: [],
+  detailData: {}
 };
 
 export const getAllDataData = createAsyncThunk('data/getAll', async (params: dataGetAllParams) => {
@@ -18,17 +20,32 @@ export const uploadDataFile = createAsyncThunk('data/upload', async (data: FormD
   return res;
 });
 
+export const getDataFile = createAsyncThunk('data/getById', async (data: string) => {
+  const res = await dataApi.getById(data);
+  return res;
+});
+
 export const deleteDataFile = createAsyncThunk('data/deleteById', async (data: string) => {
   const res = await dataApi.deleteById(data);
   return res;
 });
 
+export const updateDataFile = createAsyncThunk('data/updateById', async (data: Partial<IData>) => {
+  const res = await dataApi.updateById(data);
+  return res;
+});
+
+export const downloadDataFile = createAsyncThunk('data/downloadById', async (data: string) => {
+  const res = await dataApi.downloadById(data);
+  return res;
+});
+
 const transformDataData = (responseData: any): IDataDisplay[] => {
   return responseData.map((data: any) => {
-    const {version, createdDate, region, nosample, type, filename} = data;
+    const {createdDate, region, nosample, type, filename} = data;
 
     return {
-      id: version,
+      id: filename,
       filename,
       createdDate,
       region,

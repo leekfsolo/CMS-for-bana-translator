@@ -1,42 +1,42 @@
-import {getDataServerUrl, ignoreHttpsAgent} from 'configuration';
+import {getDataServerUrl} from 'configuration';
 import {dataGetAllParams, IModel} from 'pages/model';
 import axiosClient from './axiosClient';
 
 const modelApi = {
   add: (data: IModel) => {
     const url = '/api/model';
-    return axiosClient.post(url, data, {httpsAgent: ignoreHttpsAgent});
+    return axiosClient.post(url, data);
   },
   getById: (id: string) => {
     const url = '/api/model';
-    return axiosClient.get(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
+    return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
   },
-  deleteById: ({id, modelType}: {id: number; modelType: string}) => {
-    const url = '/api/model';
-    return axiosClient.delete(`${getDataServerUrl(url)}/${modelType}/${id}`, {httpsAgent: ignoreHttpsAgent});
+  deleteById: (data: {name: string}) => {
+    const url = '/api/model/deleteModals';
+    return axiosClient.delete(getDataServerUrl(url), {params: data});
   },
   updateById: (id: string) => {
     const url = '/api/model';
-    return axiosClient.put(`${getDataServerUrl(url)}/${id}`, {httpsAgent: ignoreHttpsAgent});
+    return axiosClient.put(`${getDataServerUrl(url)}/${id}`);
   },
   getAllFilterModels: (params: dataGetAllParams) => {
     const url = '/api/model/getModels';
-    return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent, params});
+    return axiosClient.get(getDataServerUrl(url), {params});
   },
   getAll: () => {
     const url = '/api/model/get_all_models';
-    return axiosClient.get(getDataServerUrl(url), {httpsAgent: ignoreHttpsAgent});
-  },
-  getAllNMT: () => {
-    const url = '/api/model/get_all_NMT_models';
     return axiosClient.get(getDataServerUrl(url));
   },
-  getAllTTS: () => {
-    const url = '/api/model/get_all_TTS_models';
+  activate: (name: string) => {
+    const url = `/api/model/activate_a_model/${name}`;
     return axiosClient.get(getDataServerUrl(url));
   },
-  activate: (id: string) => {
-    const url = `/api/model/activate_a_model/${id}`;
+  getCurrentModels: () => {
+    const url = '/api/model/get_current_models';
+    return axiosClient.get(getDataServerUrl(url));
+  },
+  downloadById: (name: string) => {
+    const url = `/api/model/download_a_model/${name}`;
     return axiosClient.get(getDataServerUrl(url));
   }
 };

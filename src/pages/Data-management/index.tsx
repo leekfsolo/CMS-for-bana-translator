@@ -10,7 +10,7 @@ import FormDialog from './template/FormDialog';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {handleLoading} from 'app/globalSlice';
 import {dataManagerSelector} from 'app/selectors';
-import {deleteDataFile, getAllDataData} from './dataManagementSlice';
+import {deleteDataFile, downloadDataFile, getAllDataData, getDataFile} from './dataManagementSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
@@ -20,7 +20,11 @@ import {CModalProps} from 'components/CModal/CModal';
 import {IHandleActionParams} from 'components/interface';
 import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
+import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
+
 const CModal = lazy(() => import('components/CModal/CModal'));
+const EditForm = lazy(() => import('./template/EditForm'));
 
 const headCells: TableHeadCell[] = [
   {
@@ -69,21 +73,28 @@ const DataManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const {dataData} = useAppSelector(dataManagerSelector);
+  const {dataData, detailData} = useAppSelector(dataManagerSelector);
   const [modelType, setModelType] = useState<string>('defaultValue');
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
+  const [isOpenEditForm, setIsOpenEditForm] = useState<boolean>(false);
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
     const modalPopupState: CModalProps = {
       closeText: 'Đóng',
-      content: '',
-      title: 'Xác nhận'
+      content: ''
     };
 
     let contentText = '';
 
     switch (type) {
+      case ActionType.DOWNLOAD:
+        await dispatch(downloadDataFile(payload[0]));
+        break;
+      case ActionType.EDIT:
+        await dispatch(getDataFile(payload[0]));
+        setIsOpenEditForm(true);
+        break;
       case ActionType.DELETE:
         Object.assign(modalPopupState, {
           handleConfirm: async () => {
@@ -96,7 +107,8 @@ const DataManagement = () => {
             handleUpdate();
           },
           confirmText: 'Xóa',
-          maxWidth: 'xs'
+          maxWidth: 'xs',
+          title: 'Xác nhận'
         });
         contentText = 'Bạn có chắc chắn xóa data này?';
         break;
@@ -115,6 +127,26 @@ const DataManagement = () => {
     return {
       ...data,
       action: [
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <DownloadIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.DOWNLOAD,
+          title: 'Tải xuống',
+          handle: handleAction
+        },
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <EditIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.EDIT,
+          title: 'Chỉnh sửa dữ liệu',
+          handle: handleAction
+        },
         {
           icon: (
             <IconButton disableFocusRipple sx={{padding: '4px'}}>
@@ -140,6 +172,8 @@ const DataManagement = () => {
     setOpenImportDataForm(false);
     setSelectedFiles([]);
   };
+
+  const handleCloseEditForm = () => setIsOpenEditForm(false);
 
   const handleUploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -216,6 +250,9 @@ const DataManagement = () => {
   return (
     <main className='data-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
+      <Suspense>
+        {isOpenEditForm && <EditForm dataValue={detailData} handleClose={handleCloseEditForm} open={isOpenEditForm} />}
+      </Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-data d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>
@@ -241,7 +278,7 @@ const DataManagement = () => {
             </div>
           </Box>
           <CButton className='control-import' variant='outlined' onClick={handleClickOpen}>
-            + Import Data
+            + Thêm tập dữ liệu
           </CButton>
 
           <FormDialog
@@ -253,7 +290,7 @@ const DataManagement = () => {
           />
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Data Management' />
+          <CTableToolbar tableTitle='Quản lý data' />
           <CTable
             data={displayData}
             headCells={headCells}

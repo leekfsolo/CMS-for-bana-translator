@@ -20,17 +20,17 @@ const MainLayout = () => {
     () => [
       [
         {
-          label: 'Dashboard',
+          label: 'Trang chủ',
           src: PageUrl.DASHBOARD,
           icon: <GridViewOutlinedIcon />
         },
         {
-          label: 'Model Management',
+          label: 'Quản lý model',
           src: PageUrl.MODEL_MANAGEMENT,
           icon: <AssignmentOutlinedIcon />
         },
         {
-          label: 'Data Management',
+          label: 'Quản lý data',
           src: PageUrl.DATA_MANAGEMENT,
           icon: <DataThresholdingOutlinedIcon />
         },
@@ -42,17 +42,17 @@ const MainLayout = () => {
       ],
       [
         {
-          label: 'Profile',
+          label: 'Thông tin tài khoản',
           src: PageUrl.PROFILE,
           icon: <AssignmentIndOutlinedIcon />
         },
         {
-          label: 'Create account',
+          label: 'Tạo tài khoản',
           src: PageUrl.CREATE_ACCOUNT,
           icon: <KeyOutlinedIcon />
         },
         {
-          label: 'Log out',
+          label: 'Đăng xuất',
           src: `/${PageUrl.LOGIN}`,
           icon: <LogoutOutlinedIcon />
         }
@@ -60,12 +60,12 @@ const MainLayout = () => {
     ],
     []
   );
-  const [activeSidebarTitle, setActiveSidebarTitle] = useState<string>('Dashboard');
+  const [activeSidebarTitle, setActiveSidebarTitle] = useState<string>(sidebarItems[0][0].label);
   const {isShowSidebar} = useSelector(globalSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(activeSidebarTitle.toLowerCase(), {replace: true});
+    navigate(PageUrl.DASHBOARD, {replace: true});
   }, []);
 
   const wrapperSidebarClassname = classNames('wrapper-sidebar', {isShowSideBar: isShowSidebar});

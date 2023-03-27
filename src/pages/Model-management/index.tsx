@@ -7,7 +7,7 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {activateModel, deleteModelFile, getAllModelData} from './modelManagementSlice';
+import {activateModel, deleteModelFile, downloadModelFile, getAllModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
@@ -20,6 +20,7 @@ import {ActionType} from 'configuration/enum';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
+import DownloadIcon from '@mui/icons-material/Download';
 const CModal = lazy(() => import('components/CModal/CModal'));
 
 const ModelManagement = () => {
@@ -70,6 +71,12 @@ const ModelManagement = () => {
       align: 'left'
     },
     {
+      id: 'size',
+      padding: 'normal',
+      label: 'kích thước (MB)',
+      align: 'left'
+    },
+    {
       id: 'epoch',
       padding: 'normal',
       label: 'Epoch',
@@ -105,6 +112,9 @@ const ModelManagement = () => {
     let contentText = '';
 
     switch (type) {
+      case ActionType.DOWNLOAD:
+        await dispatch(downloadModelFile(payload[0]));
+        break;
       case ActionType.ACTIVATE:
         Object.assign(modalPopupState, {
           handleConfirm: async () => {
@@ -126,8 +136,7 @@ const ModelManagement = () => {
           handleConfirm: async () => {
             dispatch(handleLoading(true));
             for (const data of payload) {
-              const [id, modelType] = data.split(' ');
-              await dispatch(deleteModelFile({id: Number(id), modelType}));
+              await dispatch(deleteModelFile({name: data}));
             }
             customToast(ToastType.SUCCESS, 'Xoá thành công');
             dispatch(handleLoading(false));
@@ -161,6 +170,16 @@ const ModelManagement = () => {
           ),
           actionType: ActionType.ACTIVATE,
           title: 'Kích hoạt model',
+          handle: handleAction
+        },
+        {
+          icon: (
+            <IconButton disableFocusRipple sx={{padding: '4px'}}>
+              <DownloadIcon />
+            </IconButton>
+          ),
+          actionType: ActionType.DOWNLOAD,
+          title: 'Tải xuống',
           handle: handleAction
         },
         {
@@ -268,7 +287,7 @@ const ModelManagement = () => {
         </Box>
 
         <Paper sx={{width: '100%', mb: 2}}>
-          <CTableToolbar tableTitle='Model Management' />
+          <CTableToolbar tableTitle='Quản lý model' />
           <CTable
             data={displayData}
             headCells={headCells}
