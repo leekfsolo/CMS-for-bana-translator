@@ -81,55 +81,56 @@ const DataManagement = () => {
   const [isOpenEditForm, setIsOpenEditForm] = useState<boolean>(false);
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
-    try {
-      const modalPopupState: CModalProps = {
-        closeText: 'Đóng',
-        content: null
-      };
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: null
+    };
 
-      switch (type) {
-        case ActionType.DOWNLOAD:
-          handleDownloadFile({url: `/api/data/download/${payload[0]}`});
-          return;
-        case ActionType.EDIT:
-          await dispatch(getDataFile(payload[0]));
-          setIsOpenEditForm(true);
-          break;
-        case ActionType.DELETE:
-          Object.assign(modalPopupState, {
-            handleConfirm: async () => {
+    switch (type) {
+      case ActionType.DOWNLOAD:
+        handleDownloadFile({url: `/api/data/download/${payload[0]}`});
+        return;
+      case ActionType.EDIT:
+        await dispatch(getDataFile(payload[0]));
+        setIsOpenEditForm(true);
+        break;
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            try {
               dispatch(handleLoading(true));
               for (const id of payload) {
-                await dispatch(deleteDataFile(id));
+                await dispatch(deleteDataFile(id)).unwrap();
               }
               customToast(ToastType.SUCCESS, 'Xoá thành công');
               dispatch(handleLoading(false));
               handleUpdate();
-            },
-            confirmText: 'Xóa',
-            maxWidth: 'xs',
-            title: 'Xác nhận',
-            content: (
-              <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>
-                Bạn có chắc chắn xóa data này?
-              </div>
-            )
-          });
-          break;
-        default:
-          break;
-      }
+            } catch (err: any) {
+              dispatch(handleLoading(false));
+              const {status} = err;
 
-      setModelContent(modalPopupState);
-    } catch (err: any) {
-      const {status} = err;
-
-      if (status === 405) {
-        customToast(ToastType.ERROR, 'Tập dữ liệu đang được sử dụng');
-      } else {
-        customToast(ToastType.ERROR, 'Thay đổi thất bại');
-      }
+              if (status === 405) {
+                customToast(ToastType.ERROR, 'Tập dữ liệu đang được sử dụng');
+              } else {
+                customToast(ToastType.ERROR, 'Thay đổi thất bại');
+              }
+            }
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs',
+          title: 'Xác nhận',
+          content: (
+            <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>
+              Bạn có chắc chắn xóa data này?
+            </div>
+          )
+        });
+        break;
+      default:
+        break;
     }
+
+    setModelContent(modalPopupState);
   };
 
   const displayData = dataData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {

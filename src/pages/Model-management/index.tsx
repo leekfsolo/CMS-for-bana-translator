@@ -105,23 +105,23 @@ const ModelManagement = () => {
   }
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
-    try {
-      const modalPopupState: CModalProps = {
-        closeText: 'Đóng',
-        content: '',
-        title: 'Xác nhận'
-      };
+    const modalPopupState: CModalProps = {
+      closeText: 'Đóng',
+      content: '',
+      title: 'Xác nhận'
+    };
 
-      let contentText = '';
+    let contentText = '';
 
-      switch (type) {
-        case ActionType.DOWNLOAD:
-          handleDownloadFile({url: `/api/model/download_a_model/${payload[0]}`});
+    switch (type) {
+      case ActionType.DOWNLOAD:
+        handleDownloadFile({url: `/api/model/download_a_model/${payload[0]}`});
 
-          return;
-        case ActionType.ACTIVATE:
-          Object.assign(modalPopupState, {
-            handleConfirm: async () => {
+        return;
+      case ActionType.ACTIVATE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            try {
               dispatch(handleLoading(true));
               for (const id of payload) {
                 await dispatch(activateModel(id));
@@ -129,47 +129,48 @@ const ModelManagement = () => {
               customToast(ToastType.SUCCESS, 'Kích hoạt thành công');
               dispatch(handleLoading(false));
               handleUpdate();
-            },
-            confirmText: 'Xác nhận',
-            maxWidth: 'xs',
-            isDelete: false
-          });
-          contentText = 'Bạn có chắc chắn chọn model này?';
-          break;
-        case ActionType.DELETE:
-          Object.assign(modalPopupState, {
-            handleConfirm: async () => {
-              dispatch(handleLoading(true));
-              for (const data of payload) {
-                await dispatch(deleteModelFile({name: data}));
-              }
-              customToast(ToastType.SUCCESS, 'Xoá thành công');
+            } catch (err: any) {
               dispatch(handleLoading(false));
-              handleUpdate();
-            },
-            confirmText: 'Xóa',
-            maxWidth: 'xs'
-          });
-          contentText = 'Bạn có chắc chắn xóa model này?';
-          break;
-        default:
-          break;
-      }
+              const {status} = err;
 
-      modalPopupState.content = (
-        <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
-      );
-
-      setModelContent(modalPopupState);
-    } catch (err: any) {
-      const {status} = err;
-
-      if (status === 405) {
-        customToast(ToastType.ERROR, 'Model đang được sử dụng');
-      } else {
-        customToast(ToastType.ERROR, 'Thay đổi thất bại');
-      }
+              if (status === 405) {
+                customToast(ToastType.ERROR, 'Model đang được sử dụng');
+              } else {
+                customToast(ToastType.ERROR, 'Thay đổi thất bại');
+              }
+            }
+          },
+          confirmText: 'Xác nhận',
+          maxWidth: 'xs',
+          isDelete: false
+        });
+        contentText = 'Bạn có chắc chắn chọn model này?';
+        break;
+      case ActionType.DELETE:
+        Object.assign(modalPopupState, {
+          handleConfirm: async () => {
+            dispatch(handleLoading(true));
+            for (const data of payload) {
+              await dispatch(deleteModelFile({name: data})).unwrap();
+            }
+            customToast(ToastType.SUCCESS, 'Xoá thành công');
+            dispatch(handleLoading(false));
+            handleUpdate();
+          },
+          confirmText: 'Xóa',
+          maxWidth: 'xs'
+        });
+        contentText = 'Bạn có chắc chắn xóa model này?';
+        break;
+      default:
+        break;
     }
+
+    modalPopupState.content = (
+      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
+    );
+
+    setModelContent(modalPopupState);
   };
 
   const displayData = modelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => {

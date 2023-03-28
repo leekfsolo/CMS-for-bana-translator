@@ -87,6 +87,9 @@ const dataManagement = createSlice({
       })
       .addCase(getDataFile.fulfilled, (state, action: PayloadAction<any>) => {
         state.detailData = action.payload;
+      })
+      .addCase(getDataFile.rejected, (state, action: PayloadAction<any>) => {
+        console.log(action.payload);
       });
   }
 });
