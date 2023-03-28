@@ -19,31 +19,31 @@ const Profile = () => {
 
   const profileSections: IProfileSection[] = [
     {
-      title: 'Profile',
+      title: 'Hồ sơ',
       items: [
         {
-          key: 'Fullname',
+          key: 'Họ và tên',
           value: userInfo?.fullname || ''
         },
         {
-          key: 'Phone',
+          key: 'Số điện thoại',
           value: userInfo?.phone || ''
         },
         {
-          key: 'Account role',
+          key: 'Vai trò',
           value: userInfo?.accountRole || ''
         }
       ]
     },
     {
-      title: 'Authentication',
+      title: 'Tài khoản',
       items: [
         {
-          key: 'username',
+          key: 'Tên tài khoản',
           value: userInfo?.username || ''
         },
         {
-          key: 'password',
+          key: 'Mật khẩu',
           value: '*'.repeat(8)
         }
       ]
@@ -51,30 +51,30 @@ const Profile = () => {
   ];
   const changePasswordFormSections: ICFormSection[] = [
     {
-      title: 'Change Password',
+      title: 'Đổi mật khẩu',
       items: [
         {
-          label: 'Current Password',
+          label: 'Mật khẩu hiện tại',
           id: 'curr-password',
           name: 'currPassword',
           required: true,
-          placeholder: 'Enter current password',
+          placeholder: 'Hãy điền mật khẩu hiện tại',
           type: 'password'
         },
         {
-          label: 'New Password',
+          label: 'Mật khẩu mới',
           id: 'new-password',
           name: 'newPassword',
           required: true,
-          placeholder: 'Enter new password',
+          placeholder: 'Hãy điền mật khẩu mới',
           type: 'password'
         },
         {
-          label: 'Confirm New Password',
+          label: 'Xác nhận mật khẩu',
           id: 'confirm-new-password',
           name: 'confirmNewPassword',
           required: true,
-          placeholder: 'Confirm new password',
+          placeholder: 'Xác nhận mật khẩu',
           type: 'password'
         }
       ]
@@ -101,7 +101,7 @@ const Profile = () => {
                     <p>{item.value}</p>
                   </div>
 
-                  {item.key === 'password' && (
+                  {item.key === 'Mật khẩu' && (
                     <div className='changePassword-button'>
                       <CButton
                         size='small'
@@ -110,7 +110,7 @@ const Profile = () => {
                           setIsChangePassword(!isChangePassword);
                         }}
                       >
-                        change password
+                        Đổi mật khẩu
                       </CButton>
                     </div>
                   )}

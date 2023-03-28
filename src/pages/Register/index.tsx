@@ -5,57 +5,57 @@ import RegisterForm from './template/RegisterForm';
 const Register = () => {
   const registerSections: IRegisterSection[] = [
     {
-      title: 'Profile Configuration',
+      title: 'Cài đặt hồ sơ',
       items: [
         {
-          label: 'Username',
+          label: 'Tên tài khoản',
           id: 'username',
           name: 'username',
           required: true,
-          placeholder: 'Enter your username',
+          placeholder: 'johnasvsd, abcxyz,...',
           type: 'text'
         },
         {
-          label: 'Full name',
+          label: 'Họ và tên',
           id: 'fullname',
           name: 'fullname',
           required: false,
           placeholder: 'Nguyen Van A',
           type: 'text'
         },
-        {label: 'Phone number', id: 'phone', name: 'phone', required: false, placeholder: '0123456789', type: 'text'}
+        {label: 'Số điện thoại', id: 'phone', name: 'phone', required: false, placeholder: '0123456789', type: 'text'}
       ]
     },
     {
-      title: 'Password Configuration',
+      title: 'Cài đặt mật khẩu',
       items: [
         {
-          label: 'Password',
+          label: 'Mật khẩu',
           id: 'password',
           name: 'password',
           required: true,
-          placeholder: 'Enter your password',
+          placeholder: 'Mật khẩu',
           type: 'password'
         },
         {
-          label: 'Confirmation',
+          label: 'Xác nhận mật khẩu',
           id: 'confirm-password',
           name: 'confirmPassword',
           required: true,
-          placeholder: 'Confirm password',
+          placeholder: 'Xác nhận mật khẩu',
           type: 'password'
         }
       ]
     },
     {
-      title: 'Access Settings',
+      title: 'Cài đặt vai trò',
       items: [
         {
-          label: 'Account role',
+          label: 'Vai trò tài khoản',
           id: 'account-role',
           name: 'accountRole',
           required: true,
-          placeholder: 'role',
+          placeholder: 'Chọn vai trò',
           type: 'text',
           options: [
             {id: 'admin', value: 'admin'},

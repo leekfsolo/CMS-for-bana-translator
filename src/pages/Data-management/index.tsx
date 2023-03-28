@@ -22,6 +22,9 @@ import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/Acti
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
+import Downloader from 'components/Downloader';
+import useFileDownloader from 'utils/hooks/useFileDownloader';
+import {getDataServerUrl} from 'configuration';
 
 const CModal = lazy(() => import('components/CModal/CModal'));
 const EditForm = lazy(() => import('./template/EditForm'));
@@ -78,19 +81,18 @@ const DataManagement = () => {
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
   const [isOpenEditForm, setIsOpenEditForm] = useState<boolean>(false);
+  const {download, remove, files} = useFileDownloader();
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
     const modalPopupState: CModalProps = {
       closeText: 'Đóng',
-      content: ''
+      content: null
     };
-
-    let contentText = '';
 
     switch (type) {
       case ActionType.DOWNLOAD:
-        await dispatch(downloadDataFile(payload[0]));
-        break;
+        download({file: getDataServerUrl(`/api/data/download/${payload[0]}`)});
+        return;
       case ActionType.EDIT:
         await dispatch(getDataFile(payload[0]));
         setIsOpenEditForm(true);
@@ -108,17 +110,17 @@ const DataManagement = () => {
           },
           confirmText: 'Xóa',
           maxWidth: 'xs',
-          title: 'Xác nhận'
+          title: 'Xác nhận',
+          content: (
+            <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>
+              Bạn có chắc chắn xóa data này?
+            </div>
+          )
         });
-        contentText = 'Bạn có chắc chắn xóa data này?';
         break;
       default:
         break;
     }
-
-    modalPopupState.content = (
-      <div className='d-flex justify-content-center align-items-center gap-2 modal-delete'>{contentText}</div>
-    );
 
     setModelContent(modalPopupState);
   };
@@ -227,6 +229,7 @@ const DataManagement = () => {
       await dispatch(getAllDataData(params));
       dispatch(handleLoading(false));
       setSelected([]);
+      setPage(0);
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));
@@ -250,6 +253,9 @@ const DataManagement = () => {
   return (
     <main className='data-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
+      <Suspense>
+        {files.length > 0 && <Downloader files={files} remove={(e) => remove(e)} formatFile='.zip' />}
+      </Suspense>
       <Suspense>
         {isOpenEditForm && <EditForm dataValue={detailData} handleClose={handleCloseEditForm} open={isOpenEditForm} />}
       </Suspense>

@@ -28,7 +28,7 @@ const dataApi = {
   },
   downloadById: (id: string) => {
     const url = '/api/data/download';
-    return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
+    return axiosClient.get(`${getDataServerUrl(url)}/${id}`, {responseType: 'blob'});
   }
 };
 

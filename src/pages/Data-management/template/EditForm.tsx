@@ -32,7 +32,12 @@ const defaultValues: SubmitDataProps = {
 const EditForm = (props: Props) => {
   const {open, handleClose, dataValue} = props;
 
-  const {handleSubmit, control, setValue} = useForm<SubmitDataProps>({
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: {isDirty}
+  } = useForm<SubmitDataProps>({
     defaultValues
   });
   const dispatch = useAppDispatch();
@@ -61,7 +66,7 @@ const EditForm = (props: Props) => {
       className='dialog dialog-form'
     >
       <DialogTitle className='d-flex justify-content-between'>
-        Tải tập dữ liệu
+        Chỉnh sửa tập dữ liệu
         <CloseIcon onClick={handleClose} />
       </DialogTitle>
       <form onSubmit={handleSubmit(onValidSubmit)} method='POST' action='#' noValidate className='dialog-form'>
@@ -108,7 +113,9 @@ const EditForm = (props: Props) => {
           <CButton size='medium' type='button' variant='text' onClick={handleClose}>
             Đóng
           </CButton>
-          <CButton type='submit'>Xác nhận</CButton>
+          <CButton type='submit' disabled={!isDirty}>
+            Xác nhận
+          </CButton>
         </DialogActions>
       </form>
     </Dialog>

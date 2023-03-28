@@ -59,16 +59,16 @@ const RegisterForm = (props: Props) => {
   };
 
   const rulesValidation = (item: IRegisterInput) => {
-    let validator = {required: {value: item.required, message: 'This field is required'}};
+    let validator = {required: {value: item.required, message: 'Trường này bắt buộc'}};
     if (item.name === 'phone') {
-      Object.assign(validator, {pattern: {value: /\d{10}/, message: 'Invalid phone number'}});
+      Object.assign(validator, {pattern: {value: /\d{10}/, message: 'Số điện thoại không hợp lệ'}});
     }
     if (item.name === 'accountRole') {
-      Object.assign(validator, {validate: (value: string) => value !== 'defaultValue' || 'This field is required'});
+      Object.assign(validator, {validate: (value: string) => value !== 'defaultValue' || 'Trường này bắt buộc'});
     }
     if (item.name === 'confirmPassword') {
       Object.assign(validator, {
-        validate: (value: string) => value === getValues('password') || 'Password does not match'
+        validate: (value: string) => value === getValues('password') || 'Mật khẩu không khớp'
       });
     }
 
@@ -135,7 +135,7 @@ const RegisterForm = (props: Props) => {
 
       <div className='register-button'>
         <CButton type='submit' variant='outlined'>
-          Create
+          Xác nhận
         </CButton>
       </div>
     </form>

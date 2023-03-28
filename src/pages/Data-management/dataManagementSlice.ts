@@ -66,6 +66,9 @@ const dataManagement = createSlice({
         const displayData = transformDataData(responseData);
         state.dataData = displayData;
       })
+      .addCase(getDataFile.fulfilled, (state, action: PayloadAction<any>) => {
+        state.detailData = action.payload;
+      })
       .addCase(uploadDataFile.fulfilled, (state, action: PayloadAction<any>) => {
         const responseData = action.payload.datas;
         const displayData = transformDataData(responseData);

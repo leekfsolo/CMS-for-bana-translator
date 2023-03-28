@@ -7,7 +7,7 @@ import CPagination from 'components/CPagination';
 import CTable from 'components/CTable';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {modelManagementSelector} from 'app/selectors';
-import {activateModel, deleteModelFile, downloadModelFile, getAllModelData} from './modelManagementSlice';
+import {activateModel, deleteModelFile, getAllModelData} from './modelManagementSlice';
 import {handleLoading} from 'app/globalSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
@@ -21,7 +21,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import DownloadIcon from '@mui/icons-material/Download';
+import useFileDownloader from 'utils/hooks/useFileDownloader';
+import {getDataServerUrl} from 'configuration';
+
 const CModal = lazy(() => import('components/CModal/CModal'));
+const Downloader = lazy(() => import('components/Downloader'));
 
 const ModelManagement = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +36,7 @@ const ModelManagement = () => {
   const [modelType, setModelType] = useState<string>('nmt');
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
+  const {download, remove, files} = useFileDownloader();
 
   const headCells: TableHeadCell[] = [
     {
@@ -113,8 +118,8 @@ const ModelManagement = () => {
 
     switch (type) {
       case ActionType.DOWNLOAD:
-        await dispatch(downloadModelFile(payload[0]));
-        break;
+        download({file: getDataServerUrl(`/api/model/download_a_model/${payload[0]}`)});
+        return;
       case ActionType.ACTIVATE:
         Object.assign(modalPopupState, {
           handleConfirm: async () => {
@@ -127,7 +132,8 @@ const ModelManagement = () => {
             handleUpdate();
           },
           confirmText: 'Xác nhận',
-          maxWidth: 'xs'
+          maxWidth: 'xs',
+          isDelete: false
         });
         contentText = 'Bạn có chắc chắn chọn model này?';
         break;
@@ -247,6 +253,7 @@ const ModelManagement = () => {
       await dispatch(getAllModelData(params));
       dispatch(handleLoading(false));
       setSelected([]);
+      setPage(0);
     } catch (err) {
       console.error(err);
       dispatch(handleLoading(false));
@@ -260,6 +267,7 @@ const ModelManagement = () => {
   return (
     <main className='model-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
+      <Suspense>{files.length > 0 && <Downloader files={files} remove={(e) => remove(e)} formatFile='.pt' />}</Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='model-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>

@@ -12,7 +12,7 @@ const modelApi = {
     return axiosClient.get(`${getDataServerUrl(url)}/${id}`);
   },
   deleteById: (data: {name: string}) => {
-    const url = '/api/model/deleteModals';
+    const url = '/api/model/deleteModels';
     return axiosClient.delete(getDataServerUrl(url), {params: data});
   },
   updateById: (id: string) => {
@@ -37,7 +37,7 @@ const modelApi = {
   },
   downloadById: (name: string) => {
     const url = `/api/model/download_a_model/${name}`;
-    return axiosClient.get(getDataServerUrl(url));
+    return axiosClient.get(getDataServerUrl(url), {responseType: 'blob'});
   }
 };
 

@@ -1,6 +1,10 @@
 @use 'styles/index' as *;
 
 .MuiTableCell-root {
+  > span {
+    white-space: nowrap;
+  }
+
   .cell-variant {
     color: white;
     padding: 5px 10px;

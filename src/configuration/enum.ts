@@ -19,3 +19,11 @@ export enum ActionType {
   DOWNLOAD = 'download',
   EDIT = 'edit'
 }
+
+export enum DownloadState {
+  NONE = 'none',
+  GET_FILE_FROM_SERVER = 'get file from server',
+  DOWNLOADING = 'downloading',
+  DOWNLOADED = 'downloaded',
+  ERROR = 'error'
+}

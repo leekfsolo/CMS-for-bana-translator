@@ -1,0 +1,23 @@
+@use 'styles/index' as *;
+
+.downloader {
+  width: 500px;
+  min-height: 150px;
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  max-height: 700px;
+  overflow-y: auto;
+  z-index: 10;
+
+  .card-header {
+    color: white;
+    background-color: $neutral-700;
+  }
+
+  .card .list-group {
+    height: 150px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
