@@ -3,7 +3,7 @@
     height: 250px;
 
     @include mobile {
-      height: 150px;
+      height: 300px;
     }
 
     &__files {
@@ -40,11 +40,6 @@
           width: 140px;
           height: 140px;
           object-fit: cover;
-
-          @include mobile {
-            width: 150px;
-            height: 150px;
-          }
         }
 
         h4 {
@@ -154,6 +149,12 @@
           }
         }
       }
+    }
+  }
+
+  .control-model {
+    .MuiFormControl-root {
+      width: 32%;
     }
   }
 

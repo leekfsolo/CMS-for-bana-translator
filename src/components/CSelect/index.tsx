@@ -8,11 +8,11 @@ interface Props extends SelectProps {
 }
 
 const CSelect = React.forwardRef<HTMLSelectElement, Props>((props, ref) => {
-  const {options, placeholder, className, value, valid = true} = props;
+  const {options, placeholder, className, value, valid = true, ...restProps} = props;
 
   return (
     <Select
-      {...Object.assign({}, props, {valid: undefined})}
+      {...Object.assign({}, restProps, {valid: undefined})}
       className={`cinput ${className} cinput-${valid ? 'valid' : 'invalid'}`}
       ref={ref}
       fullWidth

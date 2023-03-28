@@ -59,7 +59,7 @@ const dashboard = createSlice({
                   dur_loss: getRoundedFloat(dur_loss),
                   prior_loss: getRoundedFloat(prior_loss)
                 }
-              : {bleu_score: getRoundedFloat(accuracy)};
+              : {accuracy: getRoundedFloat(accuracy)};
 
           return {
             model_type: model_type.toUpperCase(),
