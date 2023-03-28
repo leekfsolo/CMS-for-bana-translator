@@ -298,7 +298,8 @@ const Dashboard = () => {
       label: `Hủy tất cả (${formatQuantity(selectedCanceledTasks.length)})`,
       variant: 'contained',
       color: 'warning',
-      onClick: () => handleAction({type: ActionType.CANCEL, payload: selectedCanceledTasks})
+      onClick: () => handleAction({type: ActionType.CANCEL, payload: selectedCanceledTasks}),
+      className: 'warning-button'
     }
   ];
 

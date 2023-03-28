@@ -15,7 +15,7 @@
 
     &-contained {
       &-primary {
-        background-color: $primary-500;
+        background-color: $info-550;
       }
 
       &-success {
@@ -31,7 +31,7 @@
       background-color: transparent;
 
       &-primary {
-        color: $primary-600;
+        color: $info-650;
         font-weight: 500;
       }
 
@@ -46,9 +46,9 @@
 
     &-outlined {
       &-primary {
-        border: 1px solid $primary-500;
+        border: 1px solid $info-550;
         background-color: $white;
-        color: $primary-500;
+        color: $info-550;
       }
 
       &-success {

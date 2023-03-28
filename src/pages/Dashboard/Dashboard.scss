@@ -154,6 +154,17 @@
       }
     }
   }
+
+  &-training {
+    .warning-button {
+      background-color: $warning-450;
+      box-shadow: none;
+
+      &:hover {
+        background-color: $warning-550;
+      }
+    }
+  }
 }
 
 .log-textarea {

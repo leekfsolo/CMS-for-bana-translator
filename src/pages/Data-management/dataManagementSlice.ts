@@ -25,15 +25,34 @@ export const getDataFile = createAsyncThunk('data/getById', async (data: string)
   return res;
 });
 
-export const deleteDataFile = createAsyncThunk('data/deleteById', async (data: string) => {
-  const res = await dataApi.deleteById(data);
-  return res;
+export const deleteDataFile = createAsyncThunk('data/deleteById', async (data: string, {rejectWithValue}) => {
+  try {
+    const res = await dataApi.deleteById(data);
+    return res;
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+
+    return rejectWithValue(err.response);
+  }
 });
 
-export const updateDataFile = createAsyncThunk('data/updateById', async (data: Partial<IData> & {id?: string}) => {
-  const res = await dataApi.updateById(data);
-  return res;
-});
+export const updateDataFile = createAsyncThunk(
+  'data/updateById',
+  async (data: Partial<IData> & {id?: string}, {rejectWithValue}) => {
+    try {
+      const res = await dataApi.updateById(data);
+      return res;
+    } catch (err: any) {
+      if (!err.response) {
+        throw err;
+      }
+
+      return rejectWithValue(err.response);
+    }
+  }
+);
 
 export const downloadDataFile = createAsyncThunk('data/downloadById', async (data: string) => {
   const res = await dataApi.downloadById(data);

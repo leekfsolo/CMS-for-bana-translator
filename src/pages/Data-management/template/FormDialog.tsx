@@ -40,20 +40,24 @@ const FormDialog = (props: Props) => {
   const dispatch = useAppDispatch();
 
   const onValidSubmit: SubmitHandler<SubmitDataProps> = async (data) => {
-    const {files, modelType, region, nosample} = data;
+    try {
+      const {files, modelType, region, nosample} = data;
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('region', region);
-      formData.append('type', modelType);
-      formData.append('nosample', nosample.toString());
-      formData.append('training_file', file);
-      await dispatch(uploadDataFile(formData));
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('region', region);
+        formData.append('type', modelType);
+        formData.append('nosample', nosample.toString());
+        formData.append('training_file', file);
+        await dispatch(uploadDataFile(formData));
+      }
+
+      customToast(ToastType.SUCCESS, 'Upload dữ liệu thành công');
+      handleUpdate();
+      handleClose();
+    } catch (err) {
+      console.error(err);
     }
-
-    customToast(ToastType.SUCCESS, 'Upload dữ liệu thành công');
-    handleUpdate();
-    handleClose();
   };
 
   return (

@@ -111,7 +111,7 @@ const CForm = (props: Props) => {
       ))}
 
       <div className='cform-button'>
-        <Button type='submit' variant='outlined'>
+        <Button type='submit' variant='contained'>
           Xác nhận
         </Button>
       </div>

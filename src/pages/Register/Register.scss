@@ -66,16 +66,6 @@
     display: flex;
     justify-content: flex-end;
 
-    button {
-      border: 1px solid $primary-500;
-      color: $primary-500;
-
-      &:hover {
-        border-color: $primary-600;
-        background-color: $primary-100;
-      }
-    }
-
     .cancel {
       border: none;
       color: $white;

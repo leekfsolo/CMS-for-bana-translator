@@ -44,13 +44,25 @@ const EditForm = (props: Props) => {
   const dispatch = useAppDispatch();
 
   const onValidSubmit: SubmitHandler<SubmitDataProps> = async (data) => {
-    const res: any = await dispatch(updateDataFile({...data, id: dataValue.filename})).unwrap();
+    try {
+      const res: any = await dispatch(updateDataFile({...data, id: dataValue.filename})).unwrap();
 
-    if (res.msg === 'done') {
-      customToast(ToastType.SUCCESS, 'Thay đổi thành công');
-      handleUpdate();
-      handleClose();
-    } else customToast(ToastType.ERROR, 'Thay đổi thất bại');
+      if (res && res.msg === 'done') {
+        customToast(ToastType.SUCCESS, 'Thay đổi thành công');
+        handleUpdate();
+        handleClose();
+      } else customToast(ToastType.ERROR, 'Thay đổi thất bại');
+    } catch (err: any) {
+      const {status} = err;
+
+      if (status === 405) {
+        customToast(ToastType.ERROR, 'Tập dữ liệu đang được sử dụng');
+      } else if (status === 409) {
+        customToast(ToastType.ERROR, 'Tên tập dữ liệu bị trùng, vui lòng nhập tên khác');
+      } else {
+        customToast(ToastType.ERROR, 'Thay đổi thất bại');
+      }
+    }
   };
 
   useLayoutEffect(() => {

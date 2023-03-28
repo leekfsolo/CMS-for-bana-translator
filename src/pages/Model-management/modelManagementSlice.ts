@@ -17,9 +17,17 @@ export const getAllModelData = createAsyncThunk('model/getAll', async (params: d
   return res;
 });
 
-export const deleteModelFile = createAsyncThunk('model/deleteById', async (data: {name: string}) => {
-  const res = await modelApi.deleteById(data);
-  return res;
+export const deleteModelFile = createAsyncThunk('model/deleteById', async (data: {name: string}, {rejectWithValue}) => {
+  try {
+    const res = await modelApi.deleteById(data);
+    return res;
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+
+    return rejectWithValue(err.response);
+  }
 });
 
 export const activateModel = createAsyncThunk('model/activate', async (id: string) => {
