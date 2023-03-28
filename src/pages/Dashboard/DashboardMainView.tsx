@@ -53,7 +53,7 @@ const DashboardMainView = (props: DashboardMainViewProps) => {
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <div className='dashboard-overview w-100 d-flex flex-wrap gap-3 justify-content-between mb-3'>
         {currentModels.map((model, idx) => {
-          const {id, model_type, createdDate, accuracy, ...modelLoss} = model;
+          const {model_name, model_type, createdDate, accuracy, ...modelLoss} = model;
           const isTranslate: boolean = model_type === 'NMT';
 
           return (
@@ -61,7 +61,7 @@ const DashboardMainView = (props: DashboardMainViewProps) => {
               <div className='card-info d-flex align-items-center justify-content-between mb-3'>
                 <div className='d-flex align-items-center'>
                   <p className='m-0 pe-1'>{model_type}</p>
-                  <span className='ps-1 card-version'>{id}</span>
+                  <span className='ps-1 card-version'>{model_name}</span>
                 </div>
                 {true && (
                   <div className='card-sub'>
@@ -76,7 +76,7 @@ const DashboardMainView = (props: DashboardMainViewProps) => {
                 <div className='card-extend'>
                   {isTranslate ? (
                     <p className='card-extend__item mb-1'>
-                      Bleu score: <span>{getCellData(accuracy)}</span>
+                      bleu score: <span>{getCellData(accuracy)}</span>
                     </p>
                   ) : (
                     <div className='d-flex flex-wrap align-items-center'>

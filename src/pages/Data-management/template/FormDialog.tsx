@@ -11,6 +11,7 @@ import {useAppDispatch} from 'app/hooks';
 import {uploadDataFile} from '../dataManagementSlice';
 import CSelect from 'components/CSelect';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
+import customToast, {ToastType} from 'components/CustomToast/customToast';
 
 interface Props {
   selectedFiles: File[];
@@ -18,6 +19,7 @@ interface Props {
   handleUploadFiles: (e: ChangeEvent<HTMLInputElement>) => void;
   openImportDataForm: boolean;
   handleRemoveFile: (filename: string) => void;
+  handleUpdate: () => Promise<void>;
 }
 
 interface SubmitDataProps {
@@ -29,7 +31,7 @@ interface SubmitDataProps {
 const defaultValues = {files: [], modelType: 'nmt', region: 'Gia Lai'};
 
 const FormDialog = (props: Props) => {
-  const {selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile} = props;
+  const {selectedFiles, handleClose, handleUploadFiles, openImportDataForm, handleRemoveFile, handleUpdate} = props;
   const {register, handleSubmit, control} = useForm<SubmitDataProps>({
     defaultValues
   });
@@ -46,6 +48,10 @@ const FormDialog = (props: Props) => {
       formData.append('training_file', file);
       await dispatch(uploadDataFile(formData));
     }
+
+    customToast(ToastType.SUCCESS, 'Upload dữ liệu thành công');
+    handleUpdate();
+    handleClose();
   };
 
   return (
@@ -99,25 +105,28 @@ const FormDialog = (props: Props) => {
             />
           </Box>
           <div className='row align-items-center dialog-content'>
-            <div className='col-12 h-100'>
-              <FormGroup className='dialog-content__files'>
-                <input
-                  id='files'
-                  type='file'
-                  multiple
-                  accept='.zip'
-                  className='input-files'
-                  {...register('files')}
-                  onChange={handleUploadFiles}
-                />
-                <Box className='input-content text-center'>
-                  <img src={UploadFile} alt='upload file' />
-                  <h4>Kéo & Thả</h4>
-                  <p className='my-1'>Tệp ở đây hoặc duyệt tệp của bạn</p>
-                  <span>Chỉ cho phép các tệp Zip</span>
-                </Box>
-              </FormGroup>
-            </div>
+            {selectedFiles.length < 10 && (
+              <div className='col-12 h-100'>
+                <FormGroup className='dialog-content__files'>
+                  <p className='files-counting'>{selectedFiles.length}/10</p>
+                  <input
+                    id='files'
+                    type='file'
+                    multiple
+                    accept='.zip'
+                    className='input-files'
+                    {...register('files')}
+                    onChange={handleUploadFiles}
+                  />
+                  <Box className='input-content text-center'>
+                    <img src={UploadFile} alt='upload file' />
+                    <h4>Kéo & Thả</h4>
+                    <p className='my-1'>Tệp ở đây hoặc duyệt tệp của bạn</p>
+                    <span>Chỉ cho phép các tệp Zip</span>
+                  </Box>
+                </FormGroup>
+              </div>
+            )}
             {selectedFiles.length > 0 && (
               <div className='col-12 h-100 mt-4 mt-md-4'>
                 <div className='preview-list'>

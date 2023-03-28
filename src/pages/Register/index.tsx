@@ -1,8 +1,16 @@
+import {useAppSelector} from 'app/hooks';
+import {authSelector} from 'app/selectors';
+import {PageUrl} from 'configuration/enum';
 import {IRegisterSection} from 'pages/interface';
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import RegisterForm from './template/RegisterForm';
 
 const Register = () => {
+  const navigate = useNavigate();
+  const auth = useAppSelector(authSelector);
+  const {userInfo} = auth;
+
   const registerSections: IRegisterSection[] = [
     {
       title: 'Cài đặt hồ sơ',
@@ -65,6 +73,16 @@ const Register = () => {
       ]
     }
   ];
+
+  useEffect(() => {
+    if (userInfo) {
+      const {accountRole} = userInfo;
+
+      if (accountRole && accountRole !== 'admin') {
+        navigate(PageUrl.DASHBOARD, {replace: true});
+      }
+    }
+  }, [userInfo]);
 
   return (
     <div className='register'>

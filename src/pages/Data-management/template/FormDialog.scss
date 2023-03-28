@@ -17,6 +17,13 @@
       justify-content: center;
       align-items: center;
 
+      .files-counting {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: $info-500;
+      }
+
       .input-files {
         position: absolute;
         top: 0;

@@ -187,21 +187,11 @@ const Dashboard = () => {
         actionType: ActionType.LOG,
         title: 'Xem chi tiết',
         handle: handleAction
-      },
-      {
-        icon: (
-          <IconButton disableFocusRipple sx={{padding: '4px'}}>
-            <DeleteIcon />
-          </IconButton>
-        ),
-        actionType: ActionType.DELETE,
-        title: 'Xóa Task',
-        handle: handleAction
       }
     ];
 
     if (status === 'processing' || status === 'waiting') {
-      tableRowActions.splice(1, 0, {
+      tableRowActions.push({
         icon: (
           <IconButton disableFocusRipple sx={{padding: '4px'}}>
             <DoNotDisturbIcon />
@@ -209,6 +199,17 @@ const Dashboard = () => {
         ),
         actionType: ActionType.CANCEL,
         title: 'Hủy Task',
+        handle: handleAction
+      });
+    } else {
+      tableRowActions.push({
+        icon: (
+          <IconButton disableFocusRipple sx={{padding: '4px'}}>
+            <DeleteIcon />
+          </IconButton>
+        ),
+        actionType: ActionType.DELETE,
+        title: 'Xóa Task',
         handle: handleAction
       });
     }
@@ -254,7 +255,7 @@ const Dashboard = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       if (cardProgressInnerRef.current) {
-        cardProgressInnerRef.current.style.width = `${Math.floor(totalTasks / tasksData.length)}%`;
+        cardProgressInnerRef.current.style.width = `${Math.floor((totalTasks / tasksData.length) * 100)}%`;
       }
     }, 200);
   }, [totalTasks, tasksData]);
@@ -274,17 +275,24 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const canceledTasks = displayData
-    .filter((task) => task.status === 'processing' || task.status === 'waiting')
-    .map((task) => task.id);
+  const canceledTasks: string[] = [],
+    deletedTasks: string[] = [];
+
+  displayData.forEach((task) => {
+    if (task.status === 'processing' || task.status === 'waiting') {
+      canceledTasks.push(task.id);
+    } else deletedTasks.push(task.id);
+  });
+
   const selectedCanceledTasks = selected.filter((id) => canceledTasks.includes(id));
+  const selectedDeletedTasks = selected.filter((id) => deletedTasks.includes(id));
 
   const actionBarControlButtons: actionBarControlButtonsProps[] = [
     {
-      label: `Xóa tất cả (${formatQuantity(selected.length)})`,
+      label: `Xóa tất cả (${formatQuantity(selectedDeletedTasks.length)})`,
       variant: 'text',
       color: 'error',
-      onClick: () => handleDelete(selected)
+      onClick: () => handleDelete(selectedDeletedTasks)
     },
     {
       label: `Hủy tất cả (${formatQuantity(selectedCanceledTasks.length)})`,

@@ -1,9 +1,9 @@
 import React, {useLayoutEffect} from 'react';
-import {Box, Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
+import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import {useAppDispatch} from 'app/hooks';
-import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
+import {regionTypeSelectData} from 'utils/base/constants';
 import CSelect from 'components/CSelect';
 import CButton from 'components/CButton';
 import {updateDataFile} from '../dataManagementSlice';
@@ -14,23 +14,24 @@ import CInput from 'components/CInput';
 type SubmitDataProps = {
   nosample: number;
   region: string;
-  type: string;
+  filename: string;
 };
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   dataValue: Partial<IData>;
+  handleUpdate: () => Promise<void>;
 }
 
 const defaultValues: SubmitDataProps = {
   nosample: 0,
-  type: 'defaultValue',
+  filename: '',
   region: 'defaultValue'
 };
 
 const EditForm = (props: Props) => {
-  const {open, handleClose, dataValue} = props;
+  const {open, handleClose, dataValue, handleUpdate} = props;
 
   const {
     handleSubmit,
@@ -43,17 +44,20 @@ const EditForm = (props: Props) => {
   const dispatch = useAppDispatch();
 
   const onValidSubmit: SubmitHandler<SubmitDataProps> = async (data) => {
-    const res: any = await dispatch(updateDataFile({filename: dataValue.filename, ...data})).unwrap();
+    const res: any = await dispatch(updateDataFile({...data, id: dataValue.filename})).unwrap();
 
-    if (res.msg === 'done') customToast(ToastType.SUCCESS, 'Thay đổi thành công');
-    else customToast(ToastType.ERROR, 'Thay đổi thất bại');
+    if (res.msg === 'done') {
+      customToast(ToastType.SUCCESS, 'Thay đổi thành công');
+      handleUpdate();
+      handleClose();
+    } else customToast(ToastType.ERROR, 'Thay đổi thất bại');
   };
 
   useLayoutEffect(() => {
-    const {nosample, region, type} = dataValue;
+    const {nosample, region, filename} = dataValue;
     if (nosample) setValue('nosample', nosample);
     if (region) setValue('region', region);
-    if (type) setValue('type', type);
+    if (filename) setValue('filename', filename);
   }, [dataValue]);
 
   return (
@@ -62,52 +66,49 @@ const EditForm = (props: Props) => {
       onClose={handleClose}
       scroll='paper'
       fullWidth={true}
-      maxWidth='sm'
+      maxWidth='xs'
       className='dialog dialog-form'
     >
       <DialogTitle className='d-flex justify-content-between'>
         Chỉnh sửa tập dữ liệu
         <CloseIcon onClick={handleClose} />
       </DialogTitle>
-      <form onSubmit={handleSubmit(onValidSubmit)} method='POST' action='#' noValidate className='dialog-form'>
-        <DialogContent>
-          <Box>
-            <Box className='control-model d-flex flex-column flex-sm-row align-items-center justify-content-between w-100 gap-3 mb-3'>
-              <Controller
-                name='type'
-                control={control}
-                render={({field}) => (
-                  <CSelect
-                    {...field}
-                    className='w-100'
-                    options={modelTypeSelectData}
-                    placeholder='Chọn loại model'
-                    size='small'
-                  />
-                )}
+      <form onSubmit={handleSubmit(onValidSubmit)} method='POST' action='#' noValidate className='dialog-form '>
+        <DialogContent className='d-flex flex-column gap-4'>
+          <Controller
+            name='filename'
+            control={control}
+            render={({field}) => (
+              <CInput
+                {...field}
+                className='w-100'
+                placeholder='Điền tên tập dữ liệu'
+                size='medium'
+                label='Tên tập dữ liệu'
               />
-              <Controller
-                name='region'
-                control={control}
-                render={({field}) => (
-                  <CSelect
-                    {...field}
-                    className='w-100'
-                    options={regionTypeSelectData}
-                    placeholder='Chọn vùng'
-                    size='small'
-                  />
-                )}
+            )}
+          />
+
+          <Controller
+            name='nosample'
+            control={control}
+            render={({field}) => (
+              <CInput {...field} className='w-100' placeholder='Nhập số sample' size='medium' label='Samples' />
+            )}
+          />
+          <Controller
+            name='region'
+            control={control}
+            render={({field}) => (
+              <CSelect
+                {...field}
+                className='w-100'
+                options={regionTypeSelectData}
+                placeholder='Chọn vùng'
+                size='medium'
               />
-            </Box>
-            <Controller
-              name='nosample'
-              control={control}
-              render={({field}) => (
-                <CInput {...field} className='w-100' placeholder='Nhập số sample' size='small' label='Samples' />
-              )}
-            />
-          </Box>
+            )}
+          />
         </DialogContent>
         <DialogActions className='d-flex justify-content-end px-4'>
           <CButton size='medium' type='button' variant='text' onClick={handleClose}>

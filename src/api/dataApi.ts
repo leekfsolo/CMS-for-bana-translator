@@ -21,10 +21,10 @@ const dataApi = {
     const url = '/api/data';
     return axiosClient.delete(`${getDataServerUrl(url)}/${id}`);
   },
-  updateById: (data: Partial<IData>) => {
-    const {filename, ...updateData} = data;
+  updateById: (data: Partial<IData> & {id?: string}) => {
+    const {id} = data;
     const url = '/api/data';
-    return axiosClient.put(`${getDataServerUrl(url)}/${filename}`, updateData);
+    return axiosClient.put(`${getDataServerUrl(url)}/${id}`, data);
   },
   downloadById: (id: string) => {
     const url = '/api/data/download';

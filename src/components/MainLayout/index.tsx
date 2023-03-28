@@ -13,11 +13,14 @@ import {ISidebarItem} from 'components/interface';
 import Header from 'components/Header';
 import classNames from 'classnames';
 import {useSelector} from 'react-redux';
-import {globalSelector} from 'app/selectors';
+import {authSelector, globalSelector} from 'app/selectors';
+import {useAppSelector} from 'app/hooks';
 
 const MainLayout = () => {
-  const sidebarItems: Array<ISidebarItem[]> = useMemo(
-    () => [
+  const auth = useAppSelector(authSelector);
+  const {userInfo} = auth;
+  const sidebarItems: Array<ISidebarItem[]> = useMemo(() => {
+    const baseSidebarItems = [
       [
         {
           label: 'Trang chủ',
@@ -47,19 +50,28 @@ const MainLayout = () => {
           icon: <AssignmentIndOutlinedIcon />
         },
         {
-          label: 'Tạo tài khoản',
-          src: PageUrl.CREATE_ACCOUNT,
-          icon: <KeyOutlinedIcon />
-        },
-        {
           label: 'Đăng xuất',
           src: `/${PageUrl.LOGIN}`,
           icon: <LogoutOutlinedIcon />
         }
       ]
-    ],
-    []
-  );
+    ];
+
+    if (userInfo) {
+      const {accountRole} = userInfo;
+
+      if (accountRole && accountRole === 'admin') {
+        baseSidebarItems[1].splice(1, 0, {
+          label: 'Tạo tài khoản',
+          src: PageUrl.CREATE_ACCOUNT,
+          icon: <KeyOutlinedIcon />
+        });
+      }
+    }
+
+    return baseSidebarItems;
+  }, [userInfo]);
+
   const [activeSidebarTitle, setActiveSidebarTitle] = useState<string>(sidebarItems[0][0].label);
   const {isShowSidebar} = useSelector(globalSelector);
   const navigate = useNavigate();

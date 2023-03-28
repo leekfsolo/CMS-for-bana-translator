@@ -30,7 +30,7 @@ export const deleteDataFile = createAsyncThunk('data/deleteById', async (data: s
   return res;
 });
 
-export const updateDataFile = createAsyncThunk('data/updateById', async (data: Partial<IData>) => {
+export const updateDataFile = createAsyncThunk('data/updateById', async (data: Partial<IData> & {id?: string}) => {
   const res = await dataApi.updateById(data);
   return res;
 });
@@ -68,11 +68,6 @@ const dataManagement = createSlice({
       })
       .addCase(getDataFile.fulfilled, (state, action: PayloadAction<any>) => {
         state.detailData = action.payload;
-      })
-      .addCase(uploadDataFile.fulfilled, (state, action: PayloadAction<any>) => {
-        const responseData = action.payload.datas;
-        const displayData = transformDataData(responseData);
-        state.dataData = displayData;
       });
   }
 });

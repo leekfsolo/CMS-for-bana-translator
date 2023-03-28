@@ -21,11 +21,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/ActionBar';
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import DownloadIcon from '@mui/icons-material/Download';
-import useFileDownloader from 'utils/hooks/useFileDownloader';
-import {getDataServerUrl} from 'configuration';
+import {handleDownloadFile} from 'utils/helpers/handleDownloadFile';
 
 const CModal = lazy(() => import('components/CModal/CModal'));
-const Downloader = lazy(() => import('components/Downloader'));
 
 const ModelManagement = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +34,6 @@ const ModelManagement = () => {
   const [modelType, setModelType] = useState<string>('nmt');
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
-  const {download, remove, files} = useFileDownloader();
 
   const headCells: TableHeadCell[] = [
     {
@@ -118,7 +115,8 @@ const ModelManagement = () => {
 
     switch (type) {
       case ActionType.DOWNLOAD:
-        download({file: getDataServerUrl(`/api/model/download_a_model/${payload[0]}`)});
+        handleDownloadFile({url: `/api/model/download_a_model/${payload[0]}`});
+
         return;
       case ActionType.ACTIVATE:
         Object.assign(modalPopupState, {
@@ -267,7 +265,6 @@ const ModelManagement = () => {
   return (
     <main className='model-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
-      <Suspense>{files.length > 0 && <Downloader files={files} remove={(e) => remove(e)} formatFile='.pt' />}</Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='model-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
           <Box className='control-model d-flex flex-column flex-sm-row align-items-center gap-2 w-100'>

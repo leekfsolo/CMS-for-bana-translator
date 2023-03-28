@@ -50,7 +50,7 @@ const dashboard = createSlice({
       })
       .addCase(getCurrentModels.fulfilled, (state, action: PayloadAction<any>) => {
         const currentModels = action.payload.map((model: any) => {
-          const {model_type, version, accuracy, createdDate, diff_loss, dur_loss, prior_loss} = model;
+          const {model_type, model_name, accuracy, createdDate, diff_loss, dur_loss, prior_loss} = model;
 
           const lossData =
             model_type === 'tts'
@@ -63,7 +63,7 @@ const dashboard = createSlice({
 
           return {
             model_type: model_type.toUpperCase(),
-            id: version,
+            model_name,
             createdDate: createdDate ? moment(createdDate).format('DD/MM/YYYY') : null,
             ...lossData
           };

@@ -57,6 +57,8 @@ const DownloadItem = (props: Props) => {
         link.click();
         link.remove();
 
+        URL.revokeObjectURL(url);
+
         setDownloadInfo((info) => ({
           ...info,
           completed: true

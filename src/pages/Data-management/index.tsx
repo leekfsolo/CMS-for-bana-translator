@@ -10,7 +10,7 @@ import FormDialog from './template/FormDialog';
 import {useAppDispatch, useAppSelector} from 'app/hooks';
 import {handleLoading} from 'app/globalSlice';
 import {dataManagerSelector} from 'app/selectors';
-import {deleteDataFile, downloadDataFile, getAllDataData, getDataFile} from './dataManagementSlice';
+import {deleteDataFile, getAllDataData, getDataFile} from './dataManagementSlice';
 import {modelTypeSelectData, regionTypeSelectData} from 'utils/base/constants';
 import {getDataParams} from 'utils/helpers/getDataParams';
 import customToast, {ToastType} from 'components/CustomToast/customToast';
@@ -22,9 +22,7 @@ import ActionBar, {actionBarControlButtonsProps} from 'components/ActionBar/Acti
 import {formatQuantity} from 'utils/helpers/formatQuantity';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
-import Downloader from 'components/Downloader';
-import useFileDownloader from 'utils/hooks/useFileDownloader';
-import {getDataServerUrl} from 'configuration';
+import {handleDownloadFile} from 'utils/helpers/handleDownloadFile';
 
 const CModal = lazy(() => import('components/CModal/CModal'));
 const EditForm = lazy(() => import('./template/EditForm'));
@@ -81,7 +79,6 @@ const DataManagement = () => {
   const [region, setRegion] = useState<string>('defaultValue');
   const [modelContent, setModelContent] = useState<CModalProps>();
   const [isOpenEditForm, setIsOpenEditForm] = useState<boolean>(false);
-  const {download, remove, files} = useFileDownloader();
 
   const handleAction = async ({type, payload}: IHandleActionParams) => {
     const modalPopupState: CModalProps = {
@@ -91,7 +88,7 @@ const DataManagement = () => {
 
     switch (type) {
       case ActionType.DOWNLOAD:
-        download({file: getDataServerUrl(`/api/data/download/${payload[0]}`)});
+        handleDownloadFile({url: `/api/data/download/${payload[0]}`});
         return;
       case ActionType.EDIT:
         await dispatch(getDataFile(payload[0]));
@@ -179,9 +176,12 @@ const DataManagement = () => {
 
   const handleUploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+    const newSelectedFiles: File[] = files ? [...selectedFiles, ...Array.from(files)] : [...selectedFiles];
 
-    if (files) {
-      setSelectedFiles(Array.from(files));
+    if (newSelectedFiles.length > 10) {
+      customToast(ToastType.ERROR, 'Số tệp vượt quá giới hạn cho phép');
+    } else {
+      setSelectedFiles(newSelectedFiles);
     }
   };
 
@@ -254,10 +254,14 @@ const DataManagement = () => {
     <main className='data-management'>
       <Suspense>{modelContent && <CModal {...modelContent} />}</Suspense>
       <Suspense>
-        {files.length > 0 && <Downloader files={files} remove={(e) => remove(e)} formatFile='.zip' />}
-      </Suspense>
-      <Suspense>
-        {isOpenEditForm && <EditForm dataValue={detailData} handleClose={handleCloseEditForm} open={isOpenEditForm} />}
+        {isOpenEditForm && (
+          <EditForm
+            dataValue={detailData}
+            handleClose={handleCloseEditForm}
+            open={isOpenEditForm}
+            handleUpdate={handleUpdate}
+          />
+        )}
       </Suspense>
       <Box sx={{width: '100%'}}>
         <Box className='data-management__controls d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4 w-100'>
@@ -293,6 +297,7 @@ const DataManagement = () => {
             handleUploadFiles={handleUploadFiles}
             openImportDataForm={openImportDataForm}
             selectedFiles={selectedFiles}
+            handleUpdate={handleUpdate}
           />
         </Box>
         <Paper sx={{width: '100%', mb: 2}}>
